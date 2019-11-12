@@ -141,8 +141,8 @@ import os
 elecmatrix = scipy.io.loadmat(
     '/home/chris/Subjects/PY19N025_Grid/electrodes/electrodes.mat')
 
-bpy.ops.object.empty_add(type='CUBE')
-bpy.context.active_object.name = 'Pia'
+# bpy.ops.object.empty_add(type='CUBE')
+# bpy.context.active_object.name = 'Pia'
 bpy.ops.object.empty_add(type='CUBE')
 bpy.context.active_object.name = 'Electrodes'
 bpy.ops.object.empty_add(type='CUBE')
@@ -163,7 +163,7 @@ for file in os.listdir("/home/chris/Subjects/PY19N025_Grid/obj"):
             file)[0]].parent = bpy.data.objects['aseg']
 
 
-bpy.data.objects['lh.pial'].parent = bpy.data.objects['Pia']
-bpy.data.objects['rh.pial'].parent = bpy.data.objects['Pia']
+# bpy.data.objects['lh.pial'].parent = bpy.data.objects['Pia']
+# bpy.data.objects['rh.pial'].parent = bpy.data.objects['Pia']
 
 bpy.ops.export_scene.fbx(filepath='/home/chris/Subjects/PY19N025_Grid/PY19N025_Grid' + ".fbx")
