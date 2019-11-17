@@ -148,4 +148,5 @@ mv $SUBJECTS_DIR/$1/surf/rh.pial.asc $SUBJECTS_DIR/$1/surf/rh.pial.srf
 # mri_annotation2label --subject $1 --hemi "rh" --surface pial --outdir $SUBJECTS_DIR/$1/label/gyri
 
 # #Take all the objs and electrodes and create a fbx from them
-/usr/local/blender/blender --background --python scripts/obj2fbx.py /$1
+# patient, electrodeExport, justCortex
+/usr/local/blender/blender --background --python scripts/obj2fbx.py /$1 False False
