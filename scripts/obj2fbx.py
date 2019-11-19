@@ -2,6 +2,7 @@ import bpy
 import os
 import sys
 import json
+import math
 
 
 def main(patient='', electrodeExport=True, justCortex=False):
@@ -9,12 +10,17 @@ def main(patient='', electrodeExport=True, justCortex=False):
     with open('scripts/materialColors.json') as json_file:
         data = json.load(json_file)
 
+    scn = bpy.context.scene
+    if not scn.render.engine == 'CYCLES':
+        scn.render.engine = 'CYCLES'
+
     subjDir = "{dir}{patient}".format(
         dir=os.environ['SUBJECTS_DIR'], patient=patient)
-
-    if electrodeExport == True:
+    if electrodeExport:
         bpy.ops.object.empty_add(type='CUBE')
         bpy.context.active_object.name = 'Electrodes'
+        bpy.context.active_object.rotation_euler = (-math.pi/2, 0, math.pi)
+        bpy.context.active_object.location = (128, 128, 128)
         electrodes = open(
             "{dir}/electrodes/electrodes.txt".format(dir=subjDir))
         elecs = electrodes.readlines()
@@ -31,7 +37,8 @@ def main(patient='', electrodeExport=True, justCortex=False):
 
     if justCortex != True:
         bpy.ops.object.empty_add(type='CUBE')
-        bpy.context.active_object.name = 'aseg'
+        bpy.context.active_object.name = 'Brain'
+        bpy.context.active_object.rotation_euler = (0, 0, 0)
 
         for file in os.listdir("{dir}/obj".format(dir=subjDir)):
             if file == 'Right-Cerebral-Cortex.obj' or file == 'Left-Cerebral-Cortex.obj':
@@ -47,8 +54,9 @@ def main(patient='', electrodeExport=True, justCortex=False):
                 mat.diffuse_color = (r, g, b, 1)
                 o = bpy.context.selected_objects[0]
                 o.active_material = mat
+                mat.use_nodes = True
                 bpy.data.objects[os.path.splitext(
-                    file)[0]].parent = bpy.data.objects['aseg']
+                    file)[0]].parent = bpy.data.objects['Brain']
     else:
         bpy.ops.import_scene.obj(
             filepath="{dir}/obj/".format(dir=subjDir) + 'Left-Cerebral-Cortex.obj')
@@ -64,7 +72,13 @@ def main(patient='', electrodeExport=True, justCortex=False):
         o.active_material = mat
 
     bpy.ops.export_scene.fbx(
-        filepath="{dir}/{patient}".format(dir=subjDir, patient=patient) + ".fbx")
+        filepath="{dir}/{patient}".format(dir=subjDir, patient="reconstruction3") + ".fbx")
+    bpy.ops.export_scene.gltf(
+        export_format="GLTF_EMBEDDED",
+        filepath="{dir}/{patient}".format(dir=subjDir,
+                                          patient="reconstruction"),
+        export_texcoords=False,
+        export_normals=False)
 
 
 if __name__ == "__main__":
