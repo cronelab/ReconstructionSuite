@@ -1,23 +1,22 @@
 #!/bin/bash
 
 # #PREP RECON
-# mkdir $SUBJECTS_DIR/$1/mri
-# mkdir $SUBJECTS_DIR/$1/CT
-# mkdir $SUBJECTS_DIR/$1/electrodes
-# mkdir $SUBJECTS_DIR/$1/Meshes
-# mkdir $SUBJECTS_DIR/$1/Meshes/subcortical
-# mkdir $SUBJECTS_DIR/$1/mri/orig
-# mkdir $SUBJECTS_DIR/$1/label
-# mkdir $SUBJECTS_DIR/$1/label/gyri
-# mkdir $SUBJECTS_DIR/$1/obj
-# mkdir $SUBJECTS_DIR/$1/rois
-# mv $SUBJECTS_DIR/$1/CT.nii $SUBJECTS_DIR/$1/CT/CT.nii
-# mv $SUBJECTS_DIR/$1/T1.nii $SUBJECTS_DIR/$1/mri/orig/T1.nii
-# mri_convert $SUBJECTS_DIR/$1/mri/orig/T1.nii $SUBJECTS_DIR/$1/mri/orig/001.mgz
+mkdir $SUBJECTS_DIR/$1/mri
+mkdir $SUBJECTS_DIR/$1/CT
+mkdir $SUBJECTS_DIR/$1/electrodes
+mkdir $SUBJECTS_DIR/$1/Meshes
+mkdir $SUBJECTS_DIR/$1/Meshes/subcortical
+mkdir $SUBJECTS_DIR/$1/mri/orig
+mkdir $SUBJECTS_DIR/$1/label
+mkdir $SUBJECTS_DIR/$1/label/gyri
+mkdir $SUBJECTS_DIR/$1/obj
+mkdir $SUBJECTS_DIR/$1/rois
+mv $SUBJECTS_DIR/$1/CT.nii $SUBJECTS_DIR/$1/CT/CT.nii
+mv $SUBJECTS_DIR/$1/T1.nii $SUBJECTS_DIR/$1/mri/orig/T1.nii
+mri_convert $SUBJECTS_DIR/$1/mri/orig/T1.nii $SUBJECTS_DIR/$1/mri/orig/001.mgz
 
-# ./scripts/reconall.sh $1
-# python ./scripts/coreg.py $1
-# ./scripts/aseg2srf.sh -s $1
+./scripts/reconall.sh $1
+./scripts/aseg2srf.sh -s $1
 
 ./scripts/srf2obj $SUBJECTS_DIR/$1/ascii/aseg_002.srf > $SUBJECTS_DIR/$1/obj/Left-Cerebral-White-Matter.obj
 # ./scripts/srf2obj $SUBJECTS_DIR/$1/ascii/aseg_003.srf > $SUBJECTS_DIR/$1/obj/Left-Cerebral-Cortex.obj
@@ -68,6 +67,7 @@ mv $SUBJECTS_DIR/$1/surf/lh.pial.asc $SUBJECTS_DIR/$1/surf/lh.pial.srf
 mv $SUBJECTS_DIR/$1/surf/rh.pial.asc $SUBJECTS_DIR/$1/surf/rh.pial.srf
 ./scripts/annot2dpv $SUBJECTS_DIR/$1/label/lh.aparc.annot $SUBJECTS_DIR/$1/label/lh.aparc.annot.dpv
 ./scripts/annot2dpv $SUBJECTS_DIR/$1/label/rh.aparc.annot $SUBJECTS_DIR/$1/label/rh.aparc.annot.dpv
+
 ./scripts/splitsrf $SUBJECTS_DIR/$1/surf/lh.pial.srf $SUBJECTS_DIR/$1/label/lh.aparc.annot.dpv $SUBJECTS_DIR/$1/rois/lh.pial_roi
 ./scripts/splitsrf $SUBJECTS_DIR/$1/surf/rh.pial.srf $SUBJECTS_DIR/$1/label/rh.aparc.annot.dpv $SUBJECTS_DIR/$1/rois/rh.pial_roi
 ./scripts/srf2obj $SUBJECTS_DIR/$1/rois/rh.pial_roi.0001.srf > $SUBJECTS_DIR/$1/obj/rh.bankssts.obj
@@ -111,7 +111,7 @@ mv $SUBJECTS_DIR/$1/surf/rh.pial.asc $SUBJECTS_DIR/$1/surf/rh.pial.srf
 ./scripts/srf2obj $SUBJECTS_DIR/$1/rois/lh.pial_roi.0003.srf > $SUBJECTS_DIR/$1/obj/lh.caudalmiddlefrontal.obj
 ./scripts/srf2obj $SUBJECTS_DIR/$1/rois/lh.pial_roi.0004.srf > $SUBJECTS_DIR/$1/obj/lh.corpuscallosum.obj
 ./scripts/srf2obj $SUBJECTS_DIR/$1/rois/lh.pial_roi.0005.srf > $SUBJECTS_DIR/$1/obj/lh.cuneus.obj
-./scripts/srf2obj $SUBJECTS_DIR/$1/rois/lh.pial_roi.0006.srf > $SUBJECTS_DIR/$1/obj/lh.entolhinal.obj
+./scripts/srf2obj $SUBJECTS_DIR/$1/rois/lh.pial_roi.0006.srf > $SUBJECTS_DIR/$1/obj/lh.entorhinal.obj
 ./scripts/srf2obj $SUBJECTS_DIR/$1/rois/lh.pial_roi.0007.srf > $SUBJECTS_DIR/$1/obj/lh.fusiform.obj
 ./scripts/srf2obj $SUBJECTS_DIR/$1/rois/lh.pial_roi.0008.srf > $SUBJECTS_DIR/$1/obj/lh.inferiorparietal.obj
 ./scripts/srf2obj $SUBJECTS_DIR/$1/rois/lh.pial_roi.0009.srf > $SUBJECTS_DIR/$1/obj/lh.inferiortemporal.obj
@@ -143,10 +143,10 @@ mv $SUBJECTS_DIR/$1/surf/rh.pial.asc $SUBJECTS_DIR/$1/surf/rh.pial.srf
 ./scripts/srf2obj $SUBJECTS_DIR/$1/rois/lh.pial_roi.0035.srf > $SUBJECTS_DIR/$1/obj/lh.insula.obj
 
 
-# #annotation2label
-# mri_annotation2label --subject $1 --hemi "lh" --surface pial --outdir $SUBJECTS_DIR/$1/label/gyri
-# mri_annotation2label --subject $1 --hemi "rh" --surface pial --outdir $SUBJECTS_DIR/$1/label/gyri
+# # #annotation2label
+mri_annotation2label --subject $1 --hemi "lh" --surface pial --outdir $SUBJECTS_DIR/$1/label/gyri
+mri_annotation2label --subject $1 --hemi "rh" --surface pial --outdir $SUBJECTS_DIR/$1/label/gyri
 
 # #Take all the objs and electrodes and create a fbx from them
 # patient, electrodeExport, justCortex
-/usr/local/blender/blender --background --python scripts/obj2fbx.py /$1 False False
+/usr/local/blender/blender --background --python scripts/sceneCreator.py /$1 True False

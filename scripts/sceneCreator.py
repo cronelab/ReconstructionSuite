@@ -72,7 +72,7 @@ def main(patient='', electrodeExport=True, justCortex=False):
         o.active_material = mat
 
     bpy.ops.export_scene.fbx(
-        filepath="{dir}/{patient}".format(dir=subjDir, patient="reconstruction3") + ".fbx")
+        filepath="{dir}/{patient}".format(dir=subjDir, patient="reconstruction") + ".fbx")
     bpy.ops.export_scene.gltf(
         export_format="GLTF_EMBEDDED",
         filepath="{dir}/{patient}".format(dir=subjDir,
