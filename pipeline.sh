@@ -1,25 +1,8 @@
 #!/bin/bash
-
-# #PREP RECON
-mkdir $SUBJECTS_DIR/$1/mri
-mkdir $SUBJECTS_DIR/$1/CT
-mkdir $SUBJECTS_DIR/$1/electrodes
-mkdir $SUBJECTS_DIR/$1/Meshes
-mkdir $SUBJECTS_DIR/$1/Meshes/subcortical
-mkdir $SUBJECTS_DIR/$1/mri/orig
-mkdir $SUBJECTS_DIR/$1/label
-mkdir $SUBJECTS_DIR/$1/label/gyri
-mkdir $SUBJECTS_DIR/$1/obj
-mkdir $SUBJECTS_DIR/$1/rois
-mv $SUBJECTS_DIR/$1/CT.nii $SUBJECTS_DIR/$1/CT/CT.nii
-mv $SUBJECTS_DIR/$1/T1.nii $SUBJECTS_DIR/$1/mri/orig/T1.nii
-mri_convert $SUBJECTS_DIR/$1/mri/orig/T1.nii $SUBJECTS_DIR/$1/mri/orig/001.mgz
-
-./scripts/reconall.sh $1
 ./scripts/aseg2srf.sh -s $1
 
 ./scripts/srf2obj $SUBJECTS_DIR/$1/ascii/aseg_002.srf > $SUBJECTS_DIR/$1/obj/Left-Cerebral-White-Matter.obj
-# ./scripts/srf2obj $SUBJECTS_DIR/$1/ascii/aseg_003.srf > $SUBJECTS_DIR/$1/obj/Left-Cerebral-Cortex.obj
+./scripts/srf2obj $SUBJECTS_DIR/$1/ascii/aseg_003.srf > $SUBJECTS_DIR/$1/obj/Left-Cerebral-Cortex.obj
 ./scripts/srf2obj $SUBJECTS_DIR/$1/ascii/aseg_004.srf > $SUBJECTS_DIR/$1/obj/Left-Lateral-Ventricle.obj
 ./scripts/srf2obj $SUBJECTS_DIR/$1/ascii/aseg_005.srf > $SUBJECTS_DIR/$1/obj/Left-Inf-Lat-Vent.obj
 ./scripts/srf2obj $SUBJECTS_DIR/$1/ascii/aseg_007.srf > $SUBJECTS_DIR/$1/obj/Left-Cerebellum-White-Matter.obj
@@ -39,7 +22,7 @@ mri_convert $SUBJECTS_DIR/$1/mri/orig/T1.nii $SUBJECTS_DIR/$1/mri/orig/001.mgz
 ./scripts/srf2obj $SUBJECTS_DIR/$1/ascii/aseg_030.srf > $SUBJECTS_DIR/$1/obj/Left-vessel.obj
 ./scripts/srf2obj $SUBJECTS_DIR/$1/ascii/aseg_031.srf > $SUBJECTS_DIR/$1/obj/Left-choroid-plexus.obj
 ./scripts/srf2obj $SUBJECTS_DIR/$1/ascii/aseg_041.srf > $SUBJECTS_DIR/$1/obj/Right-Cerebral-White-Matter.obj
-# ./scripts/srf2obj $SUBJECTS_DIR/$1/ascii/aseg_042.srf > $SUBJECTS_DIR/$1/obj/Right-Cerebral-Cortex.obj
+./scripts/srf2obj $SUBJECTS_DIR/$1/ascii/aseg_042.srf > $SUBJECTS_DIR/$1/obj/Right-Cerebral-Cortex.obj
 ./scripts/srf2obj $SUBJECTS_DIR/$1/ascii/aseg_043.srf > $SUBJECTS_DIR/$1/obj/Right-Lateral-Ventricle.obj
 ./scripts/srf2obj $SUBJECTS_DIR/$1/ascii/aseg_044.srf > $SUBJECTS_DIR/$1/obj/Right-Inf-Lat-Vent.obj
 ./scripts/srf2obj $SUBJECTS_DIR/$1/ascii/aseg_046.srf > $SUBJECTS_DIR/$1/obj/Right-Cerebellum-White-Matter.obj
@@ -143,10 +126,29 @@ mv $SUBJECTS_DIR/$1/surf/rh.pial.asc $SUBJECTS_DIR/$1/surf/rh.pial.srf
 ./scripts/srf2obj $SUBJECTS_DIR/$1/rois/lh.pial_roi.0035.srf > $SUBJECTS_DIR/$1/obj/lh.insula.obj
 
 
-# # #annotation2label
+# Segment the brainstem
+segmentBS.sh $1
+# Segment the thalamic nuclei
+segmentThalamicNuclei.sh  $1 $SUBJECTS_DIR T2.mgz T2 't2'
+# Segment the hippocampus/amygdala
+segmentHA_T2.sh $1 T2.mgz T2 1
+# On the other hand ThalamicNuclei.v10.T1.FSvoxelSpace.mgz lives in the same voxel space as the other FreeSurfer volumes (e.g., orig.mgz, nu.mgz, aseg.mgz), so you can use it directly to produce masks for further analyses, but its resolution is lower (1 mm vs 0.5 mm).
+
+
+# # # # #annotation2label
 mri_annotation2label --subject $1 --hemi "lh" --surface pial --outdir $SUBJECTS_DIR/$1/label/gyri
 mri_annotation2label --subject $1 --hemi "rh" --surface pial --outdir $SUBJECTS_DIR/$1/label/gyri
 
-# #Take all the objs and electrodes and create a fbx from them
-# patient, electrodeExport, justCortex
+mri_annotation2label --subject $1 --hemi rh --outdir annots
+mri_annotation2label --subject $1 --hemi lh --outdir annots
+mkdir labels
+mri_annotation2label --subject 26 --hemi rh --labelbase ./labels/aparc-rh
+# # #Take all the objs and electrodes and create a fbx from them
+# # patient, electrodeExport, justCortex
 /usr/local/blender/blender --background --python scripts/sceneCreator.py /$1 True False
+
+
+
+
+# mri_concat */mask-tal.nii --o group-masksum-tal.nii --mean
+# mri_binarize --i group-masksum-tal.nii --min .999 --o group-mask-tal.nii

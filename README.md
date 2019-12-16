@@ -30,6 +30,20 @@ This project is essentially feature complete.
 - As long as the electrode file is property registered to the T1, any localizer should be able to be used. Could probably re-incorporate FieldTrip to make it more software-agnostic
 - Clean up what actually gets exported. Some regions we probably don't care about.
 
+### Instructions:
+
+- Create a new folder in the Freesurfer subject directory and place the following files:
+- T1.nii
+- CT.nii
+- electrodes.txt (from Bioimage Suite)
+- T2.nii (optional)
+- DTI and corresponding bvec/bval (optional)
+
+### Issues:
+- Freesurfer dev branch is required for hippocampal/amygdal/thalamic segmentation.
+- Freesurfer 6.0 is required for trac-all
+(No idea why. Something having to do with the bval/bvec file and/or flirt)
+
 ### Example:
 
 ![Example](/Picture.jpg)
