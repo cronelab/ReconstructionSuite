@@ -30,4 +30,9 @@ fi
 if test -f "$SUBJECTS_DIR/$1/CT.nii"; then
     mkdir $SUBJECTS_DIR/$1/CT
     mv $SUBJECTS_DIR/$1/CT.nii $SUBJECTS_DIR/$1/CT/CT.nii
+    if test -f "$SUBJECTS_DIR/$1/T2.nii"; then
+        bbregister --s $1 --mov $SUBJECTS_DIR/$1/CT/CT.nii --reg $SUBJECTS_DIR/$1/CT/reg.lta --t1 --t2 --o $SUBJECTS_DIR/$1/CT/registeredCT.nii
+    else
+        bbregister --s $1 --mov $SUBJECTS_DIR/$1/CT/CT.nii --reg $SUBJECTS_DIR/$1/CT/reg.lta --t1 --o $SUBJECTS_DIR/$1/CT/registeredCT.nii
+    fi
 fi
