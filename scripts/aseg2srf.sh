@@ -1,35 +1,4 @@
 #!/bin/bash
-# Print usage if no argument is given
-if [ -z "$1" ]; then
-cat <<EOU
-Generate surfaces for the subcortical structures
-segmented with FreeSurfer.
-
-Usage:
-sub2srf -s <list of subjects> [-l <list of labels>] [-d]
-
-Options:
--s <list> : Specify a list of subjects between quotes,
-            e.g. -s "john bill mary mark" or a text file
-            containing one subject per line.
--l <list> : Specify a list of labels between quotes,
-            e.g. "10 11 14 52 253", or a text file
-            containing one label per line, or ignore
-            this option to convert all labels.
--d          Debug mode. Leave all temporary files.
-
-Requirements:
-FreeSurfer must have been configured and the variables
-FREESURFER_HOME and SUBJECTS_DIR must have been correctly set.
-
-_____________________________________
-Anderson M. Winkler
-Institute of Living / Yale University
-Jul/2009
-http://brainder.org
-EOU
-    exit
-fi
 
 # List of labels to be converted if no list is specified
 LABLIST="2 3 4 5 7 8 10 11 12 13 14 15 16 17 18 24 26 28 30 31 41 42 43 44 46 47 49 50 51 52 53 54 58 60 62 63 72 77 78 79 80 81 82 85 251 252 253 254 255"
@@ -64,8 +33,7 @@ bashtrap()
 }
 
 # For each subject
-for s in ${SBJLIST} ; do
-    
+	s=$1
     # Create directories for temp files and results
     mkdir -p ${SUBJECTS_DIR}/${s}/tmp/${RNDSTR}
     mkdir -p ${SUBJECTS_DIR}/${s}/ascii
@@ -75,7 +43,9 @@ for s in ${SBJLIST} ; do
         
         # Label string
         lab0=$(printf %03d ${lab})
-        
+
+		labelName=$(cat ./scripts/LUT.json | jq '.["'$lab'"]')
+
         # Pre-tessellate
         echo "==> Pre-tessellating: ${s}, ${lab0}"
         ${FREESURFER_HOME}/bin/mri_pretess \
@@ -102,6 +72,13 @@ for s in ${SBJLIST} ; do
         ${SUBJECTS_DIR}/${s}/tmp/${RNDSTR}/aseg_${lab0}.asc
         mv ${SUBJECTS_DIR}/${s}/tmp/${RNDSTR}/aseg_${lab0}.asc \
         ${SUBJECTS_DIR}/${s}/ascii/aseg_${lab0}.srf
+
+		labelName="${labelName#\"}"
+		labelName="${labelName%\"}"
+
+		./scripts/srf2obj $SUBJECTS_DIR/$1/ascii/aseg_${lab0}.srf > $SUBJECTS_DIR/$1/obj/$labelName.obj
+		
+
     done
     
     # Get rid of temp files
@@ -113,5 +90,4 @@ for s in ${SBJLIST} ; do
         rm -rf ${SUBJECTS_DIR}/${s}/tmp/${RNDSTR}
     fi
     echo "==> Done: ${s}"
-done
 exit 0

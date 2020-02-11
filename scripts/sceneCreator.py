@@ -90,7 +90,7 @@ def main(patient='', electrodeExport=False, justCortex=False):
     bpy.ops.export_scene.fbx(
         filepath="{dir}/{patient}".format(dir=subjDir, patient="reconstruction") + ".fbx")
     bpy.ops.export_scene.gltf(
-        export_format="GLTF_EMBEDDED",
+        export_format="GLB",
         filepath="{dir}/{patient}".format(dir=subjDir,
                                           patient="reconstruction"),
         export_texcoords=False,
