@@ -10,7 +10,8 @@ COPY ./mesh_generator/scripts /home/scripts
 WORKDIR /home/scripts
 # Download relevant freesurfer binaries
 RUN curl https://surfer.nmr.mgh.harvard.edu/pub/dist/freesurfer/dev_binaries/centos7_x86_64/mris_convert -o /home/scripts/mris_convert \
-RUN curl https://surfer.nmr.mgh.harvard.edu/pub/dist/freesurfer/dev_binaries/centos7_x86_64/mri_convert -o /home/scripts/mri_convert \
+    && curl https://surfer.nmr.mgh.harvard.edu/pub/dist/freesurfer/dev_binaries/centos7_x86_64/mri_info -o /home/scripts/mri_info \
+    && curl https://surfer.nmr.mgh.harvard.edu/pub/dist/freesurfer/dev_binaries/centos7_x86_64/mri_convert -o /home/scripts/mri_convert \
     && chmod +x mris_convert && chmod +x mri_convert
 # License/path necessary for freesurfer binaries to work
 ENV FREESURFER_HOME /usr/local/freesurfer
@@ -25,7 +26,7 @@ ENV PATH /usr/local/blender:$PATH
 
 
 ENV SUBJECTS_DIR=/data/derivatives/freesurfer
-ENV SUBJECT=$SUBJECTS_DIR/LA02
+ENV SUBJECT=$SUBJECTS_DIR/PY18N002
 
 # Freesurfer data directory
 COPY ./Data /data
@@ -56,4 +57,4 @@ RUN mkdir -p $SUBJECT/obj \
 # segmentHA.sh $1
 # # On the other hand ThalamicNuclei.v10.T1.FSvoxelSpace.mgz lives in the same voxel space as the other FreeSurfer volumes (e.g., orig.mgz, nu.mgz, aseg.mgz), so you can use it directly to produce masks for further analyses, but its resolution is lower (1 mm vs 0.5 mm).
 
-RUN /usr/local/blender/blender --background --python scripts/sceneCreator.py /${SUBJECT} True True
+RUN /usr/local/blender/blender --background --python sceneCreator.py /$SUBJECT True True

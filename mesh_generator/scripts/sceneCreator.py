@@ -33,9 +33,9 @@ def main(patient='', electrodeExport=False, justCortex=False):
             electrodeX = float(elec.split('\t')[3])
             electrodeY = float(elec.split('\t')[4])
             electrodeZ = float(elec.split('\t')[5])
-            # bpy.ops.mesh.primitive_ico_sphere_add(
-            #     location=(electrodeX, electrodeY, electrodeZ))
-            bpy.ops.mesh.primitive_plane_add(size=2.0, calc_uvs=True, enter_editmode=False, align='WORLD', location=(electrodeX, electrodeY, electrodeZ), rotation=(0.0, 0.0, 0.0))
+            bpy.ops.mesh.primitive_ico_sphere_add(
+                location=(electrodeX, electrodeY, electrodeZ))
+            # bpy.ops.mesh.primitive_plane_add(size=2.0, calc_uvs=True, enter_editmode=False, align='WORLD', location=(electrodeX, electrodeY, electrodeZ), rotation=(0.0, 0.0, 0.0))
             bpy.context.active_object.name = electrodeName
             bpy.context.active_object.parent = bpy.data.objects['Electrodes']
     else:
@@ -77,7 +77,7 @@ def main(patient='', electrodeExport=False, justCortex=False):
     bpy.ops.export_scene.gltf(
         export_format="GLB",
         filepath="{dir}/{patient}".format(dir=subjDir,
-        patient="reconstruction_plane"),
+        patient="reconstruction"),
         export_texcoords=False,
         export_normals=False)
         # export_draco_mesh_compression_enable=True)
