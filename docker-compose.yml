@@ -1,10 +1,21 @@
 version: '3'
 services:
   visualizer:
-    build: .
+    build: 
+      context: .
+      dockerfile: ./visualizer/Dockerfile
     ports:
       - "5000:5000"
     volumes:
       - ./Data:/data
       - ./visualizer:/home/visualizer
     command: npm run start
+
+  mesh_generator:
+    build:
+      context: .
+      dockerfile: ./mesh_generator/Dockerfile
+    volumes:
+      - ./Data:/data
+      - ./mesh_generator/scripts:/home/scripts
+    command: tail -f anything
