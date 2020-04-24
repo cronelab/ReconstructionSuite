@@ -11,13 +11,13 @@ while IFS=$'\t' read -r -a myArray; do
 	z=$(printf "%.01f" "${myArray[5]}")
 	z_=$(echo "256 - $z" | bc -l)
 
-	seg=$(mri_info $SUBJECTS_DIR/$1/mri/aparc+aseg.mgz --voxel $x $y $z_)	
+	seg=$(./mri_info $SUBJECTS_DIR/$SUBJECT/mri/aparc+aseg.mgz --voxel $x $y $z_)	
 	segment=$(printf "%1.0f" "${seg}")
 
 	while IFS=" " read -a line; do
 		labelIndex=$(printf "%1.0f" ${line[0]})
 		if [ "$segment" -eq "$labelIndex" ]; then
-			echo $x $y $z_ "    " "${myArray[2]}" "    " ${line[1]} >>$SUBJECTS_DIR/$1/electrodes/AvgElectrodeLocations.txt
+			echo $x $y $z_ "    " "${myArray[2]}" "    " ${line[1]} >>$SUBJECTS_DIR/$SUBJECT/electrodes/anatomicalLocations.txt
 		fi
 	done <LUT.txt
 
@@ -37,17 +37,17 @@ while IFS=$'\t' read -r -a myArray; do
 	fi 
 
 	
-	avgSeg=$(mri_info $SUBJECTS_DIR/$1/mri/aparc+aseg.mgz --voxel $averageX $averageY $averageZ)
+	avgSeg=$(./mri_info $SUBJECTS_DIR/$SUBJECT/mri/aparc+aseg.mgz --voxel $averageX $averageY $averageZ)
 	avgSegment=$(printf "%1.0f" "${avgSeg}")
 
 	while IFS=" " read -a line; do
 		labelIndex=$(printf "%1.0f" ${line[0]})
 		if [ "$avgSegment" -eq "$labelIndex" ]; then
-			echo $averageX $averageY $averageZ "    " "$averageElectrode" "    " ${line[1]} >>$SUBJECTS_DIR/$1/electrodes/AvgElectrodeLocations.txt
+			echo $averageX $averageY $averageZ "    " "$averageElectrode" "    " ${line[1]} >>$SUBJECTS_DIR/$SUBJECT/electrodes/anatomicalLocations.txt
 		fi
 	done <LUT.txt
 
 
 
 
-done <$SUBJECTS_DIR/$1/electrodes/electrodes.txt
+done <$SUBJECTS_DIR/$SUBJECT/electrodes/electrodes.txt

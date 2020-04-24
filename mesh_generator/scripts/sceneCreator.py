@@ -14,8 +14,7 @@ def main(patient='', electrodeExport=False, justCortex=False):
     if not scn.render.engine == 'CYCLES':
         scn.render.engine = 'CYCLES'
 
-    subjDir = "{dir}{patient}".format(
-        dir=os.environ['SUBJECTS_DIR'], patient=patient)
+    subjDir = "{patient}".format(patient=patient)
 
     if electrodeExport:
         bpy.ops.object.empty_add(type='CUBE')

@@ -15,7 +15,9 @@ services:
     build:
       context: .
       dockerfile: ./mesh_generator/Dockerfile
+      args: 
+        - SUBJECT=PY18N002
+    environment: 
+      - SUBJECT=PY18N002
     volumes:
       - ./Data:/data
-      - ./mesh_generator/scripts:/home/scripts
-    command: tail -f anything
