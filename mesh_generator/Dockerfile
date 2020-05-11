@@ -1,5 +1,5 @@
 FROM ubuntu:latest
-
+ENV DEBIAN_FRONTEND noninteractive
 # Install dependencies
 RUN apt-get update && apt-get -y install bc binutils libgomp1 perl psmisc sudo tar tcsh unzip \
     uuid-dev vim-common libjpeg62-dev curl octave gawk jq
