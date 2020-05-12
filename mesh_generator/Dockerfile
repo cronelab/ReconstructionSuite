@@ -4,18 +4,8 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update && apt-get -y install bc binutils libgomp1 perl psmisc sudo tar tcsh unzip \
     uuid-dev vim-common libjpeg62-dev curl octave gawk jq
 
-# Copy all scripts to image
-COPY ./mesh_generator/scripts /home/scripts
 # Set work directory
 WORKDIR /home/scripts
-# Download relevant freesurfer binaries
-RUN curl https://surfer.nmr.mgh.harvard.edu/pub/dist/freesurfer/dev_binaries/centos7_x86_64/mris_convert -o mris_convert \
-    && curl https://surfer.nmr.mgh.harvard.edu/pub/dist/freesurfer/dev_binaries/centos7_x86_64/mri_info -o mri_info \
-    && curl https://surfer.nmr.mgh.harvard.edu/pub/dist/freesurfer/dev_binaries/centos7_x86_64/mri_convert -o mri_convert \
-    && chmod +x mris_convert && chmod +x mri_convert && chmod +x mri_info
-# License/path necessary for freesurfer binaries to work
-ENV FREESURFER_HOME /usr/local/freesurfer
-COPY ./mesh_generator/freesurferlicense.txt /usr/local/freesurfer/.license
 
 # Download Blender and set path
 RUN mkdir /usr/local/blender \
@@ -24,13 +14,35 @@ RUN mkdir /usr/local/blender \
     && rm blender.tar.xz
 ENV PATH /usr/local/blender:$PATH
 
+# Download relevant freesurfer binaries
+RUN mkdir -p /usr/local/freesurfer/bin/ \
+    && curl https://surfer.nmr.mgh.harvard.edu/pub/dist/freesurfer/dev_binaries/centos7_x86_64/mris_convert -o /usr/local/freesurfer/bin/mris_convert \
+    && curl https://surfer.nmr.mgh.harvard.edu/pub/dist/freesurfer/dev_binaries/centos7_x86_64/mri_info -o /usr/local/freesurfer/bin/mri_info \
+    && curl https://surfer.nmr.mgh.harvard.edu/pub/dist/freesurfer/dev_binaries/centos7_x86_64/mri_convert -o /usr/local/freesurfer/bin/mri_convert \
+    && curl https://surfer.nmr.mgh.harvard.edu/pub/dist/freesurfer/dev_binaries/centos7_x86_64/mri_pretess -o /usr/local/freesurfer/bin/mri_pretess \
+    && curl https://surfer.nmr.mgh.harvard.edu/pub/dist/freesurfer/dev_binaries/centos7_x86_64/mri_tessellate -o /usr/local/freesurfer/bin/mri_tessellate \
+    && curl https://surfer.nmr.mgh.harvard.edu/pub/dist/freesurfer/dev_binaries/centos7_x86_64/mris_smooth -o /usr/local/freesurfer/bin/mris_smooth \
+    && chmod +x /usr/local/freesurfer/bin/mris_convert && chmod +x /usr/local/freesurfer/bin/mri_convert \
+    && chmod +x /usr/local/freesurfer/bin/mri_info \
+    && chmod +x /usr/local/freesurfer/bin/mri_pretess \
+    && chmod +x /usr/local/freesurfer/bin/mri_tessellate \
+    && chmod +x /usr/local/freesurfer/bin/mris_smooth
+# License/path necessary for freesurfer binaries to work
+ENV FREESURFER_HOME /usr/local/freesurfer
+ENV PATH /usr/local/freesurfer/bin:$PATH
+COPY ./mesh_generator/freesurferlicense.txt /usr/local/freesurfer/.license
+
+
 
 ENV SUBJECTS_DIR=/data/derivatives/freesurfer
 
+# Copy all scripts to image
+COPY ./mesh_generator/scripts /home/scripts
 # Freesurfer data directory
-COPY ./Data /data
+# COPY ./Data /data
 ARG SUBJECT
-RUN chmod +x runscript.sh && ./runscript.sh
+RUN chmod +x runscript.sh && chmod +x aseg2srf.sh
+CMD [ "/bin/bash", "-c", "./runscript.sh" ] 
 
 
 # mkdir $SUBJECTS_DIR/$1/electrodes

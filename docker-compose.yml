@@ -1,23 +1,25 @@
 version: '3'
 services:
-  visualizer:
-    build: 
-      context: .
-      dockerfile: ./visualizer/Dockerfile
-    ports:
-      - "5000:5000"
-    volumes:
-      - ./Data:/data
-      - ./visualizer:/home/visualizer
-    command: npm run start
+  # visualizer:
+  #   build: 
+  #     context: .
+  #     dockerfile: ./visualizer/Dockerfile
+  #   ports:
+  #     - "5000:5000"
+  #   volumes:
+  #     - ./Data:/data
+  #     - ./visualizer:/home/visualizer
+  #   command: npm run start
 
   mesh_generator:
+    container_name: mesh_generator
     build:
       context: .
       dockerfile: ./mesh_generator/Dockerfile
       args: 
-        - SUBJECT=PY18N002
+        - SUBJECT=PY20N006
     environment: 
-      - SUBJECT=PY18N002
+      - SUBJECT=PY20N006
     volumes:
       - ./Data:/data
+    tty: true

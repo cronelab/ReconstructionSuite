@@ -59,11 +59,11 @@ for lab in ${LABLIST} ; do
        ${SUBJECTS_DIR}/${s}/ascii/aseg_${lab0}.srf
 
 
-	labelName=$(cat ./scripts/LUT.json | jq '.["'$lab'"]')
+	labelName=$(cat ./LUT.json | jq '.["'$lab'"]')
 	labelName="${labelName#\"}"
 	labelName="${labelName%\"}"
 
-	./scripts/srf2obj $SUBJECTS_DIR/$1/ascii/aseg_${lab0}.srf > $SUBJECTS_DIR/$1/obj/$labelName.obj
+	./srf2obj $SUBJECTS_DIR/$1/ascii/aseg_${lab0}.srf > $SUBJECTS_DIR/$1/obj/$labelName.obj
 
 done
 

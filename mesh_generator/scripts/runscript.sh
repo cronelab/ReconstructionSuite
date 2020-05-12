@@ -4,10 +4,11 @@ mkdir -p $SUBJECTS_DIR/$SUBJECT/obj
 mkdir -p $SUBJECTS_DIR/$SUBJECT/rois 
 mkdir -p /usr/local/freesurfer/matlab 
 
-./mris_convert $SUBJECTS_DIR/$SUBJECT/surf/lh.pial $SUBJECTS_DIR/$SUBJECT/surf/lh.pial.asc 
-./mris_convert $SUBJECTS_DIR/$SUBJECT/surf/rh.pial $SUBJECTS_DIR/$SUBJECT/surf/rh.pial.asc 
+./aseg2srf.sh $SUBJECT
 
-./elec2vox.sh
+mris_convert $SUBJECTS_DIR/$SUBJECT/surf/lh.pial $SUBJECTS_DIR/$SUBJECT/surf/lh.pial.asc 
+mris_convert $SUBJECTS_DIR/$SUBJECT/surf/rh.pial $SUBJECTS_DIR/$SUBJECT/surf/rh.pial.asc 
+
 mv $SUBJECTS_DIR/$SUBJECT/surf/lh.pial.asc $SUBJECTS_DIR/$SUBJECT/surf/lh.pial.srf 
 mv $SUBJECTS_DIR/$SUBJECT/surf/rh.pial.asc $SUBJECTS_DIR/$SUBJECT/surf/rh.pial.srf 
 
@@ -28,4 +29,7 @@ while [ $counter -le 0035 ]; do
 	((counter++))
 done
 
-/usr/local/blender/blender --background --python sceneCreator.py $SUBJECTS_DIR/$SUBJECT True True
+# ./elec2vox.sh
+#(patient='', electrodeExport=False, justCortex=False):
+/usr/local/blender/blender --background --python sceneCreator.py $SUBJECTS_DIR/$SUBJECT True False
+

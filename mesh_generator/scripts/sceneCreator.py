@@ -26,7 +26,7 @@ def main(patient='', electrodeExport=False, justCortex=False):
             "{dir}/electrodes/electrodes.txt".format(dir=subjDir))
         elecs = electrodes.readlines()
         for elec in elecs:
-            electrodeGroup = elec.split('\t')[0]
+            # electrodeGroup = elec.split('\t')[0]
             electrodeName = elec.split('\t')[2]
             # electrodeName = electrodeGroup + '_'+elec.split('\t')[2]
             electrodeX = float(elec.split('\t')[3])
