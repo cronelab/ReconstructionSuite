@@ -303,10 +303,10 @@ window.onload = async () => {
 
   var urlParams = new URLSearchParams(window.location.search);
   let subject = urlParams.get("subject");
-  let brainReq = await fetch(`/api/PY20N006/nifti`);
+  let brainReq = await fetch(`/api/nifti`);
   let brain = await brainReq.blob();
   let objectURL = URL.createObjectURL(brain);
-
+  console.log(objectURL)
   let loader = new VolumeLoader();
   loader
     .load(objectURL)
@@ -861,7 +861,7 @@ window.onload = async () => {
       let load3DBrain_gltf = () => {
         return new Promise((resolve, reject) => {
           let loader = new GLTFLoader();
-          loader.load(`/api/${subject}/brain3D_g`, object3d => {
+          loader.load(`/api/brain3D`, object3d => {
             object3d.scene.traverse(child => {
               if (
                 child instanceof THREE.Mesh &&
@@ -874,15 +874,7 @@ window.onload = async () => {
                 child instanceof THREE.Mesh &&
                 child.parent.name == "Electrodes"
               ) {
-                let colorValsPY20N005 = {
-                  RA: [1.0, 0.0, 0.502],
-                  RAH: [0.0, 0.502, 0.0],
-                  LTP: [0.0, 1.0, 1.0],
-                  LBT: [1.0, 1.0, 0.0],
-                  LA: [1.0, 0.502, 0.0],
-                  LAH: [0.0, 1.0, 0.0],
-                  LPH: [0.502, 0.0, 1.0]
-                };
+
                 let colorVals = {
                   LA: [0.0, 1.0, 0.463],
                   LAH: [0.0, 0.549, 1.0],
