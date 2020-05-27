@@ -1,26 +1,27 @@
 version: '3'
 services:
-  visualizer:
-    container_name: visualizer
-    build: 
-      context: .
-      dockerfile: ./visualizer/Dockerfile
-    ports:
-      - "5000"
-    volumes:
-      - ./Data:/data # Really only need to copy over the glb and T1
-      # - ./visualizer:/home/visualizer
-    # command: npm run start
-
-  # mesh_generator:
-  #   container_name: mesh_generator
-  #   build:
+  # visualizer:
+  #   container_name: visualizer
+  #   build: 
   #     context: .
-  #     dockerfile: ./mesh_generator/Dockerfile
-  #     args: 
-  #       - SUBJECT=PY20N006
-  #   environment: 
-  #     - SUBJECT=PY20N006
+  #     dockerfile: ./visualizer/Dockerfile
+  #   ports:
+  #     - "5000"
   #   volumes:
   #     - ./Data:/data
-  #   tty: true
+  # environment: 
+  #   - SUBJECT=PY18N011
+
+  mesh_generator:
+    container_name: mesh_generator
+    build:
+      context: .
+      dockerfile: ./mesh_generator/Dockerfile
+    environment: 
+      - SUBJECT=PY18N011
+    volumes:
+      - ./Data:/data
+      - ./mesh_generator/scripts:/home/scripts
+    # tty: true
+
+
