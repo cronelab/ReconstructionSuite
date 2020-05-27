@@ -31,7 +31,4 @@ done
 
 mri_convert $SUBJECTS_DIR/$SUBJECT/mri/brain.mgz $SUBJECTS_DIR/$SUBJECT/reconstruction.nii
 
-# ./elec2vox.sh
-#(patient='', electrodeExport=False, justCortex=False):
-/usr/local/blender/blender --background --python sceneCreator.py $SUBJECTS_DIR/$SUBJECT True False
-
+/usr/local/blender/blender --background startup.blend --python sceneCreator.py
