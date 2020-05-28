@@ -1,27 +1,13 @@
 version: '3'
 services:
-  # visualizer:
-  #   container_name: visualizer
-  #   build: 
-  #     context: .
-  #     dockerfile: ./visualizer/Dockerfile
-  #   ports:
-  #     - "5000"
-  #   volumes:
-  #     - ./Data:/data
-  # environment: 
-  #   - SUBJECT=PY18N011
-
   mesh_generator:
     container_name: mesh_generator
     build:
       context: .
-      dockerfile: ./mesh_generator/Dockerfile
+      dockerfile: ./Dockerfile
     environment: 
-      - SUBJECT=PY18N011
+      - SUBJECT=PY20N005
     volumes:
       - ./Data:/data
-      - ./mesh_generator/scripts:/home/scripts
-    # tty: true
 
 

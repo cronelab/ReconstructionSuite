@@ -34,13 +34,13 @@ RUN mkdir -p /usr/local/freesurfer/bin/ \
 ENV FREESURFER_HOME /usr/local/freesurfer
 ENV PATH /usr/local/freesurfer/bin:$PATH
 ENV SUBJECTS_DIR=/data/derivatives/freesurfer
-COPY ./mesh_generator/freesurferlicense.txt /usr/local/freesurfer/.license
+COPY ./freesurferlicense.txt /usr/local/freesurfer/.license
 
 # Set work directory
 WORKDIR /home/scripts
 
 
 # Copy all scripts to image
-COPY ./mesh_generator/scripts /home/scripts
+COPY ./scripts /home/scripts
 RUN chmod +x runscript.sh && chmod +x aseg2srf.sh
 CMD [ "/bin/bash", "-c", "./runscript.sh" ] 

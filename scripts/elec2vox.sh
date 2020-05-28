@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 currentElecLabel=_
 prevX=0
 prevY=0
@@ -11,7 +10,7 @@ while IFS=$'\t' read -r -a myArray; do
 	z=$(printf "%.01f" "${myArray[5]}")
 	z_=$(echo "256 - $z" | bc -l)
 
-	seg=$(./mri_info $SUBJECTS_DIR/$SUBJECT/mri/aparc+aseg.mgz --voxel $x $y $z_)	
+	seg=$(mri_info $SUBJECTS_DIR/$SUBJECT/mri/aparc+aseg.mgz --voxel $x $y $z_)	
 	segment=$(printf "%1.0f" "${seg}")
 
 	while IFS=" " read -a line; do
@@ -37,7 +36,7 @@ while IFS=$'\t' read -r -a myArray; do
 	fi 
 
 	
-	avgSeg=$(./mri_info $SUBJECTS_DIR/$SUBJECT/mri/aparc+aseg.mgz --voxel $averageX $averageY $averageZ)
+	avgSeg=$(mri_info $SUBJECTS_DIR/$SUBJECT/mri/aparc+aseg.mgz --voxel $averageX $averageY $averageZ)
 	avgSegment=$(printf "%1.0f" "${avgSeg}")
 
 	while IFS=" " read -a line; do
