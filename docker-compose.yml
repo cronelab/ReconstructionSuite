@@ -8,6 +8,6 @@ services:
     environment: 
       - SUBJECT=PY20N005
     volumes:
-      - ./Data:/data
+      - $SUBJECTS_DIR:/data/derivatives/freesurfer
 
 
