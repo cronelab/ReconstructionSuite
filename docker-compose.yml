@@ -8,8 +8,10 @@ services:
     ports:
       - "5000"
     volumes:
-      - ./Data:/data
+      - /mnt/shared/Subjects:/data
     environment: 
-      - SUBJECT=PY18N011
+      - SUBJECTS_DIR=/data/derivatives/freesurfer
+      - SUBJECT=PY20N006
+      - PORT=5000
 
 

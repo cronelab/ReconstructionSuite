@@ -2,13 +2,13 @@ import path from "path";
 import fs from "fs";
 
 let subject =  process.env.SUBJECT
-let dataDir = '/data/derivatives/freesurfer/'
+let dataDir = process.env.SUBJECTS_DIR
 
 let __dirname = path.resolve(path.dirname(""));
 const routes = (express) => {
   const router = express.Router();
 
-  router.get("/reconstruction3D", (req, res) =>
+  router.get("/", (req, res) =>
     res.sendFile(path.join(__dirname, "/dist", "/index.html"))
   );
 
@@ -18,7 +18,7 @@ const routes = (express) => {
     if (
       fs.existsSync(`${dataDir}/${subject}/reconstruction.glb`)
     ) {
-      console.log("File exists. 1");
+      console.log("Sending glb...");
       res.sendFile(`reconstruction.glb`, {
         root: `${dataDir}/${subject}/`,
       });
@@ -29,7 +29,7 @@ const routes = (express) => {
     if (
       fs.existsSync(`${dataDir}/${subject}/reconstruction.nii`)
     ) {
-      console.log("File exists. 2");
+      console.log("Sending nifti...");
       res.sendFile(`${dataDir}/${subject}/reconstruction.nii`);
     } else {
       console.log("does NOT exist");

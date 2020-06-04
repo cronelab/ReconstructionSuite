@@ -1,12 +1,12 @@
 import "bootstrap";
-import "./index.scss";
 import * as dat from "dat.gui";
 import * as THREE from "three";
+import "./index.scss";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import html2canvas from "html2canvas";
-import { LineGeometry } from "../../node_modules/three/examples/jsm/lines/LineGeometry.js";
-import { LineMaterial } from "../../node_modules/three/examples/jsm/lines/LineMaterial";
-import { Line2 } from "../../node_modules/three/examples/jsm/lines/Line2";
+import { LineGeometry } from "three/examples/jsm/lines/LineGeometry";
+import { LineMaterial } from "three/examples/jsm/lines/LineMaterial";
+import { Line2 } from "three/examples/jsm/lines/Line2";
 import {
   VolumeLoader,
   stackHelperFactory,

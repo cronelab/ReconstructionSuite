@@ -6,6 +6,8 @@ import webpackDevMiddleware from "webpack-dev-middleware";
 import merge from "webpack-merge";
 import webpack from "webpack";
 
+const PORT = process.env.PORT || 5000;
+
 let newConfig = merge(config, {
 	plugins: [
 		new webpack.optimize.OccurrenceOrderPlugin(true),
@@ -21,4 +23,4 @@ app.use(
 
 app.use("/", routes(express));
 
-app.listen(5000, () => console.log("Serving"));
+app.listen(PORT, () => console.log("Serving"));

@@ -11,7 +11,7 @@ const module = {
 	mode: devMode ? "development" : "production",
 	devtool: devMode ? "inline-source-map" : "source-map",
 	entry: {
-		index: "./src/reconstruction3D/main.js"
+		index: "./src/main.js"
 	},
 
 	node: {
@@ -26,11 +26,7 @@ const module = {
 				options: {
 					presets: ["@babel/preset-env"],
 					plugins: [
-						"@babel/plugin-syntax-dynamic-import",
-						"@babel/plugin-transform-modules-commonjs",
 						"@babel/plugin-transform-runtime",
-						"@babel/plugin-proposal-class-properties",
-						"@babel/plugin-proposal-export-default-from"
 					],
 					cacheDirectory: true
 				}
@@ -49,7 +45,7 @@ const module = {
 				},
 				{
 					loader: "css-loader"
-				},
+								},
 				{
 					loader: "postcss-loader"
 				},
@@ -60,20 +56,19 @@ const module = {
 			},
 		]
 	},
-	optimization: {
-		splitChunks: {
-			cacheGroups: {
-				styles: {
-					name: "styles",
-					test: /\.css$/,
-					chunks: "all",
-					enforce: true
-				}
-			}
-		},
-		usedExports: true
-	},
-
+	// optimization: {
+		// splitChunks: {
+		// 	cacheGroups: {
+		// 		styles: {
+		// 			name: "styles",
+		// 			test: /\.css$/,
+		// 			chunks: "all",
+		// 			enforce: true
+		// 		}
+		// 	}
+		// },
+		// usedExports: true
+	// },
 	plugins: [
 		new CleanWebpackPlugin.CleanWebpackPlugin(),
 		new WriteFilePlugin(),
@@ -83,7 +78,7 @@ const module = {
 		}),
 		new HtmlWebpackPlugin({
 			hash: true,
-			template: "./src/reconstruction3D/index.html",
+			template: "./src/index.html",
 			filename: "index.html",
 			chunks: ["index"],
 		}),
