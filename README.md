@@ -1,4 +1,6 @@
-# MRIs to Meshes
+# Visualize Freesurfer cortical parcellations and subcortical segmentations in the browser
+
+
 
 
 ### Example:

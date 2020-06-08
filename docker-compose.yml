@@ -11,7 +11,7 @@ services:
       - /mnt/shared/Subjects:/data
     environment: 
       - SUBJECTS_DIR=/data/derivatives/freesurfer
-      - SUBJECT=PY20N006
+      - SUBJECT=fsaverage
       - PORT=5000
 
 

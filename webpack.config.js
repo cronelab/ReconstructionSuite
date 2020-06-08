@@ -32,7 +32,7 @@ const module = {
 				}
 			},
 			{
-				test: /\.(png|jpe?g|gif|fbx|glb|gltf|nii|mgz)$/i,
+				test: /\.(png|jpe?g|gif|fbx|glb|gltf|nii|mgz|obj)$/i,
 				loader: 'file-loader',
 				options: {
 					name: '[path][name].[ext]',

@@ -3,10 +3,9 @@ import * as dat from "dat.gui";
 import * as THREE from "three";
 import "./index.scss";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import { OBJLoader2 } from "three/examples/jsm/loaders/OBJLoader2"
 import html2canvas from "html2canvas";
-import { LineGeometry } from "three/examples/jsm/lines/LineGeometry";
-import { LineMaterial } from "three/examples/jsm/lines/LineMaterial";
-import { Line2 } from "three/examples/jsm/lines/Line2";
+
 import {
   VolumeLoader,
   stackHelperFactory,
@@ -14,7 +13,7 @@ import {
   trackballOrthoControlFactory,
   orthographicCameraFactory,
   trackballControlFactory,
-  UtilsCore
+  UtilsCore,
 } from "ami.js";
 const StackHelper = stackHelperFactory(THREE);
 const CamerasOrthographic = orthographicCameraFactory(THREE);
@@ -26,7 +25,6 @@ let ready = false;
 let elecs;
 let brainScene, wm, gyri, substructures;
 
-let lineGroup = new THREE.Group();
 const r0 = {
   domId: "r0",
   domElement: null,
@@ -36,7 +34,7 @@ const r0 = {
   camera: null,
   controls: null,
   scene: null,
-  light: null
+  light: null,
 };
 
 // 2d axial renderer
@@ -52,7 +50,7 @@ const r1 = {
   controls: null,
   scene: null,
   light: null,
-  stackHelper: null
+  stackHelper: null,
 };
 
 // 2d sagittal renderer
@@ -68,7 +66,7 @@ const r2 = {
   controls: null,
   scene: null,
   light: null,
-  stackHelper: null
+  stackHelper: null,
 };
 
 // 2d coronal renderer
@@ -84,7 +82,7 @@ const r3 = {
   controls: null,
   scene: null,
   light: null,
-  stackHelper: null
+  stackHelper: null,
 };
 
 let data = [];
@@ -98,7 +96,7 @@ function initRenderer3D(renderObj) {
   // renderer
   renderObj.domElement = document.getElementById(renderObj.domId);
   renderObj.renderer = new THREE.WebGLRenderer({
-    antialias: true
+    antialias: true,
   });
 
   renderObj.renderer.setSize(
@@ -142,7 +140,7 @@ function initRenderer2D(rendererObj) {
   // renderer
   rendererObj.domElement = document.getElementById(rendererObj.domId);
   rendererObj.renderer = new THREE.WebGLRenderer({
-    antialias: true
+    antialias: true,
   });
   rendererObj.renderer.autoClear = false;
   rendererObj.renderer.localClippingEnabled = true;
@@ -185,11 +183,11 @@ function initHelpersStack(rendererObj, stack) {
     "linear",
     [
       [0, 0, 0, 0],
-      [1, 1, 1, 1]
+      [1, 1, 1, 1],
     ],
     [
       [0, 1],
-      [1, 1]
+      [1, 1],
     ]
   );
   rendererObj.lutLayer0.luts = HelpersLut.presetLuts();
@@ -218,13 +216,13 @@ function initHelpersStack(rendererObj, stack) {
       lpsDims.x + 50,
       lpsDims.y + 50,
       lpsDims.z + 50
-    )
+    ),
   };
 
   // init and zoom
   let canvas = {
     width: rendererObj.domElement.clientWidth,
-    height: rendererObj.domElement.clientHeight
+    height: rendererObj.domElement.clientHeight,
   };
 
   rendererObj.camera.directions = [stack.xCosine, stack.yCosine, stack.zCosine];
@@ -255,7 +253,7 @@ function render() {
     r1.renderer.clear();
     r1.renderer.render(r1.scene, r1.camera);
     r1.renderer.clearDepth();
-    data.forEach(object => {
+    data.forEach((object) => {
       object.materialFront.clippingPlanes = [clipPlane1];
       object.materialBack.clippingPlanes = [clipPlane1];
     });
@@ -265,7 +263,7 @@ function render() {
     r2.renderer.clear();
     r2.renderer.render(r2.scene, r2.camera);
     r2.renderer.clearDepth();
-    data.forEach(object => {
+    data.forEach((object) => {
       object.materialFront.clippingPlanes = [clipPlane2];
       object.materialBack.clippingPlanes = [clipPlane2];
     });
@@ -275,7 +273,7 @@ function render() {
     r3.renderer.clear();
     r3.renderer.render(r3.scene, r3.camera);
     r3.renderer.clearDepth();
-    data.forEach(object => {
+    data.forEach((object) => {
       object.materialFront.clippingPlanes = [clipPlane3];
       object.materialBack.clippingPlanes = [clipPlane3];
     });
@@ -301,12 +299,9 @@ function init() {
 window.onload = async () => {
   init();
 
-  var urlParams = new URLSearchParams(window.location.search);
-  let subject = urlParams.get("subject");
   let brainReq = await fetch(`/api/nifti`);
   let brain = await brainReq.blob();
   let objectURL = URL.createObjectURL(brain);
-  console.log(objectURL)
   let loader = new VolumeLoader();
   loader
     .load(objectURL)
@@ -315,9 +310,9 @@ window.onload = async () => {
       loader.free();
       loader = null;
       let stack = series.stack[0];
-      stack._frame.forEach(frame => {
-        frame._imagePosition = [-128, 128, 128];
-      });
+      // stack._frame.forEach((frame) => {
+      //   frame._imagePosition = [-128, 128, 128];
+      // });
 
       stack.prepare();
       // center 3d camera/control on the stack
@@ -340,7 +335,7 @@ window.onload = async () => {
       r0.scene.add(r3.scene);
 
       let gui = new dat.GUI({
-        autoPlace: false
+        autoPlace: false,
       });
 
       let customContainer = document.getElementById("my-gui-container");
@@ -352,11 +347,11 @@ window.onload = async () => {
         "linear",
         [
           [0, 0, 0, 0],
-          [1, 1, 1, 1]
+          [1, 1, 1, 1],
         ],
         [
           [0, 1],
-          [1, 1]
+          [1, 1],
         ]
       );
       lut.luts = HelpersLut.presetLuts();
@@ -377,15 +372,15 @@ window.onload = async () => {
         "lut",
         lut.lutsAvailable()
       );
-      lutUpdate1.onChange(value => {
+      lutUpdate1.onChange((value) => {
         lut.lut = value;
         r1.stackHelper.slice.lutTexture = lut.texture;
       });
-      lutUpdate2.onChange(value => {
+      lutUpdate2.onChange((value) => {
         lut.lut = value;
         r2.stackHelper.slice.lutTexture = lut.texture;
       });
-      lutUpdate3.onChange(value => {
+      lutUpdate3.onChange((value) => {
         lut.lut = value;
         r3.stackHelper.slice.lutTexture = lut.texture;
       });
@@ -405,7 +400,7 @@ window.onload = async () => {
         .step(1)
         .listen();
 
-      var meshController = function() {
+      var meshController = function () {
         this.Mesh = true;
         this.Cortex = true;
         this.WM = true;
@@ -414,105 +409,22 @@ window.onload = async () => {
         this.yTransform = 0;
         this.zTransform = 0;
         this.screenshot = () => {
-          html2canvas(document.querySelector("#main")).then(canvas => {
+          html2canvas(document.querySelector("#main")).then((canvas) => {
             document.body.appendChild(canvas);
           });
         };
         this.Transparency = true;
       };
 
-      let electrodeController = function() {
+      let electrodeController = function () {
         this.Electrode_display = true;
       };
       let elecCtrl = new electrodeController();
       let electrodeToggler = gui
         .add(elecCtrl, "Electrode_display", true)
         .listen();
-      electrodeToggler.onChange(val => {
+      electrodeToggler.onChange((val) => {
         elecs.visible = val;
-      });
-
-      let cortStimController = function() {
-        this.Cortstim = false;
-      };
-      let csCtrl = new cortStimController();
-      let csToggler = gui.add(csCtrl, "Cortstim", true).listen();
-      csToggler.onChange(val => {
-        lineGroup.name = "cortstimLine";
-
-        if (val == true) {
-          var urlParams = new URLSearchParams(window.location.search);
-          let subjectName = urlParams.get("subject");
-
-          (async () => {
-            let cortstimReq = await fetch(`/api/data/${subjectName}/cortstim`);
-            let cortStimRes = await cortstimReq.json();
-            let actualData = Object.keys(cortStimRes).map(entry => {
-              if (cortStimRes[entry].Result != null) {
-                return {
-                  channel: entry,
-                  color: cortStimRes[entry].Color,
-                  result: [...cortStimRes[entry].Result, "All"]
-                };
-              } else {
-                return {
-                  channel: entry,
-                  color: cortStimRes[entry].Color,
-                  result: ["All"]
-                };
-              }
-            });
-            actualData.forEach(entry => {
-              let result = entry.result.filter(t => t == "All");
-              if (result.length > 0) {
-                let lineGeom = new LineGeometry();
-                let chan1 = entry.channel.split("_")[0];
-                let chan2 = entry.channel.split("_")[1];
-                let stimElec1 = brainScene.getObjectByName(chan1);
-                let stimElec2 = brainScene.getObjectByName(chan2);
-                brainScene.updateMatrixWorld();
-                var vector1 = new THREE.Vector3();
-                var vector2 = new THREE.Vector3();
-                let elec1Pos = vector1.setFromMatrixPosition(
-                  stimElec1.matrixWorld
-                );
-                let elec2Pos = vector2.setFromMatrixPosition(
-                  stimElec2.matrixWorld
-                );
-                lineGeom.setPositions([
-                  elec1Pos.x,
-                  elec1Pos.y,
-                  elec1Pos.z,
-                  elec2Pos.x,
-                  elec2Pos.y,
-                  elec2Pos.z
-                ]);
-                let material = new LineMaterial({
-                  color: entry.color,
-                  linewidth: 0.01
-                });
-
-                let line = new Line2(lineGeom, material);
-                line.rotation.set(0, 0, -Math.PI);
-                line.computeLineDistances();
-                line.scale.set(1, 1, 1);
-                lineGroup.add(line);
-              }
-            });
-            brainScene.add(lineGroup);
-            brainScene.traverse(child => {
-              if (
-                child instanceof THREE.Mesh &&
-                child.parent.name == "Electrodes"
-              ) {
-                child.material = new THREE.MeshLambertMaterial({
-                  emissive: new THREE.Color(0.75, 0.75, 0.75)
-                });
-              }
-            });
-          })();
-        }
-        // elecs.visible = val;
       });
 
       let text = new meshController();
@@ -529,9 +441,9 @@ window.onload = async () => {
         .add(text, "Substructures", false)
         .listen();
 
-      transToggler.onChange(val => {
+      transToggler.onChange((val) => {
         if (val == true) {
-          brainScene.traverse(child => {
+          brainScene.traverse((child) => {
             if (
               child instanceof THREE.Mesh &&
               child.parent.name != "Electrodes"
@@ -541,7 +453,7 @@ window.onload = async () => {
             }
           });
         } else {
-          brainScene.traverse(child => {
+          brainScene.traverse((child) => {
             if (
               child instanceof THREE.Mesh &&
               child.parent.name != "Electrodes"
@@ -552,7 +464,10 @@ window.onload = async () => {
         }
       });
 
-      fullMeshToggler.onChange(val => {
+      fullMeshToggler.onChange((val) => {
+        console.log(wm)
+        console.log(gyri)
+        console.log(substructures)
         if (val == false) {
           wm.visible = false;
           gyri.visible = false;
@@ -569,21 +484,21 @@ window.onload = async () => {
           text.Substructures = true;
         }
       });
-      cortexMeshToggler.onChange(val => {
+      cortexMeshToggler.onChange((val) => {
         if (val == false) {
           gyri.visible = false;
         } else {
           gyri.visible = true;
         }
       });
-      wmMeshToggler.onChange(val => {
+      wmMeshToggler.onChange((val) => {
         if (val == false) {
           wm.visible = false;
         } else {
           wm.visible = true;
         }
       });
-      subMeshToggler.onChange(val => {
+      subMeshToggler.onChange((val) => {
         if (val == false) {
           substructures.visible = false;
         } else {
@@ -648,7 +563,8 @@ window.onload = async () => {
         const id = event.target.id;
         const mouse = {
           x: ((event.clientX - canvas.offsetLeft) / canvas.clientWidth) * 2 - 1,
-          y: -((event.clientY - canvas.offsetTop) / canvas.clientHeight) * 2 + 1
+          y:
+            -((event.clientY - canvas.offsetTop) / canvas.clientHeight) * 2 + 1,
         };
         //
         let camera = null;
@@ -749,7 +665,7 @@ window.onload = async () => {
       function windowResize2D(rendererObj) {
         rendererObj.camera.canvas = {
           width: rendererObj.domElement.clientWidth,
-          height: rendererObj.domElement.clientHeight
+          height: rendererObj.domElement.clientHeight,
         };
         rendererObj.camera.fitBox(2, 1);
         rendererObj.renderer.setSize(
@@ -806,12 +722,12 @@ window.onload = async () => {
       function loadElectrodes(elec, i) {
         let meshOpacity = 0.8;
         let transparency = false;
-        if (elec.parent.name == "Electrodes") {
-          transparency = false;
-        } else {
+        // if (elec.parent.name == "Electrodes") {
+        //   transparency = false;
+        // } else {
           meshOpacity = 0.5;
           transparency = true;
-        }
+        // }
 
         data[i].scene = new THREE.Scene();
         data[i].materialFront = new THREE.MeshBasicMaterial({
@@ -820,7 +736,7 @@ window.onload = async () => {
           depthWrite: true,
           opacity: 0,
           transparent: true,
-          clippingPlanes: []
+          clippingPlanes: [],
         });
         data[i].materialBack = new THREE.MeshBasicMaterial({
           color: elec.material.color,
@@ -828,7 +744,7 @@ window.onload = async () => {
           depthWrite: true,
           opacity: meshOpacity,
           transparent: true,
-          clippingPlanes: []
+          clippingPlanes: [],
         });
         data[i].meshFront = new THREE.Mesh(
           elec.geometry,
@@ -845,13 +761,9 @@ window.onload = async () => {
           elec.position.y,
           elec.position.z
         );
-        if (elec.parent.name == "Electrodes") {
-          data[i].meshFront.scale.set(2, 2, 2);
-          data[i].meshBack.scale.set(2, 2, 2);
-        }
         data[i].scene.add(data[i].meshFront);
         data[i].scene.add(data[i].meshBack);
-        sceneClip.rotation.set(-Math.PI / 2, 0, Math.PI);
+        data[i].scene.applyMatrix4(RASToLPS);
         sceneClip.add(data[i].scene);
       }
 
@@ -860,72 +772,55 @@ window.onload = async () => {
       onYellowChanged();
       let load3DBrain_gltf = () => {
         return new Promise((resolve, reject) => {
+          // let loader = new OBJLoader2();
+          // loader.load( '/api/obj', (object3d) => {
+          //   console.log(object3d)
+
           let loader = new GLTFLoader();
-          loader.load(`/api/brain3D`, object3d => {
-            object3d.scene.traverse(child => {
+          loader.load(`/api/brain`, (object3d) => {
+            object3d.scene.traverse((child) => {
               if (
-                child instanceof THREE.Mesh &&
-                child.parent.name != "Electrodes"
+                child instanceof THREE.Mesh
               ) {
                 child.material.transparent = true;
                 child.material.opacity = 0.5;
               }
-              if (
-                child instanceof THREE.Mesh &&
-                child.parent.name == "Electrodes"
-              ) {
-
-                let colorVals = {
-                  LA: [0.0, 1.0, 0.463],
-                  LAH: [0.0, 0.549, 1.0],
-                  LPH: [1.0, 0.533, 0.0],
-                  LFA: [0.494, 0.263, 0.086],
-                  LFP: [1.0, 0.0, 1.0],
-                  AAC: [0.0, 0.8, 0.8],
-                  PAC: [1.0, 0.0, 0.0],
-                  CD: [1.0, 0.8, 0.106],
-                  AMD: [0.537, 0.0, 1.0],
-                  ALD: [0.0, 0.549, 0.0],
-                  PMD: [1.0, 0.0, 0.533],
-                  PLD: [0.169, 0.212, 0.525]
-                };
-                let [elecName, elecNumber] = child.name
-                  .replace(/\'/g, "")
-                  .split(/(\d+)/)
-                  .filter(Boolean);
-                if (colorVals[elecName] != undefined) {
-                  child.material = new THREE.MeshLambertMaterial({
-                    emissive: new THREE.Color(
-                      colorVals[elecName][0],
-                      colorVals[elecName][1],
-                      colorVals[elecName][2]
-                    )
-                  });
-                } else {
-                  child.material = new THREE.MeshLambertMaterial({
-                    emissive: new THREE.Color(1, 1, 1)
-                  });
-                }
-                child.scale.set(0.75, 0.75, 0.75);
-              }
             });
-            object3d.scene.rotation.set(0, 0, Math.PI);
             r0.scene.add(object3d.scene);
-            brainScene = object3d.scene;
-            wm = brainScene.children[3];
-            gyri = brainScene.children[2];
+            brainScene = object3d.scene.children[0];
+            gyri = brainScene.children[0];
             substructures = brainScene.children[1];
-            elecs = object3d.scene.children[0];
-            // elecs.rotation.set(0, 0, Math.PI);
-            // elecs.position.set(128, 128, 128);
+            wm = brainScene.children[2];
+            brainScene.applyMatrix4(RASToLPS)
+            console.log(brainScene)
             resolve(brainScene);
-            console.log(object3d);
           });
+          loader.load('/api/electrodes', object3d => {
+              object3d.scene.children[0].children.forEach(group => {
+                let electrodeGroup = group.name;
+                console.log(electrodeGroup)
+                group.children.forEach(electrode => {
+                  console.log(electrode)
+                  // electrode.scale.set(2.75, 2.75, 2.75);
+                  electrode.material = new THREE.MeshStandardMaterial({
+                              color: new THREE.Color(
+                                0,
+                                0,
+                                1
+                              )
+                            });
+                })
+              })
+            r0.scene.add(object3d.scene);
+            object3d.scene.applyMatrix4(RASToLPS)
+
+          })
         });
       };
-      load3DBrain_gltf().then(scene => {
+      load3DBrain_gltf()
+      .then((scene) => {
         let index = 0;
-        scene.traverse(child => {
+        scene.traverse((child) => {
           if (child instanceof THREE.Mesh) {
             if (child.parent.parent.name != "WhiteMatter") {
               data[index] = {};
@@ -938,5 +833,5 @@ window.onload = async () => {
         render();
       });
     })
-    .catch(error => window.console.log(error));
+    .catch((error) => window.console.log(error));
 };
