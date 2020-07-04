@@ -3,7 +3,7 @@
 
 ### To run:
 
-- docker run -p 5000 neuroseek/recon_visualizer
+- docker run -p 5000:5000 neuroseek/recon_visualizer
 
 
 ### Example:
