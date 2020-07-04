@@ -30,6 +30,8 @@ RUN mkdir -p /usr/local/freesurfer/bin/ \
     && chmod +x /usr/local/freesurfer/bin/mri_tessellate \
     && chmod +x /usr/local/freesurfer/bin/mris_smooth
 
+COPY FreeSurferColorLUT.txt /usr/local/freesurfer/FreeSurferColorLUT.txt
+
 # License/path necessary for freesurfer binaries to work
 ENV FREESURFER_HOME /usr/local/freesurfer
 ENV PATH /usr/local/freesurfer/bin:$PATH
@@ -43,4 +45,14 @@ WORKDIR /home/scripts
 # Copy all scripts to image
 COPY ./scripts /home/scripts
 RUN chmod +x runscript.sh && chmod +x aseg2srf.sh
+
+
+RUN apt-get update
+RUN apt-get install -y locales
+RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
+    locale-gen
+ENV LC_ALL en_US.UTF-8 
+ENV LANG en_US.UTF-8  
+ENV LANGUAGE en_US:en     
+
 CMD [ "/bin/bash", "-c", "./runscript.sh" ] 

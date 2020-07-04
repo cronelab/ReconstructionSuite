@@ -6,8 +6,7 @@ services:
       context: .
       dockerfile: ./Dockerfile
     environment: 
-      - SUBJECT=PY20N005
+      - SUBJECT=fsaverage
     volumes:
-      - $SUBJECTS_DIR:/data/derivatives/freesurfer
-
+      - $SUBJECTS_DIR:/data
 

@@ -31,5 +31,6 @@ done
 
 mri_convert $SUBJECTS_DIR/$SUBJECT/mri/brain.mgz $SUBJECTS_DIR/$SUBJECT/reconstruction.nii
 
-/usr/local/blender/blender --background startup.blend --python brainGenerator.py
+./elec2vox.sh
 /usr/local/blender/blender --background startup.blend --python electrodeGenerator.py
+/usr/local/blender/blender --background startup.blend --python brainGenerator.py
