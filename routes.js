@@ -11,6 +11,7 @@ const routes = (express) => {
   router.get("/", (req, res) =>
     res.sendFile(path.join(__dirname, "/dist", "/index.html"))
   );
+router.use("/docs", express.static(path.join(__dirname, "/docs", "/_build/html")));
 
   //3D brain
   router.get("/api/brain3D", (req, res) => {
@@ -53,6 +54,7 @@ const routes = (express) => {
     });
   
   router.get("/api/nifti", (req, res) => {
+    console.log(`${dataDir}/${subject}/reconstruction.nii`)
     if (fs.existsSync(`${dataDir}/${subject}/reconstruction.nii`)) {
       console.log("Sending nifti...");
       res.sendFile(`${dataDir}/${subject}/reconstruction.nii`);

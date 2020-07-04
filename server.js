@@ -23,4 +23,4 @@ app.use(
 
 app.use("/", routes(express));
 
-app.listen(PORT, () => console.log("Serving"));
+app.listen(PORT, () => console.log(`Serving on port: ${PORT}`));
