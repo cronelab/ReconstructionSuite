@@ -3,7 +3,6 @@ import * as dat from "dat.gui";
 import * as THREE from "three";
 import "./index.scss";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
-import { OBJLoader2 } from "three/examples/jsm/loaders/OBJLoader2"
 import html2canvas from "html2canvas";
 
 import {
@@ -23,6 +22,7 @@ const HelpersLut = lutHelperFactory(THREE);
 let lut;
 let ready = false;
 let elecs;
+let electrodeLegend = {};
 let brainScene, wm, gyri, substructures;
 
 const r0 = {
@@ -310,9 +310,6 @@ window.onload = async () => {
       loader.free();
       loader = null;
       let stack = series.stack[0];
-      // stack._frame.forEach((frame) => {
-      //   frame._imagePosition = [-128, 128, 128];
-      // });
 
       stack.prepare();
       // center 3d camera/control on the stack
@@ -415,25 +412,16 @@ window.onload = async () => {
         };
         this.Transparency = true;
       };
-
-      let electrodeController = function () {
-        this.Electrode_display = true;
-      };
-      let elecCtrl = new electrodeController();
-      let electrodeToggler = gui
-        .add(elecCtrl, "Electrode_display", true)
-        .listen();
-      electrodeToggler.onChange((val) => {
-        elecs.visible = val;
-      });
-
       let text = new meshController();
-      let meshToggler = gui.addFolder("Mesh");
+
+
       let transparencyToggler = gui.addFolder("Transparency");
       let transToggler = transparencyToggler
         .add(text, "Transparency", true)
         .listen();
       // let screenshot = meshToggler.add(text, "screenshot").listen();
+      let meshToggler = gui.addFolder("Mesh");
+
       let fullMeshToggler = meshToggler.add(text, "Mesh", false).listen();
       let cortexMeshToggler = meshToggler.add(text, "Cortex", false).listen();
       let wmMeshToggler = meshToggler.add(text, "WM", false).listen();
@@ -783,7 +771,7 @@ window.onload = async () => {
                 child instanceof THREE.Mesh
               ) {
                 child.material.transparent = true;
-                child.material.opacity = 0.5;
+                child.material.opacity = 0.4;
               }
             });
             r0.scene.add(object3d.scene);
