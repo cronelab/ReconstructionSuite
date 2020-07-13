@@ -11,7 +11,8 @@ const routes = (express) => {
   router.get("/", (req, res) =>
     res.sendFile(path.join(__dirname, "/dist", "/index.html"))
   );
-router.use("/docs", express.static(path.join(__dirname, "/docs", "/_build/html")));
+router.use("/docs/meshviz", express.static(path.join(__dirname, "/docs", "/_build/html")));
+router.use("/docs/meshgen", express.static(path.join(__dirname, "/meshdocs", "/_build/html")));
 
   //3D brain
   router.get("/api/brain3D", (req, res) => {

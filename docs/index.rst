@@ -1,5 +1,5 @@
 
-Welcome to Visualizer's documentation!
+Welcome to the Stereotactic ElectroEncephalography Kit (SEEK) 3D brain visualization documentation!
 ====================================================
 
 .. toctree::
@@ -15,3 +15,7 @@ Getting Started
 :ref:`Click here <gettingstarted>` to get started
    
 
+Special thanks
+^^^^^^^^^^^^^^^^^^^^^^^^
++ Adam Li - Core maintainer of `SEEK <https://github.com/ncsl/seek>`_
++ Joon Kang - Clinical Neurologist, collaborator

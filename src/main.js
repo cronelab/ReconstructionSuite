@@ -253,30 +253,30 @@ function render() {
     r1.renderer.clear();
     r1.renderer.render(r1.scene, r1.camera);
     r1.renderer.clearDepth();
-    data.forEach((object) => {
-      object.materialFront.clippingPlanes = [clipPlane1];
-      object.materialBack.clippingPlanes = [clipPlane1];
-    });
+    // data.forEach((object) => {
+    //   object.materialFront.clippingPlanes = [clipPlane1];
+    //   object.materialBack.clippingPlanes = [clipPlane1];
+    // });
     r1.renderer.render(sceneClip, r1.camera);
     r1.renderer.clearDepth();
 
     r2.renderer.clear();
     r2.renderer.render(r2.scene, r2.camera);
     r2.renderer.clearDepth();
-    data.forEach((object) => {
-      object.materialFront.clippingPlanes = [clipPlane2];
-      object.materialBack.clippingPlanes = [clipPlane2];
-    });
+    // data.forEach((object) => {
+    //   object.materialFront.clippingPlanes = [clipPlane2];
+    //   object.materialBack.clippingPlanes = [clipPlane2];
+    // });
     r2.renderer.render(sceneClip, r2.camera);
     r2.renderer.clearDepth();
 
     r3.renderer.clear();
     r3.renderer.render(r3.scene, r3.camera);
     r3.renderer.clearDepth();
-    data.forEach((object) => {
-      object.materialFront.clippingPlanes = [clipPlane3];
-      object.materialBack.clippingPlanes = [clipPlane3];
-    });
+    // data.forEach((object) => {
+    //   object.materialFront.clippingPlanes = [clipPlane3];
+    //   object.materialBack.clippingPlanes = [clipPlane3];
+    // });
     r3.renderer.render(sceneClip, r3.camera);
     r3.renderer.clearDepth();
   }
@@ -707,53 +707,6 @@ window.onload = async () => {
         1
       );
 
-      function loadElectrodes(elec, i) {
-        let meshOpacity = 0.8;
-        let transparency = false;
-        // if (elec.parent.name == "Electrodes") {
-        //   transparency = false;
-        // } else {
-          meshOpacity = 0.5;
-          transparency = true;
-        // }
-
-        data[i].scene = new THREE.Scene();
-        data[i].materialFront = new THREE.MeshBasicMaterial({
-          color: elec.material.color,
-          side: THREE.FrontSide,
-          depthWrite: true,
-          opacity: 0,
-          transparent: true,
-          clippingPlanes: [],
-        });
-        data[i].materialBack = new THREE.MeshBasicMaterial({
-          color: elec.material.color,
-          side: THREE.BackSide,
-          depthWrite: true,
-          opacity: meshOpacity,
-          transparent: true,
-          clippingPlanes: [],
-        });
-        data[i].meshFront = new THREE.Mesh(
-          elec.geometry,
-          data[i].materialFront
-        );
-        data[i].meshBack = new THREE.Mesh(elec.geometry, data[i].materialBack);
-        data[i].meshFront.position.set(
-          elec.position.x,
-          elec.position.y,
-          elec.position.z
-        );
-        data[i].meshBack.position.set(
-          elec.position.x,
-          elec.position.y,
-          elec.position.z
-        );
-        data[i].scene.add(data[i].meshFront);
-        data[i].scene.add(data[i].meshBack);
-        data[i].scene.applyMatrix4(RASToLPS);
-        sceneClip.add(data[i].scene);
-      }
 
       onGreenChanged();
       onRedChanged();
@@ -780,46 +733,107 @@ window.onload = async () => {
             substructures = brainScene.children[1];
             wm = brainScene.children[2];
             brainScene.applyMatrix4(RASToLPS)
-            console.log(brainScene)
             resolve(brainScene);
           });
           loader.load('/api/electrodes', object3d => {
-              object3d.scene.children[0].children.forEach(group => {
-                let electrodeGroup = group.name;
-                console.log(electrodeGroup)
-                group.children.forEach(electrode => {
-                  console.log(electrode)
-                  // electrode.scale.set(2.75, 2.75, 2.75);
-                  electrode.material = new THREE.MeshStandardMaterial({
-                              color: new THREE.Color(
-                                0,
-                                0,
-                                1
-                              )
-                            });
-                })
-              })
+            elecs = object3d.scene;
             r0.scene.add(object3d.scene);
+            object3d.scene.children.forEach(electrodeGroups => {
+              electrodeGroups.children.forEach(electrodeGroup => {
+                electrodeLegend[electrodeGroup.name] = electrodeGroup.children[0].material.color
+              })
+            })
             object3d.scene.applyMatrix4(RASToLPS)
 
           })
         });
       };
       load3DBrain_gltf()
-      .then((scene) => {
-        let index = 0;
-        scene.traverse((child) => {
-          if (child instanceof THREE.Mesh) {
-            if (child.parent.parent.name != "WhiteMatter") {
-              data[index] = {};
-              loadElectrodes(child, index);
-              index++;
+        .then((scene) => {
+          let i = 0;
+          scene.traverse((child) => {
+            if (child instanceof THREE.Mesh) {
+              if (child.parent.parent.name != "WhiteMatter") {
+                data[i] = {};
+
+                let meshOpacity = 0.8;
+                let transparency = false;
+                // if (elec.parent.name == "Electrodes") {
+                //   transparency = false;
+                // } else {
+                meshOpacity = 0.5;
+                transparency = true;
+                // }
+
+                // data[i].scene = new THREE.Scene();
+                // data[i].materialFront = new THREE.MeshBasicMaterial({
+                //   color: child.material.color,
+                //   side: THREE.FrontSide,
+                //   depthWrite: true,
+                //   opacity: 0,
+                //   transparent: true,
+                //   clippingPlanes: [],
+                // });
+                // data[i].materialBack = new THREE.MeshBasicMaterial({
+                //   color: elec.material.color,
+                //   side: THREE.BackSide,
+                //   depthWrite: true,
+                //   opacity: meshOpacity,
+                //   transparent: true,
+                //   clippingPlanes: [],
+                // });
+                // data[i].meshFront = new THREE.Mesh(
+                //   elec.geometry,
+                //   data[i].materialFront
+                // );
+                // data[i].meshBack = new THREE.Mesh(elec.geometry, data[i].materialBack);
+                // data[i].meshFront.position.set(
+                //   elec.position.x,
+                //   elec.position.y,
+                //   elec.position.z
+                // );
+                // data[i].meshBack.position.set(
+                //   elec.position.x,
+                //   elec.position.y,
+                //   elec.position.z
+                // );
+                // data[i].scene.add(data[i].meshFront);
+                // data[i].scene.add(data[i].meshBack);
+                // data[i].scene.applyMatrix4(RASToLPS);
+                // sceneClip.add(data[i].scene);
+                i++;
+              }
             }
-          }
+          });
+          ready = true;
+          render();
+
+          let electrodeController = function (legend) {
+
+            this.Electrode_display = true;
+            this.LFS = [legend.LFS.r*255, legend.LFS.g*255, legend.LFS.b*255]
+            this.LPS = [legend.LPS.r*255, legend.LPS.g*255, legend.LPS.b*255]
+            this.SIS = [legend.SIS.r*255, legend.SIS.g*255, legend.SIS.b*255]
+            this.DIS = [legend.DIS.r*255, legend.DIS.g*255, legend.DIS.b*255]
+            this.RFP = [legend.RFP.r*255, legend.RFP.g*255, legend.RFP.b*255]
+          };
+          let elecCtrl = new electrodeController(electrodeLegend);
+          let electrodeManager = gui.addFolder("Electrodes")
+          let electrodeToggler = electrodeManager
+            .add(elecCtrl, "Electrode_display", true)
+            .listen();
+
+          electrodeManager.addColor(elecCtrl, "LFS")
+          electrodeManager.addColor(elecCtrl, "LPS")
+          electrodeManager.addColor(elecCtrl, "SIS")
+          electrodeManager.addColor(elecCtrl, "DIS")
+          electrodeManager.addColor(elecCtrl, "RFP")
+
+          electrodeToggler.onChange((val) => {
+            elecs.visible = val;
+          });
         });
-        ready = true;
-        render();
-      });
+
     })
     .catch((error) => window.console.log(error));
 };
