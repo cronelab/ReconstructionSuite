@@ -6,13 +6,12 @@ services:
       context: .
       dockerfile: ./Dockerfile
     ports:
-      - "80"
+      - "5000:5000"
     volumes:
       - /mnt/shared/Subjects:/data
-      - ./docs:/home/visualizer/docs/
     environment: 
       - SUBJECTS_DIR=/data/derivatives/freesurfer
       - SUBJECT=fsaverage
-      - PORT=80
+      - PORT=5000
 
 
