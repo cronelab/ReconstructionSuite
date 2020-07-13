@@ -25,6 +25,9 @@ let elecs;
 let electrodeLegend = {};
 let brainScene, wm, gyri, substructures;
 
+let urlParams = new URLSearchParams(window.location.search);
+
+
 const r0 = {
   domId: "r0",
   domElement: null,
@@ -299,7 +302,14 @@ function init() {
 window.onload = async () => {
   init();
 
-  let brainReq = await fetch(`/api/nifti`);
+  let subject = urlParams.get('subject') || 'fsaverage';
+
+
+  let brainReq = await fetch(`/nifti/${subject}`);
+  if(!brainReq.ok){
+    alert("Error: Subject not found")
+    return
+  }
   let brain = await brainReq.blob();
   let objectURL = URL.createObjectURL(brain);
   let loader = new VolumeLoader();
@@ -716,9 +726,8 @@ window.onload = async () => {
           // let loader = new OBJLoader2();
           // loader.load( '/api/obj', (object3d) => {
           //   console.log(object3d)
-
           let loader = new GLTFLoader();
-          loader.load(`/api/brain`, (object3d) => {
+          loader.load(`/brain/${subject}`, (object3d) => {
             object3d.scene.traverse((child) => {
               if (
                 child instanceof THREE.Mesh
@@ -735,7 +744,7 @@ window.onload = async () => {
             brainScene.applyMatrix4(RASToLPS)
             resolve(brainScene);
           });
-          loader.load('/api/electrodes', object3d => {
+          loader.load(`/electrodes/${subject}`, object3d => {
             elecs = object3d.scene;
             r0.scene.add(object3d.scene);
             object3d.scene.children.forEach(electrodeGroups => {

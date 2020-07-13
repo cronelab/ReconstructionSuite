@@ -14,7 +14,7 @@ Welcome to fsMeshGenerator's documentation!
 Dependences
 ++++++++++++++++++++++++++
 - Select Freesurfer binaries 
-- Various [Brainder](https://brainder.org/) scripts for mesh generation
+- Various `Brainder <https://brainder.org>`_ scripts for mesh generation
     - Matlab/Octave
 - Blender (Freesurfer OBJ to FBX/gLTF)
     - Comes with a python interpreter

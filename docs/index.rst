@@ -8,6 +8,7 @@ Welcome to the Stereotactic ElectroEncephalography Kit (SEEK) 3D brain visualiza
 
    description
    gettingstarted
+   api
 
 
 Getting Started
