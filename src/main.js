@@ -1,7 +1,7 @@
-import "bootstrap";
+import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import * as dat from "dat.gui";
 import * as THREE from "three";
-import "./index.scss";
+import "./index.css";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import html2canvas from "html2canvas";
 
