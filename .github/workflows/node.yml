@@ -32,12 +32,10 @@ jobs:
     - run: npm ci
     - run: npm run docs
     - run: npm run build
-    - name: Pushes to another repository
-      uses: cpina/github-action-push-to-another-repository@master
-      env:
-        API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
+    - name: Push to docker
+      uses: docker/build-push-action@v1
       with:
-        source-directory: 'docs'
-        destination-github-username: 'cronelab'
-        destination-repository-name: 'FreesurferMeshGenerator'
-        # user-email: carles3@pina.cat
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        repository: neuroseek/recon_visualizer
+        tags: latest
