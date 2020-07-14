@@ -1,0 +1,19 @@
+name: Node.js CI
+
+on: [push, pull_request, repository_dispatch]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Pushes to another repository
+        uses: thebrainchain/copy-folder-action@master
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
+        with:
+          source-directory: "docs"
+          output-directory: "meshdocs"
+          destination-github-username: "TheBrainChain"
+          destination-repository-name: "dumm2"
+          user-email: c.coogan2201@gmail.com
