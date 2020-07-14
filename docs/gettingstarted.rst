@@ -23,9 +23,9 @@ Without Docker
 
 With Docker
 -----------------------------------------
-.. code-block:: bash
-    :linenos:
-      - SUBJECT=fsaverage
+.. .. code-block:: bash
+..     :linenos:
+..     SUBJECT=fsaverage
 
     # Replace SUBJECTS_DIR and SUBJECT variables with your own
     docker run --rm -e SUBJECTS_DIR=/data/derivatives/freesurfer -e SUBJECT=fsaverage neuroseek/recon_visualizer 
