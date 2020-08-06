@@ -1,6 +1,6 @@
 import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import * as dat from "dat.gui";
-import * as THREE from "three";
+import { Scene, Plane, WebGLRenderer, Vector3, Matrix4, Raycaster, PerspectiveCamera, Mesh, DirectionalLight } from "three";
 import "./index.css";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import html2canvas from "html2canvas";
@@ -14,11 +14,11 @@ import {
   trackballControlFactory,
   UtilsCore,
 } from "ami.js";
-const StackHelper = stackHelperFactory(THREE);
-const CamerasOrthographic = orthographicCameraFactory(THREE);
-const ControlsOrthographic = trackballOrthoControlFactory(THREE);
-const ControlsTrackball = trackballControlFactory(THREE);
-const HelpersLut = lutHelperFactory(THREE);
+const StackHelper = stackHelperFactory();
+const CamerasOrthographic = orthographicCameraFactory();
+const ControlsOrthographic = trackballOrthoControlFactory();
+const ControlsTrackball = trackballControlFactory();
+const HelpersLut = lutHelperFactory();
 let lut;
 let ready = false;
 let elecs;
@@ -90,15 +90,15 @@ const r3 = {
 
 let data = [];
 
-let sceneClip = new THREE.Scene();
-let clipPlane1 = new THREE.Plane(new THREE.Vector3(0, 0, 0), 0);
-let clipPlane2 = new THREE.Plane(new THREE.Vector3(0, 0, 0), 0);
-let clipPlane3 = new THREE.Plane(new THREE.Vector3(0, 0, 0), 0);
+let sceneClip = new Scene();
+let clipPlane1 = new Plane(new Vector3(0, 0, 0), 0);
+let clipPlane2 = new Plane(new Vector3(0, 0, 0), 0);
+let clipPlane3 = new Plane(new Vector3(0, 0, 0), 0);
 
 function initRenderer3D(renderObj) {
   // renderer
   renderObj.domElement = document.getElementById(renderObj.domId);
-  renderObj.renderer = new THREE.WebGLRenderer({
+  renderObj.renderer = new WebGLRenderer({
     antialias: true,
   });
 
@@ -111,7 +111,7 @@ function initRenderer3D(renderObj) {
   renderObj.domElement.appendChild(renderObj.renderer.domElement);
 
   // camera
-  renderObj.camera = new THREE.PerspectiveCamera(
+  renderObj.camera = new PerspectiveCamera(
     45,
     renderObj.domElement.clientWidth / renderObj.domElement.clientHeight,
     0.1,
@@ -132,9 +132,9 @@ function initRenderer3D(renderObj) {
   renderObj.controls.staticMoving = true;
   renderObj.controls.dynamicDampingFactor = 0.3;
 
-  renderObj.scene = new THREE.Scene();
+  renderObj.scene = new Scene();
 
-  renderObj.light = new THREE.DirectionalLight(0xffffff, 1);
+  renderObj.light = new DirectionalLight(0xffffff, 1);
   renderObj.light.position.copy(renderObj.camera.position);
   renderObj.scene.add(renderObj.light);
 }
@@ -142,7 +142,7 @@ function initRenderer3D(renderObj) {
 function initRenderer2D(rendererObj) {
   // renderer
   rendererObj.domElement = document.getElementById(rendererObj.domId);
-  rendererObj.renderer = new THREE.WebGLRenderer({
+  rendererObj.renderer = new WebGLRenderer({
     antialias: true,
   });
   rendererObj.renderer.autoClear = false;
@@ -175,7 +175,7 @@ function initRenderer2D(rendererObj) {
   rendererObj.camera.controls = rendererObj.controls;
 
   // scene
-  rendererObj.scene = new THREE.Scene();
+  rendererObj.scene = new Scene();
 }
 
 function initHelpersStack(rendererObj, stack) {
@@ -206,7 +206,7 @@ function initHelpersStack(rendererObj, stack) {
 
   // set camera
   let worldbb = stack.worldBoundingBox();
-  let lpsDims = new THREE.Vector3(
+  let lpsDims = new Vector3(
     (worldbb[1] - worldbb[0]) / 2,
     (worldbb[3] - worldbb[2]) / 2,
     (worldbb[5] - worldbb[4]) / 2
@@ -215,7 +215,7 @@ function initHelpersStack(rendererObj, stack) {
   // box: {halfDimensions, center}
   let box = {
     center: stack.worldCenter().clone(),
-    halfDimensions: new THREE.Vector3(
+    halfDimensions: new Vector3(
       lpsDims.x + 50,
       lpsDims.y + 50,
       lpsDims.z + 50
@@ -306,7 +306,7 @@ window.onload = async () => {
 
 
   let brainReq = await fetch(`/nifti/${subject}`);
-  if(!brainReq.ok){
+  if (!brainReq.ok) {
     alert("Error: Subject not found")
     return
   }
@@ -443,7 +443,7 @@ window.onload = async () => {
         if (val == true) {
           brainScene.traverse((child) => {
             if (
-              child instanceof THREE.Mesh &&
+              child instanceof Mesh &&
               child.parent.name != "Electrodes"
             ) {
               child.material.transparent = true;
@@ -453,7 +453,7 @@ window.onload = async () => {
         } else {
           brainScene.traverse((child) => {
             if (
-              child instanceof THREE.Mesh &&
+              child instanceof Mesh &&
               child.parent.name != "Electrodes"
             ) {
               child.material.transparent = false;
@@ -508,17 +508,17 @@ window.onload = async () => {
         const stackHelper = refObj.stackHelper;
         const camera = refObj.camera;
         let vertices = stackHelper.slice.geometry.vertices;
-        let p1 = new THREE.Vector3(
+        let p1 = new Vector3(
           vertices[0].x,
           vertices[0].y,
           vertices[0].z
         ).applyMatrix4(stackHelper._stack.ijk2LPS);
-        let p2 = new THREE.Vector3(
+        let p2 = new Vector3(
           vertices[1].x,
           vertices[1].y,
           vertices[1].z
         ).applyMatrix4(stackHelper._stack.ijk2LPS);
-        let p3 = new THREE.Vector3(
+        let p3 = new Vector3(
           vertices[2].x,
           vertices[2].y,
           vertices[2].z
@@ -526,7 +526,7 @@ window.onload = async () => {
 
         clipPlane.setFromCoplanarPoints(p1, p2, p3);
 
-        let cameraDirection = new THREE.Vector3(1, 1, 1);
+        let cameraDirection = new Vector3(1, 1, 1);
         cameraDirection.applyQuaternion(camera.quaternion);
 
         if (cameraDirection.dot(clipPlane.normal) > 0) {
@@ -591,7 +591,7 @@ window.onload = async () => {
             break;
         }
 
-        const raycaster = new THREE.Raycaster();
+        const raycaster = new Raycaster();
         raycaster.setFromCamera(mouse, camera);
 
         const intersects = raycaster.intersectObjects(scene.children, true);
@@ -696,7 +696,7 @@ window.onload = async () => {
 
       window.addEventListener("resize", onWindowResize, false);
 
-      let RASToLPS = new THREE.Matrix4();
+      let RASToLPS = new Matrix4();
       const worldCenter = r1.stackHelper.stack.worldCenter();
       RASToLPS.set(
         -1,
@@ -730,7 +730,7 @@ window.onload = async () => {
           loader.load(`/brain/${subject}`, (object3d) => {
             object3d.scene.traverse((child) => {
               if (
-                child instanceof THREE.Mesh
+                child instanceof Mesh
               ) {
                 child.material.transparent = true;
                 child.material.opacity = 0.4;
@@ -761,7 +761,7 @@ window.onload = async () => {
         .then((scene) => {
           let i = 0;
           scene.traverse((child) => {
-            if (child instanceof THREE.Mesh) {
+            if (child instanceof Mesh) {
               if (child.parent.parent.name != "WhiteMatter") {
                 data[i] = {};
 
@@ -818,13 +818,20 @@ window.onload = async () => {
           render();
 
           let electrodeController = function (legend) {
-
             this.Electrode_display = true;
-            this.LFS = [legend.LFS.r*255, legend.LFS.g*255, legend.LFS.b*255]
-            this.LPS = [legend.LPS.r*255, legend.LPS.g*255, legend.LPS.b*255]
-            this.SIS = [legend.SIS.r*255, legend.SIS.g*255, legend.SIS.b*255]
-            this.DIS = [legend.DIS.r*255, legend.DIS.g*255, legend.DIS.b*255]
-            this.RFP = [legend.RFP.r*255, legend.RFP.g*255, legend.RFP.b*255]
+
+            this.LTPO = [legend.LTPO.r * 255, legend.LTPO.g * 255, legend.LTPO.b * 255]
+            this.LSO = [legend.LSO.r * 255, legend.LSO.g * 255, legend.LSO.b * 255]
+            this.LIO = [legend.LIO.r * 255, legend.LIO.g * 255, legend.LIO.b * 255]
+            this.LPH = [legend.LPH.r * 255, legend.LPH.g * 255, legend.LPH.b * 255]
+            this.LAH = [legend.LAH.r * 255, legend.LAH.g * 255, legend.LAH.b * 255]
+            this.LSTG = [legend.LSTG.r * 255, legend.LSTG.g * 255, legend.LSTG.b * 255]
+            this.LPRC = [legend.LPRC.r * 255, legend.LPRC.g * 255, legend.LPRC.b * 255]
+            this.LPOC = [legend.LPOC.r * 255, legend.LPOC.g * 255, legend.LPOC.b * 255]
+            this.LSP = [legend.LSP.r * 255, legend.LSP.g * 255, legend.LSP.b * 255]
+            this.LOL = [legend.LOL.r * 255, legend.LOL.g * 255, legend.LOL.b * 255]
+            this.LTO = [legend.LTO.r * 255, legend.LTO.g * 255, legend.LTO.b * 255]
+
           };
           let elecCtrl = new electrodeController(electrodeLegend);
           let electrodeManager = gui.addFolder("Electrodes")
@@ -832,12 +839,18 @@ window.onload = async () => {
             .add(elecCtrl, "Electrode_display", true)
             .listen();
 
-          electrodeManager.addColor(elecCtrl, "LFS")
-          electrodeManager.addColor(elecCtrl, "LPS")
-          electrodeManager.addColor(elecCtrl, "SIS")
-          electrodeManager.addColor(elecCtrl, "DIS")
-          electrodeManager.addColor(elecCtrl, "RFP")
 
+          electrodeManager.addColor(elecCtrl, "LTPO")
+          electrodeManager.addColor(elecCtrl, "LSO")
+          electrodeManager.addColor(elecCtrl, "LIO")
+          electrodeManager.addColor(elecCtrl, "LPH")
+          electrodeManager.addColor(elecCtrl, "LAH")
+          electrodeManager.addColor(elecCtrl, "LSTG")
+          electrodeManager.addColor(elecCtrl, "LPRC")
+          electrodeManager.addColor(elecCtrl, "LPOC")
+          electrodeManager.addColor(elecCtrl, "LSP")
+          electrodeManager.addColor(elecCtrl, "LOL")
+          electrodeManager.addColor(elecCtrl, "LTO")
           electrodeToggler.onChange((val) => {
             elecs.visible = val;
           });

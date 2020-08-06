@@ -12,6 +12,11 @@ const module = {
 	module: {
 		rules: [
 			{
+				test: /\.js$/,
+				include: path.resolve(__dirname, 'src'),
+				loader: 'babel-loader',
+			  },
+			{
 				test: /\.(sa|sc|c)ss$/,
 				use: [{
 					loader: "style-loader"
@@ -37,10 +42,10 @@ const module = {
 		filename: "[name].bundle.js",
 		path: path.resolve(__dirname, "dist")
 	},
-	optimization: {
-		splitChunks: {
-			chunks: 'all',
-		},
-	}
+	// optimization: {
+	// 	splitChunks: {
+	// 		chunks: 'all',
+	// 	},
+	// }
 };
 export default module;
