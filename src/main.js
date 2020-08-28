@@ -819,38 +819,23 @@ window.onload = async () => {
 
           let electrodeController = function (legend) {
             this.Electrode_display = true;
-
-            this.LTPO = [legend.LTPO.r * 255, legend.LTPO.g * 255, legend.LTPO.b * 255]
-            this.LSO = [legend.LSO.r * 255, legend.LSO.g * 255, legend.LSO.b * 255]
-            this.LIO = [legend.LIO.r * 255, legend.LIO.g * 255, legend.LIO.b * 255]
-            this.LPH = [legend.LPH.r * 255, legend.LPH.g * 255, legend.LPH.b * 255]
-            this.LAH = [legend.LAH.r * 255, legend.LAH.g * 255, legend.LAH.b * 255]
-            this.LSTG = [legend.LSTG.r * 255, legend.LSTG.g * 255, legend.LSTG.b * 255]
-            this.LPRC = [legend.LPRC.r * 255, legend.LPRC.g * 255, legend.LPRC.b * 255]
-            this.LPOC = [legend.LPOC.r * 255, legend.LPOC.g * 255, legend.LPOC.b * 255]
-            this.LSP = [legend.LSP.r * 255, legend.LSP.g * 255, legend.LSP.b * 255]
-            this.LOL = [legend.LOL.r * 255, legend.LOL.g * 255, legend.LOL.b * 255]
-            this.LTO = [legend.LTO.r * 255, legend.LTO.g * 255, legend.LTO.b * 255]
-
+            elecs.children[0].children.forEach(elecName => {
+              this[elecName.name] = [legend[elecName.name].r * 255, legend[elecName.name].g * 255, legend[elecName.name].b * 255]
+            })
           };
+          
+
           let elecCtrl = new electrodeController(electrodeLegend);
           let electrodeManager = gui.addFolder("Electrodes")
           let electrodeToggler = electrodeManager
             .add(elecCtrl, "Electrode_display", true)
             .listen();
 
+            elecs.children[0].children.forEach(elecName => {
+          electrodeManager.addColor(elecCtrl, elecName.name)
 
-          electrodeManager.addColor(elecCtrl, "LTPO")
-          electrodeManager.addColor(elecCtrl, "LSO")
-          electrodeManager.addColor(elecCtrl, "LIO")
-          electrodeManager.addColor(elecCtrl, "LPH")
-          electrodeManager.addColor(elecCtrl, "LAH")
-          electrodeManager.addColor(elecCtrl, "LSTG")
-          electrodeManager.addColor(elecCtrl, "LPRC")
-          electrodeManager.addColor(elecCtrl, "LPOC")
-          electrodeManager.addColor(elecCtrl, "LSP")
-          electrodeManager.addColor(elecCtrl, "LOL")
-          electrodeManager.addColor(elecCtrl, "LTO")
+            })
+
           electrodeToggler.onChange((val) => {
             elecs.visible = val;
           });
