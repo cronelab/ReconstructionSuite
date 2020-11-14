@@ -40,6 +40,7 @@ jobs:
       - name: Push to docker
         uses: docker/build-push-action@v2
         with:
+          push: true
           context: .
           file: generate.Dockerfile
           tags: neuroseek/3d_reconstruction:latest
