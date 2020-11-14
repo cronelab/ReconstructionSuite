@@ -42,5 +42,4 @@ jobs:
         with:
           context: .
           file: generate.Dockerfile
-          repository: neuroseek/3d_reconstruction
-          tags: latest
+          tags: neuroseek/3d_reconstruction:latest
