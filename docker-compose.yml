@@ -14,4 +14,13 @@ services:
       - SUBJECT=fsaverage
       - PORT=80
 
+  mesh_generator:
+    container_name: mesh_generator
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    environment: 
+      - SUBJECT=fsaverage
+    volumes:
+      - $SUBJECTS_DIR:/data
 
