@@ -1,15 +1,15 @@
 version: '3'
 services:
-  # mesh_generator:
-  #   container_name: mesh_generator
-  #   build:
-  #     context: .
-  #     dockerfile: ./generate.Dockerfile
-  #   environment: 
-  #     - SUBJECT=PY20N014
-  #     - SUBJECTS_DIR=/data/
-  #   volumes:
-  #     - $SUBJECTS_DIR:/data/
+  mesh_generator:
+    container_name: mesh_generator
+    build:
+      context: .
+      dockerfile: ./generate.Dockerfile
+    environment: 
+      - SUBJECTS_DIR=/data/
+      - SUBJECT=fsaverage
+    volumes:
+      - $SUBJECTS_DIR:/data/
 
   visualizer:
     container_name: mesh_visualizer
@@ -20,7 +20,7 @@ services:
       - "80:80"
     environment: 
       - SUBJECTS_DIR=/data/
-      - SUBJECT=PY20N014
+      - SUBJECT=fsaverage
       - PORT=80
     volumes:
       - $SUBJECTS_DIR:/data

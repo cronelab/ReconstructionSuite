@@ -3,4 +3,4 @@ Data*
 node_modules/*
 dist/
 seekdocs/*
-docs/meshgen/build/*
+docs/ReconViz/build/*

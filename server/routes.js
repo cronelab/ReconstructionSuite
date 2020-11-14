@@ -11,9 +11,8 @@ const routes = (express) => {
   router.get("/", (req, res) =>
     res.sendFile(path.join(__dirname, "/dist", "/index.html"))
   );
-  router.use("/docs/meshviz", express.static(path.join(__dirname, "/docs", "/_build/html")));
-  router.use("/docs/meshgen", express.static(path.join(__dirname, "/meshdocs", "/_build/html")));
-  router.use("/docs/seek", express.static(path.join(__dirname, "/seekdocs", "/_build/html")));
+  router.use("/docs/viz", express.static(path.join(__dirname, "/docs", "ReconViz/build")));
+  router.use("/docs/seek", express.static(path.join(__dirname, "/docs", "seek/build")));
 
 
   //3D brain
@@ -51,28 +50,6 @@ const routes = (express) => {
     }
   });
 
-
-
-
-  // // objs
-  // router.get("/api/obj", (req, res) => {
-  //   if (fs.existsSync(`${dataDir}/${subject}/obj/3rd-Ventricle.obj`)) {
-  //     console.log("Sending obj...");
-  //     res.sendFile(`3rd-Ventricle.obj`, {
-  //       root: `${dataDir}/${subject}/obj/`,
-  //     });
-  //   }
-  // });
-
-  // //3D brain
-  // router.get("/api/brain3D", (req, res) => {
-  //   if (fs.existsSync(`${dataDir}/${subject}/reconstruction.glb`)) {
-  //     console.log("Sending glb...");
-  //     res.sendFile(`reconstruction.glb`, {
-  //       root: `${dataDir}/${subject}/`,
-  //     });
-  //   }
-  // });
   return router;
 };
 export default routes;
