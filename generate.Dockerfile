@@ -3,7 +3,12 @@ ENV DEBIAN_FRONTEND noninteractive
 
 # Install dependencies
 RUN apt-get update && apt-get -y install bc binutils libgomp1 perl psmisc sudo tar tcsh unzip \
-    uuid-dev vim-common libjpeg62-dev curl octave gawk jq
+    uuid-dev vim-common libjpeg62-dev curl octave gawk jq locales apt-utils
+RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
+    locale-gen
+ENV LC_ALL en_US.UTF-8 
+ENV LANG en_US.UTF-8  
+ENV LANGUAGE en_US:en    
 
 # Download Blender and set path
 RUN mkdir /usr/local/blender \
@@ -35,7 +40,7 @@ COPY FreeSurferColorLUT.txt /usr/local/freesurfer/FreeSurferColorLUT.txt
 # License/path necessary for freesurfer binaries to work
 ENV FREESURFER_HOME /usr/local/freesurfer
 ENV PATH /usr/local/freesurfer/bin:$PATH
-ENV SUBJECTS_DIR=/data/derivatives/freesurfer
+# ENV SUBJECTS_DIR=/data/derivatives/freesurfer
 COPY ./freesurferlicense.txt /usr/local/freesurfer/.license
 
 # Set work directory
@@ -47,20 +52,6 @@ COPY ./scripts /home/scripts
 RUN chmod +x runscript.sh && chmod +x aseg2srf.sh
 
 
-RUN apt-get update
-RUN apt-get install -y locales
-RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
-    locale-gen
-ENV LC_ALL en_US.UTF-8 
-ENV LANG en_US.UTF-8  
-ENV LANGUAGE en_US:en     
+ 
 
 CMD [ "/bin/bash", "-c", "./runscript.sh" ] 
-
-WORKDIR /home/visualizer
-COPY ./package*.json ./
-RUN npm i
-COPY fsaverage /data/derivatives/freesurfer/fsaverage
-COPY ./ ./
-RUN npm run build
-CMD [ "npm", "run", "start" ]

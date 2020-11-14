@@ -1,26 +1,26 @@
 version: '3'
 services:
+  # mesh_generator:
+  #   container_name: mesh_generator
+  #   build:
+  #     context: .
+  #     dockerfile: ./generate.Dockerfile
+  #   environment: 
+  #     - SUBJECT=PY20N014
+  #     - SUBJECTS_DIR=/data/
+  #   volumes:
+  #     - $SUBJECTS_DIR:/data/
+
   visualizer:
     container_name: mesh_visualizer
     build: 
       context: .
-      dockerfile: ./Dockerfile
+      dockerfile: ./visualize.Dockerfile
     ports:
-      - "80"
-    volumes:
-      - /mnt/shared/Subjects:/data
+      - "80:80"
     environment: 
-      - SUBJECTS_DIR=/data/derivatives/freesurfer
-      - SUBJECT=fsaverage
+      - SUBJECTS_DIR=/data/
+      - SUBJECT=PY20N014
       - PORT=80
-
-  mesh_generator:
-    container_name: mesh_generator
-    build:
-      context: .
-      dockerfile: ./Dockerfile
-    environment: 
-      - SUBJECT=fsaverage
     volumes:
       - $SUBJECTS_DIR:/data
-
