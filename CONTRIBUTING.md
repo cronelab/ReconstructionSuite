@@ -26,11 +26,40 @@ First, you should [fork](https://help.github.com/en/github/getting-started-with-
 
 TODO insert how to install and setup, or link to instructions.
 
-### Install Python packages required to run tests
+### Install Python/javascript packages required to run tests
 Install the following packages for testing purposes, plus all optonal MNE-BIDS
 dependencies to ensure you will be able to run all tests.
 
     $ pip install flake8 pytest pytest-cov
+
+Running code linter:
+
+    TODO: @Christopher can you add how you can code lint the javascript code?
+
+
+## Building the documentation
+
+TODO: @Christopher Coogan, can you help fill this in?
+
+The documentation can be built using sphinx. For that, please additionally
+install the following:
+
+    $ pip install matplotlib nilearn sphinx numpydoc sphinx-gallery sphinx_bootstrap_theme pillow
+
+To build the documentation locally, one can run:
+
+    $ cd doc/
+    $ make html
+
+or
+
+    $ make html-noplot
+    
+if you don't want to run the examples to build the documentation. This will result in a faster build but produce no plots in the examples.
+
+## BIDS-Validation
+To robustly apply seek workflows and reconstruction visualiztion, we rely on the BIDS specification 
+for storing data. One can use the `bids-validator` to verify that a dataset is BIDS-compliant.
 
 ### Install the BIDS validator
 Finally, it is necessary to install the
@@ -65,23 +94,3 @@ Then, retrieve the validator and install all its dependencies via `npm`.
 Test your installation by running:
 
     $ ./bin/bids-validator --version
-
-## Building the documentation
-
-TODO: @Christopher Coogan, can you help fill this in?
-
-The documentation can be built using sphinx. For that, please additionally
-install the following:
-
-    $ pip install matplotlib nilearn sphinx numpydoc sphinx-gallery sphinx_bootstrap_theme pillow
-
-To build the documentation locally, one can run:
-
-    $ cd doc/
-    $ make html
-
-or
-
-    $ make html-noplot
-    
-if you don't want to run the examples to build the documentation. This will result in a faster build but produce no plots in the examples.
