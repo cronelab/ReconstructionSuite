@@ -49,3 +49,7 @@ The gLTF binary file format allows for optimized viewing directly in browsers an
 - Electrodes
     - electrodeGroupA
         - electrodeGroupA1
+
+Citing
+------
+TODO
