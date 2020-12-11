@@ -12,12 +12,12 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@babel/core": "^7.10.5",
-    "@babel/plugin-transform-runtime": "^7.10.5",
-    "@babel/preset-env": "^7.10.4",
-    "@babel/register": "^7.10.5",
+    "@babel/core": "^7.12.10",
+    "@babel/plugin-transform-runtime": "^7.12.10",
+    "@babel/preset-env": "^7.12.10",
+    "@babel/register": "^7.12.10",
     "ami.js": "github:thebrainchain/ami#master",
-    "babel-loader": "^8.1.0",
+    "babel-loader": "^8.2.2",
     "bootstrap": "^4.5.0",
     "clean-webpack-plugin": "^3.0.0",
     "css-loader": "^3.6.0",
@@ -34,6 +34,6 @@
     "write-file-webpack-plugin": "^4.5.1"
   },
   "devDependencies": {
-    "nodemon": "^2.0.4"
+    "nodemon": "^2.0.6"
   }
 }

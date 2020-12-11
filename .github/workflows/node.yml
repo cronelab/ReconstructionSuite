@@ -22,6 +22,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install sphinx sphinx-rtd-theme sphinxcontrib-openapi
+          rm -r docs/ReconViz/build
           sphinx-build -b html docs/ReconViz/source docs/ReconViz/build
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
