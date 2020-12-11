@@ -5,7 +5,7 @@ Localization
 electrodes.glb can only be generated if an electrode Localization step has been completed outside of this pipeline. 
 For our purposes we'll be using the fieldtrip pipeline. For a more thorough waklthrough visit the official `Fieltrip documentation <https://www.fieldtriptoolbox.org/tutorial/human_ecog/>`_.
 
-For the automated SEEK pipeline (Steps 0 through 1) see: `SEEK <https://github.com/ncsl/seek>`_
+For the automated SEEK pipeline (Steps 0 through 2) see: `SEEK <https://github.com/ncsl/seek>`_
 
 Requirements
 -------------------------------------------------------------------------------------------------------------
@@ -54,7 +54,7 @@ Step 1: MR ACPC alignment
    cfg.parameter = 'anatomy';
    ft_volumewrite(cfg, mri_acpc);
 
-Step 1: Freesurfer reconstrucion
+Step 2: Freesurfer reconstrucion
 ------------------------------------------------------------------------------------------------------------------------------------------------------------
 (T1_acpc.nii => T1_acpc_processed.nii)
 ++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -64,7 +64,7 @@ For more information and configuration options on Freesurfer visit the `official
 
    recon-all -i /path_to_T1_acpc.nii/ -s $SUBJECT_NAME
 
-Step 2: CT CTF alignment 
+Step 3: CT CTF alignment 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 (CT.nii => CT_ctf.nii)
 ++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -77,7 +77,7 @@ Step 2: CT CTF alignment
    ct_ctf = ft_volumerealign(cfg, ct);
    ct_acpc = ft_convert_coordsys(ct_ctf, 'acpc');
 
-Step 3: Register CT to T1 
+Step 4: Register CT to T1 
 -------------------------------------------------------------------------------------------------------------------------------------------
 (CT_ctf.nii CT_acpc.nii)
 ++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -95,7 +95,7 @@ Step 3: Register CT to T1
    cfg.parameter = 'anatomy';
    ft_volumewrite(cfg, ct_acpc_f);
 
-Step 4: Mark electrodes
+Step 5: Mark electrodes
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 .. code-block:: matlab
 
@@ -104,7 +104,7 @@ Step 4: Mark electrodes
    cfg.channel = labels;
    elec_acpc_f = ft_electrodeplacement(cfg, ct_acpc_f, fsmri_acpc);
 
-Step 5: Export electrodes in BIDS-compliant tsv file 
+Step 6: Export electrodes in BIDS-compliant tsv file 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 (electrodes.tsv)
 ++++++++++++++++++++++++++++++++++++++++++++++++++++
