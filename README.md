@@ -52,4 +52,10 @@ The gLTF binary file format allows for optimized viewing directly in browsers an
 
 Citing
 ------
-TODO
+
++ Preprocessing
+    - https://brainder.org/2012/05/08/importing-freesurfer-subcortical-structures-into-blender/
+    - https://brainder.org/research/brain-for-blender/
+
++ Visualization
+    - https://github.com/FNNDSC/ami
