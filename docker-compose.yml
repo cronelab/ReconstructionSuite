@@ -6,10 +6,11 @@ services:
       context: .
       dockerfile: ./generate.Dockerfile
     environment: 
-      - SUBJECTS_DIR=/data/
-      - SUBJECT=fsaverage
+      - SUBJECTS_DIR=/data
+      - SUBJECT=cvs_avg35_inMNI152
     volumes:
-      - $SUBJECTS_DIR:/data/
+      # - $SUBJECTS_DIR:/data
+      - /usr/local/freesurfer/subjects:/data
 
   visualizer:
     container_name: mesh_visualizer
@@ -19,8 +20,9 @@ services:
     ports:
       - "80:80"
     environment: 
-      - SUBJECTS_DIR=/data/
-      - SUBJECT=fsaverage
+      - SUBJECTS_DIR=/data
+      - SUBJECT=cvs_avg35_inMNI152
       - PORT=80
     volumes:
-      - $SUBJECTS_DIR:/data
+      # - $SUBJECTS_DIR:/data
+      - /usr/local/freesurfer/subjects:/data
