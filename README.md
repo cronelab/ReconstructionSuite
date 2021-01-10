@@ -1,9 +1,7 @@
 # NeuroSEEK-Viz
 ![Github Actions](https://github.com/cronelab/ReconstructionVisualizer/workflows/Node.js%20CI/badge.svg?branch=master)
 
-A web-based visualization platform for sEEG electrodes in brain space.
-
-This can be used as a stand-alone visualization, or in conjunction with [NeuroSEEK-pipeline](https://github.com/ncsl/seek). 
+A web-based visualization platform for sEEG electrodes in brain space. This can be used as a stand-alone visualization, or in conjunction with [NeuroSEEK-pipeline](https://github.com/ncsl/seek). 
 
 All this repository requires are ``Blender`` objects (`.glb` files) for the brains and electrodes.
 
