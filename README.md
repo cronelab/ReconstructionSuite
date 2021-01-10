@@ -1,3 +1,10 @@
+# NeuroSEEK-Viz
+A web-based visualization platform for sEEG electrodes in brain space.
+
+This can be used as a stand-alone visualization, or in conjunction with [NeuroSEEK-pipeline](https://github.com/ncsl/seek). 
+
+All this repository requires are ``Blender`` objects (`.glb` files) for the brains and electrodes.
+
 ### Visualize Freesurfer cortical parcellations and subcortical segmentations in the browser
 
 Input: Freesurfer directory with completed subjects
@@ -6,7 +13,6 @@ Output: 3D mesh file containing brain regions and electrodes
 ### To run:
 
 - docker run -p 5000:5000 neuroseek/recon_visualizer
-
 
 ### Example:
 
@@ -20,6 +26,9 @@ The gLTF binary file format allows for optimized viewing directly in browsers an
     - Matlab/Octave
 - Blender (Freesurfer OBJ to FBX/gLTF)
     - Comes with a python interpreter
+
+# Documentation
+The official documentation with usage is at http://neuroseek.azurewebsites.net/docs/
 
 ### Instructions:
 
