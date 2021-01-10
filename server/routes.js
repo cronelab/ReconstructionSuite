@@ -13,7 +13,9 @@ const routes = (express) => {
   );
   router.use("/docs/viz", express.static(path.join(__dirname, "/docs", "ReconViz/build")));
   router.use("/docs/seek", express.static(path.join(__dirname, "/docs", "seek/build")));
+  router.use("/docs/localize", express.static(path.join(__dirname, "/docs", "Localization/build")));
 
+  router.use("/docs/", express.static(path.join(__dirname, "/docs", "LandingPage")));
 
   //3D brain
   router.get("/brain/:subject", (req, res) => {

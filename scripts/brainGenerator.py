@@ -1,10 +1,6 @@
 import bpy
 import os
-import sys
 import json
-import math
-import pandas
-import csv
 
 def main():
 

@@ -101,20 +101,20 @@
 <li class="toctree-l3"><a class="reference internal" href="#t1-nii-t1-acpc-nii">(T1.nii =&gt; T1_acpc.nii)</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#step-1-freesurfer-reconstrucion">Step 1: Freesurfer reconstrucion</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#step-2-freesurfer-reconstrucion">Step 2: Freesurfer reconstrucion</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#t1-acpc-nii-t1-acpc-processed-nii">(T1_acpc.nii =&gt; T1_acpc_processed.nii)</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#step-2-ct-ctf-alignment">Step 2: CT CTF alignment</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#step-3-ct-ctf-alignment">Step 3: CT CTF alignment</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#ct-nii-ct-ctf-nii">(CT.nii =&gt; CT_ctf.nii)</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#step-3-register-ct-to-t1">Step 3: Register CT to T1</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#step-4-register-ct-to-t1">Step 4: Register CT to T1</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#ct-ctf-nii-ct-acpc-nii">(CT_ctf.nii CT_acpc.nii)</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#step-4-mark-electrodes">Step 4: Mark electrodes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#step-5-export-electrodes-in-bids-compliant-tsv-file">Step 5: Export electrodes in BIDS-compliant tsv file</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#step-5-mark-electrodes">Step 5: Mark electrodes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#step-6-export-electrodes-in-bids-compliant-tsv-file">Step 6: Export electrodes in BIDS-compliant tsv file</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#electrodes-tsv">(electrodes.tsv)</a></li>
 </ul>
 </li>
@@ -189,7 +189,7 @@
 <h1>Localization<a class="headerlink" href="#localization" title="Permalink to this headline">¶</a></h1>
 <p>electrodes.glb can only be generated if an electrode Localization step has been completed outside of this pipeline.
 For our purposes we’ll be using the fieldtrip pipeline. For a more thorough waklthrough visit the official <a class="reference external" href="https://www.fieldtriptoolbox.org/tutorial/human_ecog/">Fieltrip documentation</a>.</p>
-<p>For the automated SEEK pipeline (Steps 0 through 1) see: <a class="reference external" href="https://github.com/ncsl/seek">SEEK</a></p>
+<p>For the automated SEEK pipeline (Steps 0 through 2) see: <a class="reference external" href="https://github.com/ncsl/seek">SEEK</a></p>
 <div class="section" id="requirements">
 <h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
@@ -238,8 +238,8 @@ For our purposes we’ll be using the fieldtrip pipeline. For a more thorough wa
 </div>
 </div>
 </div>
-<div class="section" id="step-1-freesurfer-reconstrucion">
-<h2>Step 1: Freesurfer reconstrucion<a class="headerlink" href="#step-1-freesurfer-reconstrucion" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="step-2-freesurfer-reconstrucion">
+<h2>Step 2: Freesurfer reconstrucion<a class="headerlink" href="#step-2-freesurfer-reconstrucion" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="t1-acpc-nii-t1-acpc-processed-nii">
 <h3>(T1_acpc.nii =&gt; T1_acpc_processed.nii)<a class="headerlink" href="#t1-acpc-nii-t1-acpc-processed-nii" title="Permalink to this headline">¶</a></h3>
 <p>For more information and configuration options on Freesurfer visit the <a class="reference external" href="https://surfer.nmr.mgh.harvard.edu/">official page</a></p>
@@ -248,8 +248,8 @@ For our purposes we’ll be using the fieldtrip pipeline. For a more thorough wa
 </div>
 </div>
 </div>
-<div class="section" id="step-2-ct-ctf-alignment">
-<h2>Step 2: CT CTF alignment<a class="headerlink" href="#step-2-ct-ctf-alignment" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="step-3-ct-ctf-alignment">
+<h2>Step 3: CT CTF alignment<a class="headerlink" href="#step-3-ct-ctf-alignment" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="ct-nii-ct-ctf-nii">
 <h3>(CT.nii =&gt; CT_ctf.nii)<a class="headerlink" href="#ct-nii-ct-ctf-nii" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">ct</span> <span class="p">=</span> <span class="n">ft_read_mri</span><span class="p">([</span><span class="n">subjID</span> <span class="s">&#39;_CT_acpc_f.nii&#39;</span><span class="p">]);</span> <span class="c">% we used the dcm series</span>
@@ -262,8 +262,8 @@ For our purposes we’ll be using the fieldtrip pipeline. For a more thorough wa
 </div>
 </div>
 </div>
-<div class="section" id="step-3-register-ct-to-t1">
-<h2>Step 3: Register CT to T1<a class="headerlink" href="#step-3-register-ct-to-t1" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="step-4-register-ct-to-t1">
+<h2>Step 4: Register CT to T1<a class="headerlink" href="#step-4-register-ct-to-t1" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="ct-ctf-nii-ct-acpc-nii">
 <h3>(CT_ctf.nii CT_acpc.nii)<a class="headerlink" href="#ct-ctf-nii-ct-acpc-nii" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">cfg</span>             <span class="p">=</span> <span class="p">[];</span>
@@ -281,8 +281,8 @@ For our purposes we’ll be using the fieldtrip pipeline. For a more thorough wa
 </div>
 </div>
 </div>
-<div class="section" id="step-4-mark-electrodes">
-<h2>Step 4: Mark electrodes<a class="headerlink" href="#step-4-mark-electrodes" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="step-5-mark-electrodes">
+<h2>Step 5: Mark electrodes<a class="headerlink" href="#step-5-mark-electrodes" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">labels</span> <span class="p">=</span> <span class="p">[</span>&quot;<span class="n">ch1</span>&quot;<span class="p">,</span>&quot;<span class="n">ch2</span>&quot;<span class="p">,</span>&quot;<span class="n">ch3</span>&quot;<span class="p">]</span><span class="o">&#39;</span> <span class="c">%...</span>
 <span class="n">cfg</span>         <span class="p">=</span> <span class="p">[];</span>
 <span class="n">cfg</span><span class="p">.</span><span class="n">channel</span> <span class="p">=</span> <span class="n">labels</span><span class="p">;</span>
@@ -290,8 +290,8 @@ For our purposes we’ll be using the fieldtrip pipeline. For a more thorough wa
 </pre></div>
 </div>
 </div>
-<div class="section" id="step-5-export-electrodes-in-bids-compliant-tsv-file">
-<h2>Step 5: Export electrodes in BIDS-compliant tsv file<a class="headerlink" href="#step-5-export-electrodes-in-bids-compliant-tsv-file" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="step-6-export-electrodes-in-bids-compliant-tsv-file">
+<h2>Step 6: Export electrodes in BIDS-compliant tsv file<a class="headerlink" href="#step-6-export-electrodes-in-bids-compliant-tsv-file" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="electrodes-tsv">
 <h3>(electrodes.tsv)<a class="headerlink" href="#electrodes-tsv" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-matlab notranslate"><div class="highlight"><pre><span></span><span class="n">MR_vox</span> <span class="p">=</span> <span class="n">elec_acpc_f</span><span class="p">;</span>

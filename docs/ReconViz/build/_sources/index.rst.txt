@@ -10,7 +10,6 @@ Welcome to the Freesurfer mesh generation and visualization documentation
    gettingstarted
    details
    api
-   localization
 
 Getting Started
 ---------------------

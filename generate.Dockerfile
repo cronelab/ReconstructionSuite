@@ -12,12 +12,12 @@ ENV LANGUAGE en_US:en
 
 # Download Blender and set path
 RUN mkdir /usr/local/blender \
-    && curl -SL https://download.blender.org/release/Blender2.82/blender-2.82a-linux64.tar.xz -o blender.tar.xz \
+    && curl -SL https://download.blender.org/release/Blender2.91/blender-2.91.0-linux64.tar.xz -o blender.tar.xz \
     && tar -xf blender.tar.xz -C /usr/local/blender --strip-components=1 \
     && rm blender.tar.xz \
     && curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py \
-    && /usr/local/blender/2.82/python/bin/python3.7m get-pip.py \
-    && /usr/local/blender/2.82/python/bin/python3.7m -m pip install pandas
+    && /usr/local/blender/2.91/python/bin/python3.7m get-pip.py \
+    && /usr/local/blender/2.91/python/bin/python3.7m -m pip install pandas
 
 ENV PATH /usr/local/blender:$PATH
 
