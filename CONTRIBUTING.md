@@ -10,6 +10,17 @@ To help developing `seek` or `ReconstructionVisualizer`, you will need a few adj
 installation as shown below.
 
 ## Running tests
+To develop locally, clone the project and run ``yarn`` from the project root. This will install external dependencies. 
+
+To make sure all javascript code conforms to standards, run the linter with
+
+    npm run lint
+
+or 
+
+    yarn lint
+
+The lint configurations are stored in `.eslintrc.json` file. We follow Google's JavaScript standards (subject to change).
 
 ### (Optional) Install Docker
 To run workflows, it is recommended to use Docker. Install Docker at: https://docs.docker.com/get-docker/.
@@ -31,11 +42,6 @@ Install the following packages for testing purposes, plus all optonal MNE-BIDS
 dependencies to ensure you will be able to run all tests.
 
     $ pip install flake8 pytest pytest-cov
-
-Running code linter:
-
-    TODO: @Christopher can you add how you can code lint the javascript code?
-
 
 ## Building the documentation
 

@@ -1,0 +1,54 @@
+version: 2
+
+jobs:
+  test:
+    docker:
+      - image: node:12.16.1
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - npm-deps-{{ checksum "package.json" }}
+      - run: yarn
+      - save_cache:
+          key: npm-deps-{{ checksum "package.json" }}
+          paths: node_modules
+      - run:
+          name: Eslint
+          command: yarn lint
+      # - run:
+      #     name: Jest tests
+      #     command: yarn coverage --maxWorkers=2
+      # - run:
+      #     name: Upload to codecov
+      #     command: yarn codecov
+      # - run:
+      #     name: Smoke tests
+          # command: bids-validator/bin/bids-validator bids-validator/tests/data/valid_headers/ --ignoreNiftiHeaders && bids-validator/bin/bids-validator bids-validator/tests/data/valid_headers/ --ignoreNiftiHeaders --json
+  # test_docker:
+  #   machine:
+  #     # Ubuntu 16.04, docker 18.09.3, docker-compose 1.23.1
+  #     image: ubuntu-1604:201903-01
+  #   steps:
+  #     - checkout
+  #     - run: docker build -t bids/validator:latest .
+  #     - run:
+  #         name: Smoke tests
+  #         command: |
+  #           docker run --rm -it -v $PWD/bids-validator/tests/data/valid_headers:/data bids/validator:latest /data --ignoreNiftiHeaders
+  #           docker run --rm -it -v $PWD/bids-validator/tests/data/valid_headers:/data bids/validator:latest /data --ignoreNiftiHeaders --json
+
+workflows:
+  version: 2
+  build-deploy:
+    jobs:
+      - test:
+          filters:
+            branches:
+              only: /.*/
+            tags:
+              only: /.*/
+      # - test_docker:
+      #     filters:
+      #       tags:
+      #         only: /.*/

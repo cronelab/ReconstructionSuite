@@ -7,7 +7,10 @@
     "build": "webpack --config webpack.config.js",
     "start": "node server/server",
     "dev": "nodemon server/server --ignore './dist/'",
-    "docs": "cd docs && make html"
+    "docs": "cd docs && make html",
+    "lint": "./node_modules/eslint/bin/eslint.js ./src/**/*.js",
+    "coverage": "./node_modules/.bin/jest --coverage",
+    "codecov": "./node_modules/.bin/codecov"
   },
   "author": "",
   "license": "ISC",
@@ -20,12 +23,15 @@
     "babel-loader": "^8.2.2",
     "bootstrap": "^4.5.0",
     "clean-webpack-plugin": "^3.0.0",
+    "codecov": "^3.8.1",
+    "coverage": "^0.4.1",
     "css-loader": "^3.6.0",
     "dat.gui": "^0.7.7",
     "express": "^4.17.1",
     "html-webpack-plugin": "^4.3.0",
     "html2canvas": "^1.0.0-rc.5",
     "jquery": "^3.5.1",
+    "lint": "^0.7.0",
     "popper.js": "^1.16.1",
     "style-loader": "^1.2.1",
     "three": "^0.117.1",
@@ -34,6 +40,10 @@
     "write-file-webpack-plugin": "^4.5.1"
   },
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.13.0",
+    "@typescript-eslint/parser": "^4.13.0",
+    "eslint": "^7.17.0",
+    "eslint-config-google": "^0.14.0",
     "nodemon": "^2.0.7"
   }
 }

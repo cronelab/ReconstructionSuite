@@ -1,5 +1,7 @@
 .vscode/*
 Data*
-node_modules/*
+node_modules/
 dist/
 seekdocs/*
+.DS_Store
+.idea/
