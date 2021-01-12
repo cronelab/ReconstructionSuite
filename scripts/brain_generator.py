@@ -20,7 +20,7 @@ def _convert_materialcolors_to_rgb(matcolors_dict, region_name):
     return r, g, b
 
 
-def main(mat_color_json_fpath):
+def main(mat_color_json_fpath, savePath):
     """Create ``.glb`` Blender files for brain regions.
 
     Parameters
@@ -71,7 +71,7 @@ def main(mat_color_json_fpath):
             mat = bpy.data.materials.new("brainMaterial")
             mat.diffuse_color = (r, g, b, 1)
             bpy.data.objects[os.path.splitext(file)[0]].active_material = mat
-            mat.use_nodes = True
+            # mat.use_nodes = True
 
             if name.endswith("-Cerebral-Cortex"):
                 pass
@@ -80,8 +80,8 @@ def main(mat_color_json_fpath):
                     "Gyri"
                 ]
             elif (
-                    file == "Left-Cerebral-White-Matter.obj"
-                    or file == "Right-Cerebral-White-Matter.obj"
+                    file == "Left-Cerebral-White-Matter.obj" or
+                    file == "Right-Cerebral-White-Matter.obj"
             ):
                 bpy.data.objects[os.path.splitext(file)[0]].parent = bpy.data.objects[
                     "WhiteMatter"
@@ -93,30 +93,27 @@ def main(mat_color_json_fpath):
 
     bpy.ops.export_scene.gltf(
         export_format="GLB",
-        filepath=f"{subjects_dir}/blender_objects/brain",
+        filepath=f"{subjects_dir}/{savePath}", #savePath,
         export_texcoords=False,
         export_normals=False,
         export_cameras=False,
         export_yup=False,
     )
 
+    bpy.ops.export_scene.fbx(
+        filepath=f"{subjects_dir}/brain.fbx")
+
+
 
 if __name__ == "__main__":
-    # parser = argparse.ArgumentParser()
-    # parser.add_argument(
-    #     "--materialColorsPath",
-    #     # dest="describe",
-    #     # action="store_true",
-    #     default="/home/scripts/materialColors.json",
-    #     help=("If set, is the path to the materialColors JSON file."),
-    # )
-    #
-    # args = parser.parse_args()
 
-    # Extract arguments from parser
-    # Note: that arguments for Python start at index 6. See the snakemake rule
     mat_colors_json_fpath = sys.argv[6]
     if mat_colors_json_fpath == "":
-        mat_colors_json_fpath = "/home/scripts/materialColors.json"
+        mat_colors_json_fpath = "/home/scripts/octave/materialColors.json"
 
-    main(mat_color_json_fpath=mat_colors_json_fpath)
+    savePath = sys.argv[7]
+    if savePath == "":
+        savePath = "brain"
+    
+
+    main(mat_color_json_fpath=mat_colors_json_fpath, savePath=savePath)

@@ -48,3 +48,4 @@ COPY ./freesurferlicense.txt /usr/local/freesurfer/.license
 
 # Copy all scripts to image
 COPY ./scripts /home/scripts
+RUN chmod +x /home/scripts/runscript.sh && chmod +x /home/scripts/bash/aseg2srf.sh

@@ -18,7 +18,7 @@ def _text_num_split(item):
             return [item[:index], item[index:]]
 
 
-def main(elec_fpath, verbose=False):
+def main(elec_fpath,savePath, verbose=False):
     """Create ``.glb`` Blender files for electrodes.tsv file.
 
     Parameters
@@ -91,17 +91,33 @@ def main(elec_fpath, verbose=False):
         bpy.context.active_object.active_material = mat
         bpy.context.active_object.parent = bpy.data.objects[electrodeGroup]
 
-    bpy.ops.export_scene.gltf(
+    # bpy.ops.export_scene.gltf(
+    #     export_format="GLB",
+    #     filepath=f"{subjects_dir}/blender_objects/electrodes",
+    #     export_texcoords=False,
+    #     export_normals=False,
+    #     export_cameras=False,
+    #     export_yup=False,
+    # )
+
+        bpy.ops.export_scene.gltf(
         export_format="GLB",
-        filepath=f"{subjects_dir}/blender_objects/electrodes",
+        filepath=f"{subjects_dir}/{savePath}", #savePath,
         export_texcoords=False,
         export_normals=False,
         export_cameras=False,
         export_yup=False,
     )
 
+    bpy.ops.export_scene.fbx(
+        filepath=f"{subjects_dir}/electrodes.fbx")
+
 
 if __name__ == "__main__":
     elec_fpath = sys.argv[6]
 
-    main(elec_fpath, verbose=False)
+    savePath = sys.argv[7]
+    if savePath == "":
+        savePath = "electrodes"
+    
+    main(elec_fpath, savePath, verbose=False)

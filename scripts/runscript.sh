@@ -21,7 +21,7 @@ mv $SUBJECTS_DIR/$SUBJECT/surf/rh.pial.asc $SUBJECTS_DIR/$SUBJECT/surf/rh.pial.s
 counter=0001
 while [ $counter -le 0035 ]; do
 	newCount=$(printf "%04g" $counter)
-	labelName=$(cat ./roiNames.json | jq '.["'$newCount'"]')
+	labelName=$(cat ./octave/roiNames.json | jq '.["'$newCount'"]')
 	labelName="${labelName#\"}"
 	labelName="${labelName%\"}"
 	./octave/srf2obj $SUBJECTS_DIR/$SUBJECT/rois/lh.pial_roi.$newCount.srf >$SUBJECTS_DIR/$SUBJECT/obj/lh.$labelName.obj
@@ -32,5 +32,5 @@ done
 mri_convert $SUBJECTS_DIR/$SUBJECT/mri/brain.mgz $SUBJECTS_DIR/$SUBJECT/reconstruction.nii
 
 ./elec2vox.sh
-/usr/local/blender/blender --background startup.blend -noaudio --python electrodeGenerator.py
-/usr/local/blender/blender --background startup.blend -noaudio --python brainGenerator.py
+/usr/local/blender/blender --background startup.blend -noaudio --python electrode_generator.py $SUBJECTS_DIR/$SUBJECT/electrodes/tkrRAS_electrodes.tsv ""
+/usr/local/blender/blender --background startup.blend -noaudio --python brain_generator.py "" ""
