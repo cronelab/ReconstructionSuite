@@ -80,8 +80,8 @@ def main(mat_color_json_fpath):
                     "Gyri"
                 ]
             elif (
-                file == "Left-Cerebral-White-Matter.obj"
-                or file == "Right-Cerebral-White-Matter.obj"
+                    file == "Left-Cerebral-White-Matter.obj"
+                    or file == "Right-Cerebral-White-Matter.obj"
             ):
                 bpy.data.objects[os.path.splitext(file)[0]].parent = bpy.data.objects[
                     "WhiteMatter"
