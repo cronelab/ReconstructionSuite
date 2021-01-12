@@ -10,7 +10,7 @@ Output: 3D mesh file containing brain regions and electrodes
 
 ### Example:
 
-![Example](/Picture.jpg)
+![Example](/docs/_static/Picture.jpg)
 The gLTF binary file format allows for optimized viewing directly in browsers and VR/AR devices.
 
 ### Dependencies:
