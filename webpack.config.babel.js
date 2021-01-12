@@ -7,13 +7,13 @@ let __dirname = path.resolve(path.dirname(""));
 const module = {
 	mode: "production",
 	entry: {
-		index: "./src/main.js"
+		index: "./seek_viz/main.js"
 	},
 	module: {
 		rules: [
 			{
 				test: /\.js$/,
-				include: path.resolve(__dirname, 'src'),
+				include: path.resolve(__dirname, 'seek_viz'),
 				loader: 'babel-loader',
 			  },
 			{
@@ -33,7 +33,7 @@ const module = {
 		new WriteFilePlugin(),
 		new HtmlWebpackPlugin({
 			hash: true,
-			template: "./src/index.html",
+			template: "./seek_viz/index.html",
 			filename: "index.html",
 			chunks: ["index"],
 		}),
