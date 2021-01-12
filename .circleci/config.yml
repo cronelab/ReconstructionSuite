@@ -1,0 +1,53 @@
+version: 2.1
+
+jobs:
+  python-lint:
+    docker:
+      - image: circleci/python:3.8-buster
+    steps:
+      - checkout
+
+      # Also restore pip cache to speed up installations
+      - restore_cache: # ensure this step occurs *before* installing dependencies
+          keys:
+            # when lock file changes, use increasingly general patterns to restore cache
+            - pip-packages-v1-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+            - pip-packages-v1-{{ .Branch }}-
+            - pip-packages-v1-
+
+      - run:
+          name: Setup Python environment via Pipenv
+          # ... but use latest version of EZTrack
+          command: |
+            sudo pip install --upgrade pip
+            sudo pip install pipenv
+            pipenv install --skip-lock --dev
+
+      - run:
+          name: Run unit and integration tests
+          command: |
+            pipenv run make check
+
+workflows:
+  commit:
+    jobs:
+      - python-lint
+#      - docs-deploy:
+#          requires:
+#            - docs-build
+#          filters:
+#            branches:
+#              only: master
+
+#  scheduled:
+#    jobs:
+#      - docs-build
+#
+#    triggers:
+#      - schedule:
+#          cron: "0 4 * * *"
+#          filters:
+#            branches:
+#              only:
+#                - master
+
