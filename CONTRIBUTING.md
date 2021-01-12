@@ -23,13 +23,14 @@ or
 The lint configurations are stored in `.eslintrc.json` file. We follow Google's JavaScript standards (subject to change).
 
 ### (Optional) Install Docker
-To run workflows, it is recommended to use Docker. Install Docker at: https://docs.docker.com/get-docker/.
+To run the visualization engine, it is recommended to use Docker. Install Docker at: https://docs.docker.com/get-docker/.
+
+
+## Developing workflows
+``SEEK`` automates workflows that output data structures/files that can be visualized using ``ReconstructionVisualizer``. 
 
 ### Install development version of seek
-First, you should [fork](https://help.github.com/en/github/getting-started-with-github/fork-a-repo) the `seek` repository. 
-Then, clone the fork and install it in.
-
-TODO insert how to install and setup, or link to instructions.
+First, you should [fork](https://help.github.com/en/github/getting-started-with-github/fork-a-repo) the `seek` repository. Then, clone the fork and install it. See https://neuroseek.azurewebsites.net/docs/seek/ for more details.
 
 ### Install development version of ReconstructionVisualizer
 First, you should [fork](https://help.github.com/en/github/getting-started-with-github/fork-a-repo) the 
@@ -37,14 +38,7 @@ First, you should [fork](https://help.github.com/en/github/getting-started-with-
 
 TODO insert how to install and setup, or link to instructions.
 
-### Install Python/javascript packages required to run tests
-Install the following packages for testing purposes, plus all optonal MNE-BIDS
-dependencies to ensure you will be able to run all tests.
-
-    $ pip install flake8 pytest pytest-cov
-
 ## Building the documentation
-
 TODO: @Christopher Coogan, can you help fill this in?
 
 The documentation can be built using sphinx. For that, please additionally
