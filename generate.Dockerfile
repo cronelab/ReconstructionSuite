@@ -1,5 +1,8 @@
+# syntax=docker/dockerfile:1.2
 FROM ubuntu:latest
 ENV DEBIAN_FRONTEND noninteractive
+
+LABEL authors="Christopher Coogan <c.coogan2201@gmail.com>, Adam Li <ali39@jhu.edu>"
 
 # Install dependencies
 RUN apt-get update && apt-get -y install bc binutils libgomp1 perl psmisc sudo tar tcsh unzip \
@@ -40,18 +43,8 @@ COPY FreeSurferColorLUT.txt /usr/local/freesurfer/FreeSurferColorLUT.txt
 # License/path necessary for freesurfer binaries to work
 ENV FREESURFER_HOME /usr/local/freesurfer
 ENV PATH /usr/local/freesurfer/bin:$PATH
-# ENV SUBJECTS_DIR=/data/derivatives/freesurfer
+
 COPY ./freesurferlicense.txt /usr/local/freesurfer/.license
-
-# Set work directory
-WORKDIR /home/scripts
-
 
 # Copy all scripts to image
 COPY ./scripts /home/scripts
-RUN chmod +x runscript.sh && chmod +x aseg2srf.sh
-
-
- 
-
-CMD [ "/bin/bash", "-c", "./runscript.sh" ] 
