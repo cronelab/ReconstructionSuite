@@ -64,5 +64,9 @@ def main():
         export_cameras=False,
         export_yup=False)
 
+    bpy.ops.export_scene.fbx(
+        filepath="{dir}/{patient}.fbx".format(dir=subjDir,
+        patient="brain"))
+
 if __name__ == "__main__":
     main()
