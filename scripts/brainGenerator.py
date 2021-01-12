@@ -41,7 +41,7 @@ def main():
             mat.diffuse_color = (r, g, b, 1)
             bpy.data.objects[os.path.splitext(
                 file)[0]].active_material = mat
-            mat.use_nodes = True
+            # mat.use_nodes = True
 
             if name.endswith("-Cerebral-Cortex"):
                 pass
