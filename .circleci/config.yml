@@ -83,7 +83,8 @@ workflows:
     jobs:
       - python-lint
       - test-npm
-      - test-docker
+      - test-docker_viz
+      - test_docker_mesh
 #      - docs-deploy:
 #          requires:
 #            - docs-build
