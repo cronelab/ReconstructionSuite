@@ -59,3 +59,9 @@ Citing
 
 + Visualization
     - https://github.com/FNNDSC/ami
+
+
+Version 2.0 viewer
++ Written with react/react-three-fiber/drei
++ Only mesh view, no volumetric rendering
++ localhost/threed.html?subject=$SUBJECT
