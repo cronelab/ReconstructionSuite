@@ -5,12 +5,14 @@ services:
     build:
       context: .
       dockerfile: ./generate.Dockerfile
+    working_dir: /home/scripts
     environment: 
       - SUBJECTS_DIR=/data
       - SUBJECT=cvs_avg35_inMNI152
     volumes:
       # - $SUBJECTS_DIR:/data
       - /usr/local/freesurfer/subjects:/data
+    command: /bin/bash -c ./runscript.sh
 
   visualizer:
     container_name: mesh_visualizer
@@ -26,3 +28,8 @@ services:
     volumes:
       # - $SUBJECTS_DIR:/data
       - /usr/local/freesurfer/subjects:/data
+
+
+  # docker build -f ./generate.Dockerfile . -t vizgen
+  
+  # docker run --env SUBJECTS_DIR=/data --env SUBJECT=cvs_avg35_inMNI152 -v /usr/local/freesurfer/subjects:/data -w /home/scripts -it vizgen:latest /bin/bash -c ./runscript.sh

@@ -21,7 +21,7 @@ TODO: list dependencies
 
 
 We recommend the `Docker <https://docs.docker.com/get-docker/>`_ 
-way of installing things because we rely on a plethora of open-source softwares 
+way of installing things because we rely on a plethora of open-source software
 ranging languages and runtime environments. 
 
 We require that you use Python 3.6 or higher.

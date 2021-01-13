@@ -17,7 +17,7 @@ Output: 3D mesh file containing brain regions and electrodes
 
 ### Example:
 
-![Example](/Picture.jpg)
+![Example](/docs/_static/Picture.jpg)
 The gLTF binary file format allows for optimized viewing directly in browsers and VR/AR devices.
 
 ### Dependencies:
@@ -69,3 +69,9 @@ Citing
 
 + Visualization
     - https://github.com/FNNDSC/ami
+
+
+Version 2.0 viewer
++ Written with react/react-three-fiber/drei
++ Only mesh view, no volumetric rendering
++ localhost/threed.html?subject=$SUBJECT

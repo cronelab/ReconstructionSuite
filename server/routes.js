@@ -1,5 +1,6 @@
 import path from "path";
 import fs from "fs";
+import parse from "csv-parse/lib/sync.js";
 
 let subject = process.env.SUBJECT || "fsaverage";
 let dataDir = process.env.SUBJECTS_DIR || "/data/derivatives/freesurfer";
@@ -19,7 +20,6 @@ const routes = (express) => {
 
   //3D brain
   router.get("/brain/:subject", (req, res) => {
-    let subject = req.params.subject
     if (fs.existsSync(`${dataDir}/${subject}/brain.glb`)) {
       res.sendFile(`brain.glb`, {
         root: `${dataDir}/${subject}/`,
@@ -33,6 +33,7 @@ const routes = (express) => {
   //3D brain
   router.get("/electrodes/:subject", (req, res) => {
     let subject = req.params.subject
+    console.log(`${dataDir}/${subject}/electrodes.glb`)
     if (fs.existsSync(`${dataDir}/${subject}/electrodes.glb`)) {
       res.sendFile(`electrodes.glb`, {
         root: `${dataDir}/${subject}/`,
@@ -42,6 +43,30 @@ const routes = (express) => {
       res.status(404).send('Not Found')
     }
   });
+
+    //Anatomical locations
+    router.get("/anatomy/:subject", (req, res) => {
+      let subject = req.params.subject;
+      fs.readdir(dataDir, (err, subjects) => {
+        if (subjects.indexOf(subject) > -1) {
+          if (fs.existsSync(`${dataDir}/${subject}/electrodes/anatomicalLabels.tsv`)) {
+            let file = fs.readFileSync(
+              `${dataDir}/${subject}/electrodes/anatomicalLabels.tsv`
+            );
+            let anatomy = parse(file, {
+              delimiter: ["\t"],
+            });
+            anatomy.shift();
+            res.send(JSON.stringify(anatomy))
+          }
+          else {
+            res.status(204).end();
+  
+          }
+        }
+      });
+    });
+  
 
   router.get("/nifti/:subject", (req, res) => {
     let subject = req.params.subject
