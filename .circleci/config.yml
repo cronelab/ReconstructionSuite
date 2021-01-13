@@ -52,19 +52,31 @@ jobs:
       # - run:
       #     name: Smoke tests
       # command: bids-validator/bin/bids-validator bids-validator/tests/data/valid_headers/ --ignoreNiftiHeaders && bids-validator/bin/bids-validator bids-validator/tests/data/valid_headers/ --ignoreNiftiHeaders --json
-  test_docker:
+  test_docker_viz:
     machine:
       # Ubuntu 16.04, docker 18.09.3, docker-compose 1.23.1
       image: ubuntu-1604:201903-01
     steps:
       - checkout
-      - run: docker build -t neuroseek/recon_visualizer:latest .
+      - run: docker build -t neuroseek/recon_visualizer:latest -f visualizer.Dockerfile .
       # - run:
       #     name: Smoke tests
       #     command: |
       #       docker run --rm -it -v $PWD/bids-validator/tests/data/valid_headers:/data bids/validator:latest /data --ignoreNiftiHeaders
       #       docker run --rm -it -v $PWD/bids-validator/tests/data/valid_headers:/data bids/validator:latest /data --ignoreNiftiHeaders --json
 
+  test_docker_mesh:
+    machine:
+      # Ubuntu 16.04, docker 18.09.3, docker-compose 1.23.1
+      image: ubuntu-1604:201903-01
+    steps:
+      - checkout
+      - run: docker build -t neuroseek/3d_reconstruction:latest -f generate.Dockerfile .
+      # - run:
+      #     name: Smoke tests
+      #     command: |
+      #       docker run --rm -it -v $PWD/bids-validator/tests/data/valid_headers:/data bids/validator:latest /data --ignoreNiftiHeaders
+      #       docker run --rm -it -v $PWD/bids-validator/tests/data/valid_headers:/data bids/validator:latest /data --ignoreNiftiHeaders --json
 
 workflows:
   commit:
