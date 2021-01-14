@@ -7,18 +7,14 @@ free and properly documented (both API docs and an example script),
 it can be incorporated into the master branch.
 
 To help developing `seek` or `ReconstructionVisualizer`, you will need a few adjustments to your
-installation as shown below.
+installation as shown below. To install packages, we use ``npm``.
 
 ## Running tests
-To develop locally, clone the project and run ``yarn`` from the project root. This will install external dependencies. 
+To develop locally, clone the project and run ``yarn`` from the project root. This will install external dependencies.
 
 To make sure all javascript code conforms to standards, run the linter with
 
     npm run lint
-
-or 
-
-    yarn lint
 
 The lint configurations are stored in `.eslintrc.json` file. We follow Google's JavaScript standards (subject to change).
 
