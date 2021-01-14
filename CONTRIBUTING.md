@@ -38,6 +38,13 @@ First, you should [fork](https://help.github.com/en/github/getting-started-with-
 
 TODO insert how to install and setup, or link to instructions.
 
+## Updating Dockerfiles
+
+
+
+Reference: https://www.learncloudnative.com/blog/2020-02-20-github-action-build-push-docker-images/
+
+
 ## Building the documentation
 TODO: @Christopher Coogan, can you help fill this in?
 
