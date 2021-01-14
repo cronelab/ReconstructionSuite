@@ -42,7 +42,7 @@ jobs:
           paths: node_modules
       - run:
           name: Eslint
-          command: yarn lint
+          command: npm lint
       # - run:
       #     name: Jest tests
       #     command: yarn coverage --maxWorkers=2
