@@ -2,10 +2,14 @@
 Localization
 ========================================================================================================
 
-electrodes.glb can only be generated if an electrode Localization step has been completed outside of this pipeline. 
+``electrodes.glb`` can only be generated if an electrode localization step has been completed outside of this pipeline. 
 For our purposes we'll be using the fieldtrip pipeline. For a more thorough waklthrough visit the official `Fieltrip documentation <https://www.fieldtriptoolbox.org/tutorial/human_ecog/>`_.
 
 For the automated SEEK pipeline (Steps 0 through 2) see: `SEEK <https://github.com/ncsl/seek>`_
+
+We also provide the `electrode_localization.m <https://github.com/ncsl/seek/blob/master/workflow/scripts/electrode_localization.m>`_ file, which is already setup
+with the steps outlined below and some additional documentation. You will need 
+to alter a few paths.
 
 Requirements
 -------------------------------------------------------------------------------------------------------------
@@ -16,16 +20,17 @@ Requirements
 + `dcm2niix <https://github.com/neurolabusc/MRIcroGL)>`_ or `MRIcroGL for an interactive GUI <https://github.com/rordenlab/dcm2niix>`_
 
 
-
 Step 0a: Convertsion of MR dcm to nii and anonymization
 -------------------------------------------------------------------------------------------------------------
 (T1.dcm => T1.nii) 
 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+To convert ``.dicom`` images to ``.nii`` (Nifti), one can use ``dcm2niix``. 
 For more information and configuration options on dcm2niix visit the `official repo <https://github.com/rordenlab/dcm2niix>`_
 
 .. code-block:: bash
 
    dcm2niix /path_to_T1_dicom_folder/ -o /output_folder
+
 
 Step 0b: Convertsion of CT dcm to nii and anonymization 
 -------------------------------------------------------------------------------------------------------------
@@ -35,11 +40,26 @@ Step 0b: Convertsion of CT dcm to nii and anonymization
 
    dcm2niix /path_to_CT_dicom_folder/ -o /output_folder
 
+Step 0c: Renaming T1/CT nii files
+-------------------------------------------------------------------------------------------------------------
+After generating the Nifti T1/CT images, you will want to rename 
+your files to be BIDS-compliant. See BIDS_ for more information on 
+how to name files. For example
+
+   CT.nii -> sub-01_ses-presurgery_space-orig_CT.nii
+
+and
+
+   T1.nii -> sub-01_ses-presurgery_space-orig_T1w.nii
+
 
 Step 1: MR ACPC alignment
 -------------------------------------------------------------------------------------------------------------
-(T1.nii => T1_acpc.nii)
-++++++++++++++++++++++++++++++++++++++++++++++++++++
+(sub-01_ses-presurgery_space-orig_T1w.nii => sub-01_ses-presurgery_space-acpc_T1w.nii)
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Next, we want to align the T1 MRI to the ACPC. This will 
+help FreeSurfer reconstruction downstream.
+
 .. code-block:: matlab
 
    mri = ft_read_mri([subjID '_MR_acpc.nii']); % we used the dcm series
@@ -53,6 +73,9 @@ Step 1: MR ACPC alignment
    cfg.filetype  = 'nifti';
    cfg.parameter = 'anatomy';
    ft_volumewrite(cfg, mri_acpc);
+
+This step can be accomplished also with ``acpcdetectv2.0+`` 
+software, which is automated in ``SEEK-pipeline``.
 
 Step 2: Freesurfer reconstrucion
 ------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -77,6 +100,21 @@ Step 3: CT CTF alignment
    ct_ctf = ft_volumerealign(cfg, ct);
    ct_acpc = ft_convert_coordsys(ct_ctf, 'acpc');
 
+This step is important because it will tell the image 
+certain coordinate landmarks to prevent a left/right hemisphere 
+flip. Coregistering the CT to the T1 naively without marking the
+LPA, RPA, NAS and Z-point, could very easily result in the 
+left hemisphere of the CT being registered to the right hemisphere 
+of the T1 brain. Marking the sides explicitly prevents this because 
+coregistration algorithm can be applied without worrying about flipping 
+right/left by accident.
+
+To recognize left/right, one would need the implantation schematic 
+of the electrodes. Then one can determine which side is right/left 
+based on clinical information. In addition, generally sEEG electrodes 
+with a ``'`` character in the channel name indicates a 
+left-hemisphere electrode.
+
 Step 4: Register CT to T1 
 -------------------------------------------------------------------------------------------------------------------------------------------
 (CT_ctf.nii CT_acpc.nii)
@@ -95,6 +133,8 @@ Step 4: Register CT to T1
    cfg.parameter = 'anatomy';
    ft_volumewrite(cfg, ct_acpc_f);
 
+Note that this step occurs within FieldTrip, and utilizes ``SPM12``.
+
 Step 5: Mark electrodes
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 .. code-block:: matlab
@@ -104,10 +144,18 @@ Step 5: Mark electrodes
    cfg.channel = labels;
    elec_acpc_f = ft_electrodeplacement(cfg, ct_acpc_f, fsmri_acpc);
 
+Marking electrodes will require a list of the channel labels to be marked. This 
+can be obtained from the ``*channels.tsv`` file in the BIDS_ layout for 
+iEEG data.
+
 Step 6: Export electrodes in BIDS-compliant tsv file 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 (electrodes.tsv)
 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+Finally, to store the electrode coordinates in BIDS_, we have a 
+short function to do so. This matlab script also shows how to apply warping 
+using FieldTrip functions to get the channels in voxel space, and tkRAS (pial surface) space.
+
 .. code-block:: matlab
 
    MR_vox = elec_acpc_f;
@@ -130,6 +178,8 @@ Step 6: Export electrodes in BIDS-compliant tsv file
       end
       fclose(fid)
    end
+
+Here is an example output:
 
 .. list-table:: electrodes.tsv
    :widths: 10 10 10 10
@@ -156,4 +206,4 @@ Step 6: Export electrodes in BIDS-compliant tsv file
       - 154.419	
       - 129.712
    
-   
+.. _BIDS: https://bids-specification.readthedocs.io/

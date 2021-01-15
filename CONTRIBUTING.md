@@ -7,18 +7,26 @@ free and properly documented (both API docs and an example script),
 it can be incorporated into the master branch.
 
 To help developing `seek` or `ReconstructionVisualizer`, you will need a few adjustments to your
-installation as shown below.
+installation as shown below. To install packages, we use ``npm``.
 
 ## Running tests
+To develop locally, clone the project and run ``yarn`` from the project root. This will install external dependencies.
+
+To make sure all javascript code conforms to standards, run the linter with
+
+    npm run lint
+
+The lint configurations are stored in `.eslintrc.json` file. We follow Google's JavaScript standards (subject to change).
 
 ### (Optional) Install Docker
-To run workflows, it is recommended to use Docker. Install Docker at: https://docs.docker.com/get-docker/.
+To run the visualization engine, it is recommended to use Docker. Install Docker at: https://docs.docker.com/get-docker/.
+
+
+## Developing workflows
+``SEEK`` automates workflows that output data structures/files that can be visualized using ``ReconstructionVisualizer``. 
 
 ### Install development version of seek
-First, you should [fork](https://help.github.com/en/github/getting-started-with-github/fork-a-repo) the `seek` repository. 
-Then, clone the fork and install it in.
-
-TODO insert how to install and setup, or link to instructions.
+First, you should [fork](https://help.github.com/en/github/getting-started-with-github/fork-a-repo) the `seek` repository. Then, clone the fork and install it. See https://neuroseek.azurewebsites.net/docs/seek/ for more details.
 
 ### Install development version of ReconstructionVisualizer
 First, you should [fork](https://help.github.com/en/github/getting-started-with-github/fork-a-repo) the 
@@ -26,19 +34,14 @@ First, you should [fork](https://help.github.com/en/github/getting-started-with-
 
 TODO insert how to install and setup, or link to instructions.
 
-### Install Python/javascript packages required to run tests
-Install the following packages for testing purposes, plus all optonal MNE-BIDS
-dependencies to ensure you will be able to run all tests.
+## Updating Dockerfiles
 
-    $ pip install flake8 pytest pytest-cov
 
-Running code linter:
 
-    TODO: @Christopher can you add how you can code lint the javascript code?
+Reference: https://www.learncloudnative.com/blog/2020-02-20-github-action-build-push-docker-images/
 
 
 ## Building the documentation
-
 TODO: @Christopher Coogan, can you help fill this in?
 
 The documentation can be built using sphinx. For that, please additionally
