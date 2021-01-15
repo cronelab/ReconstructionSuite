@@ -68,7 +68,7 @@ const routes = (express) => {
   });
 
 
-  router.get("/nifti/:subject", (req, res) => {
+  router.get("/t1/:subject", (req, res) => {
     let subject = req.params.subject
     if (fs.existsSync(`${dataDir}/${subject}/reconstruction.nii`)) {
       res.sendFile(`${dataDir}/${subject}/reconstruction.nii`);

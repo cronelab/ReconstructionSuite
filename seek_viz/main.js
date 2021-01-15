@@ -303,9 +303,10 @@ window.onload = async () => {
   init();
 
   let subject = urlParams.get('subject') || 'fsaverage';
+  let modality = urlParams.get('modality') || 't1'; //ct
 
 
-  let brainReq = await fetch(`/nifti/${subject}`);
+  let brainReq = await fetch(`/${modality}/${subject}`);
   if (!brainReq.ok) {
     alert("Error: Subject not found")
     return
