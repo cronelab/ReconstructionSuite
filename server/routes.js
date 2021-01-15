@@ -44,34 +44,43 @@ const routes = (express) => {
     }
   });
 
-    //Anatomical locations
-    router.get("/anatomy/:subject", (req, res) => {
-      let subject = req.params.subject;
-      fs.readdir(dataDir, (err, subjects) => {
-        if (subjects.indexOf(subject) > -1) {
-          if (fs.existsSync(`${dataDir}/${subject}/electrodes/anatomicalLabels.tsv`)) {
-            let file = fs.readFileSync(
-              `${dataDir}/${subject}/electrodes/anatomicalLabels.tsv`
-            );
-            let anatomy = parse(file, {
-              delimiter: ["\t"],
-            });
-            anatomy.shift();
-            res.send(JSON.stringify(anatomy))
-          }
-          else {
-            res.status(204).end();
-  
-          }
+  //Anatomical locations
+  router.get("/anatomy/:subject", (req, res) => {
+    let subject = req.params.subject;
+    fs.readdir(dataDir, (err, subjects) => {
+      if (subjects.indexOf(subject) > -1) {
+        if (fs.existsSync(`${dataDir}/${subject}/electrodes/anatomicalLabels.tsv`)) {
+          let file = fs.readFileSync(
+            `${dataDir}/${subject}/electrodes/anatomicalLabels.tsv`
+          );
+          let anatomy = parse(file, {
+            delimiter: ["\t"],
+          });
+          anatomy.shift();
+          res.send(JSON.stringify(anatomy))
         }
-      });
-    });
-  
+        else {
+          res.status(204).end();
 
-  router.get("/nifti/:subject", (req, res) => {
+        }
+      }
+    });
+  });
+
+
+  router.get("/t1/:subject", (req, res) => {
     let subject = req.params.subject
     if (fs.existsSync(`${dataDir}/${subject}/reconstruction.nii`)) {
       res.sendFile(`${dataDir}/${subject}/reconstruction.nii`);
+    } else {
+      res.status(404).send('Not Found')
+    }
+  });
+  router.get("/ct/:subject", (req, res) => {
+    let subject = req.params.subject
+    if (fs.existsSync(`${dataDir}/${subject}/CT.nii`)) {
+      console.log("Sending CT")
+      res.sendFile(`${dataDir}/${subject}/CT.nii`);
     } else {
       res.status(404).send('Not Found')
     }
