@@ -7,30 +7,38 @@ let __dirname = path.resolve(path.dirname(""));
 const module = {
 	mode: "development",
 	entry: {
-		index: "./seek_viz/main.js",
-		main: "./seek_viz/React/index.jsx"
+		index: "./src/main.js",
+		main: "./src/React/index.jsx"
 	},
 	module: {
 		rules: [
 			{
 				test: /\.js|jsx$/,
-				include: path.resolve(__dirname, 'seek_viz'),
-				loader: 'babel-loader',
-				options: {
+				exclude: /(node_modules|bower_components)/,
+				use:{
+					loader: 'babel-loader',
+					options:{
 					presets: ["@babel/preset-env", "@babel/preset-react"],
 					plugins: [
-						"@babel/plugin-syntax-dynamic-import",
-						"@babel/plugin-transform-modules-commonjs",
-						"@babel/plugin-transform-runtime",
-						"@babel/plugin-proposal-class-properties",
-						"@babel/plugin-proposal-export-default-from",
-					  ],
-			
+								"@babel/plugin-transform-runtime",
+
+					]
+			}
 				}
+
+				// 	plugins: [
+				// 		"@babel/plugin-syntax-dynamic-import",
+				// 		"@babel/plugin-transform-modules-commonjs",
+				// 		"@babel/plugin-proposal-class-properties",
+				// 		"@babel/plugin-proposal-export-default-from",
+				// 	  ],
+			
+				// }
 			},
 			{
 				test: /\.(sa|sc|c)ss$/,
-				use: [{
+				use: [
+					{
 					loader: "style-loader"
 				},
 				{
@@ -45,13 +53,13 @@ const module = {
 		new WriteFilePlugin(),
 		new HtmlWebpackPlugin({
 			hash: true,
-			template: "./seek_viz/index.html",
+			template: "./src/index.html",
 			filename: "index.html",
 			chunks: ["index"],
 		}),
 		new HtmlWebpackPlugin({
 			hash: true,
-			template: "./seek_viz/React/index.html",
+			template: "./src/React/index.html",
 			filename: "threed.html",
 			chunks: ["main"],
 		}),
