@@ -45,6 +45,33 @@ const routes = (express) => {
     }
   });
 
+  //datasets
+  router.get("/data/:subject", (req, res) => {
+    let subject = req.params.subject
+    console.log(subject)
+    if (fs.existsSync(`/home/visualizer/data/derivatives/timeseries/${subject}/timeSeriesTest.json`)) {
+      console.log(subject)
+      res.sendFile(`timeSeriesTest.json`, {
+        root: `/home/visualizer/data/derivatives/timeseries/${subject}`,
+      });
+    }
+    else {
+      res.status(404).send('Not Found')
+    }
+  });
+  
+  //default colors
+  router.get("/electrodeColors/:subject", (req, res) => {
+    let subject = req.params.subject
+    if (fs.existsSync(`${dataDir}/${subject}/colors.json`)) {
+      res.sendFile(`colors.json`, {
+        root: `${dataDir}/${subject}/`,
+      });
+    }
+    else {
+      res.status(404).send('Not Found')
+    }
+  });
 
   //Anatomical locations
   router.get("/anatomy/:subject", (req, res) => {
