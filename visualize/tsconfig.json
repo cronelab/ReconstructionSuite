@@ -1,0 +1,41 @@
+// {
+//   "compilerOptions": {
+//     // "rootDir": "./src",
+//     "outDir": "./dist/",
+//     "noImplicitAny": false,
+//     "module": "es6",
+//     "target": "es5",
+//     "jsx": "react",
+//     "allowJs": true,
+//     "allowSyntheticDefaultImports": true,
+//     "esModuleInterop": true,
+//     "paths": {
+//       "ami.js": ["./node_modules/ami.js/build/ami"],
+//       "dat.gui": ["./node_modules/dat.gui/build/dat.gui"]
+//     },
+//     "moduleResolution": "node",
+//     "strict": false
+//   }
+//   // "include": ["./src/**/*"]
+// }
+
+{
+  "compilerOptions": {
+    "target": "es5",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx"
+  },
+  "include": ["src"]
+}

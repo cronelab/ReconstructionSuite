@@ -1,0 +1,25 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
+// https://github.com/microsoft/vscode-dev-containers/tree/v0.158.0/containers/docker-existing-docker-compose
+// If you want to run as a non-root user in the container, see .devcontainer/docker-compose.yml.
+{
+	"name": "MeshGenerator",
+
+	// Update the 'dockerComposeFile' list if you have more compose files or use different names.
+	// The .devcontainer/docker-compose.yml file contains any overrides you need/want to make.
+
+	"context": ".",
+
+	// Update the 'dockerFile' property if you aren't using the standard 'Dockerfile' filename.
+	"dockerFile": "./Dockerfile",
+
+	"shutdownAction": "none",
+
+	"workspaceMount": "source=/mnt/user/Data/Projects/Work/SEEK/ReconViz/visualize,target=/home/visualizer,type=bind,consistency=cached",
+
+	"workspaceFolder": "/home/visualizer",
+
+	"settings": {
+		"terminal.integrated.shell.linux": null
+	},
+	"extensions": []
+}
