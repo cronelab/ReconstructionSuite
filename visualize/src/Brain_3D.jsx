@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { OrthographicCamera, OrbitControls } from '@react-three/drei';
-import { modifySize, modifyColor } from '../helpers/modifyElectrodes';
+import { modifySize, modifyColor } from './helpers/modifyElectrodes';
 import { useLoader, useFrame } from 'react-three-fiber';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { Mesh, Color } from 'three';

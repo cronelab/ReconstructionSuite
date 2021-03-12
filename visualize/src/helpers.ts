@@ -5,7 +5,7 @@ import {
   trackballControlFactory,
   orthographicCameraFactory,
   trackballOrthoControlFactory,
-} from '../../node_modules/ami.js/build/ami';
+} from '../node_modules/ami.js/build/ami';
 
 // Instantiate AMI factories
 const CamerasOrthographic = orthographicCameraFactory();

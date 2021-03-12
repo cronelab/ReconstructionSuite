@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { withControls, Controls } from 'react-three-gui';
 import { Brain_3D } from './Brain_3D.jsx';
 import React, { Suspense, useEffect, useRef } from 'react';

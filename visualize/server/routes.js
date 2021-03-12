@@ -3,7 +3,7 @@ import fs from 'fs';
 import parse from 'csv-parse/lib/sync.js';
 
 let subject = process.env.SUBJECT || 'fsaverage';
-let dataDir = process.env.SUBJECTS_DIR || '/data/derivatives/freesurfer';
+let dataDir = process.env.SUBJECTS_DIR || '/home/visualizer/data/derivatives/freesurfer';
 
 let __dirname = path.resolve(path.dirname(''));
 const routes = (express) => {

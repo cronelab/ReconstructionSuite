@@ -8,12 +8,13 @@ import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 let __dirname = path.resolve(path.dirname(''));
 
 const module = {
-  mode: 'development',
   // mode: 'production',
-  devtool: 'eval',
+  mode: 'development',
+
+  devtool: 'source-map',
   entry: {
-    index: './src/OG/index.tsx',
-    main: './src/Homebrew/index.jsx',
+    index: './src/index.tsx',
+    // main: './src/Homebrew/index.jsx',
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
@@ -60,20 +61,14 @@ const module = {
     ],
   },
   plugins: [
-    new BundleAnalyzerPlugin(),
+    // new BundleAnalyzerPlugin(),
     new CleanWebpackPlugin(),
     new WriteFilePlugin(),
     new HtmlWebpackPlugin({
       hash: true,
-      template: './src/OG/index.html',
+      template: './src/index.html',
       filename: 'index.html',
       chunks: ['index'],
-    }),
-    new HtmlWebpackPlugin({
-      hash: true,
-      template: './src/Homebrew/index.html',
-      filename: 'threed.html',
-      chunks: ['main'],
     }),
     new ForkTsCheckerWebpackPlugin(),
   ],

@@ -5,16 +5,16 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import { initHelpersStack, initRenderer3D, initRenderer2D } from './helpers';
 // Import THREE
-import { Scene, Plane, Vector3, Matrix4, Mesh, Color } from 'three';
+import { Scene, Plane, Vector3, Matrix4, Mesh, Color, MeshBasicMaterial, FrontSide, Backside } from 'three';
 
 // Import GLTFLoader
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-
 // Import AMI (from TheBrainChain repo)
 import { VolumeLoader } from 'ami.js';
 import { guiCall } from './guiStuff';
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 
-function App() {
+function App(): JSX.Element {
   const r0 = {
     domId: 'r0',
     domElement: null,
@@ -82,12 +82,14 @@ function App() {
   const clipPlane2 = new Plane(new Vector3(0, 0, 0), 0);
   const clipPlane3 = new Plane(new Vector3(0, 0, 0), 0);
 
-  let elecs, brainScene, wm, gyri, substructures;
-
   let ready = false;
   const electrodeLegend = {};
 
   const urlParams = new URLSearchParams(window.location.search);
+  const gltfLoader = new GLTFLoader();
+  const dracoLoader = new DRACOLoader();
+  dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.4.1/'); // use a full url path
+  gltfLoader.setDRACOLoader(dracoLoader);
 
   function init() {
     function animate() {
@@ -146,9 +148,8 @@ function App() {
     }
   }
 
-  useEffect(() => {
-    guiCall();
-  });
+  // useEffect(() => {
+  // });
 
   useEffect(() => {
     (async () => {
@@ -168,12 +169,12 @@ function App() {
       const objectURL = URL.createObjectURL(brain);
 
       // Use AMI to parse, processes, and display the scan
-      const loader = new VolumeLoader();
-      loader
+      const volumeLoader = new VolumeLoader();
+      volumeLoader
         .load(objectURL)
         .then(() => {
-          const series = loader.data[0].mergeSeries(loader.data)[0];
-          loader.free();
+          const series = volumeLoader.data[0].mergeSeries(volumeLoader.data)[0];
+          volumeLoader.free();
           // loader = null;
           const stack = series.stack[0];
           stack.prepare();
@@ -196,65 +197,6 @@ function App() {
           // green slice
           initHelpersStack(r3, stack);
           r0.scene.add(r3.scene);
-
-          // transToggler.onChange((val) => {
-          //   if (val == true) {
-          //     brainScene.traverse((child) => {
-          //       if (child instanceof Mesh && child.parent.name != 'Electrodes') {
-          //         child.material.transparent = true;
-          //         child.material.opacity = 0.5;
-          //       }
-          //     });
-          //   } else {
-          //     brainScene.traverse((child) => {
-          //       if (child instanceof Mesh && child.parent.name != 'Electrodes') {
-          //         child.material.transparent = false;
-          //       }
-          //     });
-          //   }
-          // });
-
-          // fullMeshToggler.onChange((val) => {
-          //   console.log(wm);
-          //   console.log(gyri);
-          //   console.log(substructures);
-          //   if (val == false) {
-          //     wm.visible = false;
-          //     gyri.visible = false;
-          //     substructures.visible = false;
-          //     text.Cortex = false;
-          //     text.WM = false;
-          //     text.Substructures = false;
-          //   } else {
-          //     wm.visible = true;
-          //     gyri.visible = true;
-          //     substructures.visible = true;
-          //     text.Cortex = true;
-          //     text.WM = true;
-          //     text.Substructures = true;
-          //   }
-          // });
-          // cortexMeshToggler.onChange((val) => {
-          //   if (val == false) {
-          //     gyri.visible = false;
-          //   } else {
-          //     gyri.visible = true;
-          //   }
-          // });
-          // wmMeshToggler.onChange((val) => {
-          //   if (val == false) {
-          //     wm.visible = false;
-          //   } else {
-          //     wm.visible = true;
-          //   }
-          // });
-          // subMeshToggler.onChange((val) => {
-          //   if (val == false) {
-          //     substructures.visible = false;
-          //   } else {
-          //     substructures.visible = true;
-          //   }
-          // });
 
           function updateClipPlane(refObj, clipPlane) {
             const stackHelper = refObj.stackHelper;
@@ -351,13 +293,9 @@ function App() {
           const worldCenter = r1.stackHelper.stack.worldCenter();
           RASToLPS.set(-1, 0, 0, worldCenter.x, 0, -1, 0, worldCenter.y, 0, 0, 1, worldCenter.z, 0, 0, 0, 1);
 
-          // onGreenChanged();
-          // onRedChanged();
-          // onYellowChanged();
           const load3DBrain_gltf = () => {
             return new Promise(async (resolve) => {
-              const loader = new GLTFLoader();
-              loader.load(`/brain/${subject}`, (object3d) => {
+              gltfLoader.load(`/brain/${subject}`, (object3d) => {
                 object3d.scene.traverse((child) => {
                   if (child instanceof Mesh) {
                     child.material.transparent = true;
@@ -365,11 +303,11 @@ function App() {
                   }
                 });
                 r0.scene.add(object3d.scene);
-                brainScene = object3d.scene.children[0];
-                gyri = brainScene.children[0];
-                substructures = brainScene.children[1];
-                wm = brainScene.children[2];
+                const brainScene = object3d.scene.children[0];
+
                 brainScene.applyMatrix4(RASToLPS);
+                guiCall(brainScene, { r1, r2, r3 });
+
                 resolve(brainScene);
               });
               const _electrodeColors = await fetch(`/electrodeColors/${subject}`);
@@ -379,8 +317,8 @@ function App() {
                 electrodeColors = await _electrodeColors.json();
               }
 
-              loader.load(`/electrodes/${subject}`, (object3d) => {
-                elecs = object3d.scene;
+              gltfLoader.load(`/electrodes/${subject}`, (object3d) => {
+                let elecs = object3d.scene;
                 r0.scene.add(object3d.scene);
                 object3d.scene.children.forEach((electrodeGroups) => {
                   electrodeGroups.children.forEach((electrodeGroup) => {
@@ -418,38 +356,27 @@ function App() {
                   //   transparency = true;
                   // }
 
-                  // data[i].scene = new THREE.Scene();
-                  // data[i].materialFront = new THREE.MeshBasicMaterial({
+                  // data[i].scene = new Scene();
+                  // data[i].materialFront = new MeshBasicMaterial({
                   //   color: child.material.color,
-                  //   side: THREE.FrontSide,
+                  //   side: FrontSide,
                   //   depthWrite: true,
                   //   opacity: 0,
                   //   transparent: true,
                   //   clippingPlanes: [],
                   // });
-                  // data[i].materialBack = new THREE.MeshBasicMaterial({
+                  // data[i].materialBack = new MeshBasicMaterial({
                   //   color: elec.material.color,
-                  //   side: THREE.BackSide,
+                  //   side: BackSide,
                   //   depthWrite: true,
                   //   opacity: meshOpacity,
                   //   transparent: true,
                   //   clippingPlanes: [],
                   // });
-                  // data[i].meshFront = new THREE.Mesh(
-                  //   elec.geometry,
-                  //   data[i].materialFront
-                  // );
-                  // data[i].meshBack = new THREE.Mesh(elec.geometry, data[i].materialBack);
-                  // data[i].meshFront.position.set(
-                  //   elec.position.x,
-                  //   elec.position.y,
-                  //   elec.position.z
-                  // );
-                  // data[i].meshBack.position.set(
-                  //   elec.position.x,
-                  //   elec.position.y,
-                  //   elec.position.z
-                  // );
+                  // data[i].meshFront = new Mesh(elec.geometry, data[i].materialFront);
+                  // data[i].meshBack = new Mesh(elec.geometry, data[i].materialBack);
+                  // data[i].meshFront.position.set(elec.position.x, elec.position.y, elec.position.z);
+                  // data[i].meshBack.position.set(elec.position.x, elec.position.y, elec.position.z);
                   // data[i].scene.add(data[i].meshFront);
                   // data[i].scene.add(data[i].meshBack);
                   // data[i].scene.applyMatrix4(RASToLPS);
