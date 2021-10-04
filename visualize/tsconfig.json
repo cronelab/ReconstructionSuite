@@ -7,17 +7,18 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "strict": true,
+    "strictNullChecks": false,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
     "module": "esnext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
+    "noImplicitAny": false,
     "noEmit": true,
     "jsx": "react-jsx",
     "paths": {
-      "ami.js": ["./node_modules/ami.js/build/ami"],
-      "dat.gui": ["./node_modules/dat.gui/build/dat.gui"]
+      "ami.js": ["./node_modules/ami.js/build/ami"]
     }
   },
   "include": ["src"]

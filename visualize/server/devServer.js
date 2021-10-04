@@ -26,8 +26,8 @@ app.use(
   })
 );
 
-app.get('/', function (req, res) {
-  res.sendFile(path.resolve(__dirname, 'src/index.html'));
+app.get('*', function (req, res) {
+  res.sendFile(path.resolve(__dirname, 'dist/index.html'));
 });
 app.use('/', routes(express));
 

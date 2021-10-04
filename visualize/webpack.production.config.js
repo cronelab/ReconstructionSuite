@@ -14,15 +14,23 @@ const module = {
   devtool: 'source-map',
   entry: {
     index: './src/index.tsx',
-    // main: './src/Homebrew/index.jsx',
   },
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
     symlinks: false,
+    fallback: {
+      fs: false,
+      path: false,
+      crypto: false,
+    },
   },
 
   module: {
     rules: [
+      {
+        test: /\.png/,
+        type: 'asset/resource',
+      },
       {
         test: /\.tsx?$/,
         use: [

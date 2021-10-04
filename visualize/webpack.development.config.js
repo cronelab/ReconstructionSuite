@@ -10,8 +10,7 @@ const module = {
     hot: true,
   },
   entry: {
-    index: './src/OG/index.js',
-    main: './src/Homebrew/index.jsx',
+    main: './src/index.tsx',
   },
   // entry: [
   //   // Add the client which connects to our middleware

@@ -1,13 +1,11 @@
 {
-  "name": "MeshVisualizer",
-  "context": ".",
-  "dockerFile": "./Dockerfile",
+  "name": "Mesh Visualizer",
+  "dockerComposeFile": ["../docker-compose.yml"],
+  "service": "mesh_visualizer",
   "shutdownAction": "none",
-  "workspaceMount": "source=/mnt/user/Data/Projects/Work/SEEK/ReconViz/visualize,target=/home/visualizer,type=bind,consistency=cached",
-  "workspaceFolder": "/home/visualizer",
+  "workspaceFolder": "/home/visualize",
   "extensions": ["esbenp.prettier-vscode", "aaron-bond.better-comments", "dbaeumer.vscode-eslint"],
-  "appPort": ["5000:80"],
   "settings": {
-    "terminal.integrated.shell.linux": null
+    "terminal.integrated.profile.linux": "bash"
   }
 }
