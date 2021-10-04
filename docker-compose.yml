@@ -1,35 +1,41 @@
 version: '3'
 services:
+  preprocessor:
+    container_name: preprocessor
+    build:
+      context: ./preprocess
+      dockerfile: Dockerfile
+    environment: 
+      - SUBJECT=PY21N026
+      - ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS=16
+    volumes:
+      - /usr/local/freesurfer/7-dev/subjects:/data
+      - ./preprocess/scripts:/home/preprocess/scripts:cached
+    tty: true
+    
   mesh_generator:
     container_name: mesh_generator
     build:
-      context: .
-      dockerfile: ./generate.Dockerfile
-    working_dir: /home/scripts
+      context: ./generate
+      dockerfile: Dockerfile
     environment: 
-      - SUBJECTS_DIR=/data
-      - SUBJECT=cvs_avg35_inMNI152
+      - SUBJECT=PY21N026
     volumes:
-      # - $SUBJECTS_DIR:/data
-      - /usr/local/freesurfer/subjects:/data
-    command: /bin/bash -c ./runscript.sh
+      - /usr/local/freesurfer/7-dev/subjects:/data
+      # - .:/home:cached
+      - ./generate:/home/generate:cached
+    tty: true
 
-  visualizer:
+  mesh_visualizer:
     container_name: mesh_visualizer
     build: 
-      context: .
-      dockerfile: ./visualize.Dockerfile
+      context: ./visualize
+      dockerfile: Dockerfile
     ports:
       - "80:80"
     environment: 
-      - SUBJECTS_DIR=/data
-      - SUBJECT=cvs_avg35_inMNI152
       - PORT=80
     volumes:
-      # - $SUBJECTS_DIR:/data
-      - /usr/local/freesurfer/subjects:/data
-
-
-  # docker build -f ./generate.Dockerfile . -t vizgen
-  
-  # docker run --env SUBJECTS_DIR=/data --env SUBJECT=cvs_avg35_inMNI152 -v /usr/local/freesurfer/subjects:/data -w /home/scripts -it vizgen:latest /bin/bash -c ./runscript.sh
+      - /usr/local/freesurfer/7-dev/subjects:/data
+      - ./visualize:/home/visualize:cached
+    tty: true
