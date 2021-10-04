@@ -1,21 +1,25 @@
-# NeuroSEEK-Viz
-![Github Actions](https://github.com/cronelab/ReconstructionVisualizer/workflows/Node.js%20CI/badge.svg?branch=master)
-![Circle CI](https://circleci.com/gh/cronelab/ReconstructionVisualizer.svg?style=svg)
-[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
+# ReconstructionSuite
+![Github Actions](https://github.com/cronelab/ReconstructionSuite/workflows/Node.js%20CI/badge.svg?branch=master)
 
-A web-based visualization platform for sEEG electrodes in brain space. This can be used as a stand-alone visualization, or in conjunction with [NeuroSEEK-pipeline](https://github.com/ncsl/seek). 
-
-All this repository requires are ``Blender`` objects (`.glb` files) for the brains and electrodes.
+A web-based processing and visualization platform for placing and visualizing intracranial electrodes in subject-specific brain space. 
 
 
 ### Visualize Freesurfer cortical parcellations and subcortical segmentations in the browser
 
-Input: Freesurfer directory with completed subjects
-Output: 3D mesh file containing brain regions and electrodes
+Input: Subject directory with a directory for MR and CT nifti files
+Output: 
++ Freesurfer-processed subject directory
++ 3D mesh files containing brain regions and electrodes
++ BIDS-compliant electrode coordinates
++ Webserver to view and localize electrodes
 
 ### To run:
 
-- docker run -p 5000:5000 neuroseek/recon_visualizer
+docker-compose up --build
+docker exec -it mesh_preprocessor python 1_reconstruction.py -e SUBJECT=$SUBJECT
+docker exec -it mesh_generator bash runscript.sh -e SUBJECT=$SUBJECT
+docker exec -it -e SUBJECT=$SUBJECT preprocessor python3 scripts/2_coregistration.py
+docker exec -it mesh_visualizer npm run start
 
 ### Example:
 
@@ -24,30 +28,26 @@ The gLTF binary file format allows for optimized viewing directly in browsers an
 
 ### Dependencies:
 
-- Select Freesurfer binaries 
+- Freesurfer
 - Various [Brainder](https://brainder.org/) scripts for mesh generation
     - Matlab/Octave
 - Blender (Freesurfer OBJ to FBX/gLTF)
     - Comes with a python interpreter
+- [acpcdetect](https://www.nitrc.org/projects/art) for automatic ac-pc detection
 
-# Documentation
-The official documentation with usage is at http://neuroseek.azurewebsites.net/docs/
 
 ### Instructions:
 
-- In the docker-compose.yml file edit the environment and volumes field:
-    - environment:
-        - Subject=Name of freesurfer subject
-    - volumes:
-        - path to $SUBJECTS_DIR
+- In the docker-compose.yml file edit the volumes field:
+    - path to $SUBJECTS_DIR
 
 ### electrodes.tsv:
-| name              | x         | y       | z       |
-| ----------------- | --------- | ------- | ------- |
-| electrodeGroupA'1 | 4.52036   | 61.73   | 66.4995 |
-| electrodeGroupA'2 | 1.85841   | 63.8435 | 66.9489 |
-| electrodeGroupA'3 | -2.14716  | 65.0158 | 67.3797 |
-| electrodeGroupB'1 | -5.17384  | 65.0651 | 68.1047 |
+| name              | x         | y       | z       |size|
+| ----------------- | --------- | ------- | ------- |----|
+| electrodeGroupA'1 | 4.52036   | 61.73   | 66.4995 |  1 |
+| electrodeGroupA'2 | 1.85841   | 63.8435 | 66.9489 |  1 |
+| electrodeGroupA'3 | -2.14716  | 65.0158 | 67.3797 |  1 |
+| electrodeGroupB'1 | -5.17384  | 65.0651 | 68.1047 |  1 |
 
 ### reconstruction.glb:
 - Brain
@@ -75,5 +75,6 @@ Citing
 
 Version 2.0 viewer
 + Written with react/react-three-fiber/drei
-+ Only mesh view, no volumetric rendering
-+ localhost/threed.html?subject=$SUBJECT
+
+
+
