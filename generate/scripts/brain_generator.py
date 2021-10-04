@@ -109,7 +109,7 @@ if __name__ == "__main__":
 
     mat_colors_json_fpath = sys.argv[6]
     if mat_colors_json_fpath == "":
-        mat_colors_json_fpath = "/home/scripts/octave/materialColors.json"
+        mat_colors_json_fpath = "/home/generate/scripts/octave/materialColors.json"
 
     savePath = sys.argv[7]
     if savePath == "":
