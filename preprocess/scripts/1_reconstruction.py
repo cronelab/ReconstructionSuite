@@ -25,3 +25,7 @@ os.system(f'recon-all -s {SUBJECT} -i {filePath}{acpc_aligned_T1} -openmp 16 -pa
 os.system(f'recon-all -s {SUBJECT} -openmp 16 -parallel -autorecon2 -notify {SUBJECTS_DIR}/{SUBJECT}/auto2done.txt')
 os.system(f'recon-all -s {SUBJECT} -openmp 16 -parallel -autorecon3 -notify {SUBJECTS_DIR}/{SUBJECT}/auto3done.txt')
 
+os.system(f'mri_convert {SUBJECTS_DIR}/{SUBJECT}/mri/brain.mgz {SUBJECTS_DIR}/{SUBJECT}/reconstruction.nii.gz')
+
+# Cleaned up images for clinical team
+os.system(f'mri_binarize --i {SUBJECTS_DIR}/{SUBJECT}/mri/aparc+aseg.mgz --o {SUBJECTS_DIR}/{SUBJECT}/cerebellumRemoved.nii.gz --match 0 7 8 15 16 46 47 --merge {SUBJECTS_DIR}/{SUBJECT}/mri/brain.mgz')
