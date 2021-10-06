@@ -17,21 +17,11 @@ def _text_num_split(item):
         if letter.isdigit():
             return [item[:index], item[index:]]
 
-
-def main(elec_fpath,savePath, verbose=False):
-    """Create ``.glb`` Blender files for electrodes.tsv file.
-
-    Parameters
-    ----------
-    elec_fpath : str | pathlib.Path
-        The path to the ``*electrodes.tsv`` file to use to
-        generate a mesh.
-    verbose : bool
-        Verbosity.
-    """
+# Create ``.glb`` Blender files for electrodes.tsv file.
+def main(verbose=False): 
     fs_subjects_dir = os.environ.get("SUBJECTS_DIR")
-    subject = os.environ.get("SUBJECT")
-    subjects_dir = f"{fs_subjects_dir}/{subject}"
+    SUBJECT = os.environ.get("SUBJECT")
+    subjects_dir = f"{fs_subjects_dir}/{SUBJECT}"
 
     scn = bpy.context.scene
     if not scn.render.engine == "CYCLES":
@@ -41,7 +31,7 @@ def main(elec_fpath,savePath, verbose=False):
     bpy.ops.object.empty_add()
     bpy.context.active_object.name = "Electrodes"
 
-    elec_df = pd.read_csv(elec_fpath, sep="\t")
+    elec_df = pd.read_csv(f"{fs_subjects_dir}/{SUBJECT}/electrodes/tkrRAS_electrodes.tsv", sep="\t")
 
     # keep track of which electrode group
     oldElectrodeGroup = ""
@@ -91,18 +81,10 @@ def main(elec_fpath,savePath, verbose=False):
         bpy.context.active_object.active_material = mat
         bpy.context.active_object.parent = bpy.data.objects[electrodeGroup]
 
-    # bpy.ops.export_scene.gltf(
-    #     export_format="GLB",
-    #     filepath=f"{subjects_dir}/blender_objects/electrodes",
-    #     export_texcoords=False,
-    #     export_normals=False,
-    #     export_cameras=False,
-    #     export_yup=False,
-    # )
 
         bpy.ops.export_scene.gltf(
         export_format="GLB",
-        filepath=f"{subjects_dir}/{savePath}", #savePath,
+        filepath=f"{subjects_dir}/electrodes",
         export_texcoords=False,
         export_normals=False,
         export_cameras=False,
@@ -114,10 +96,5 @@ def main(elec_fpath,savePath, verbose=False):
 
 
 if __name__ == "__main__":
-    elec_fpath = sys.argv[6]
-
-    savePath = sys.argv[7]
-    if savePath == "":
-        savePath = "electrodes"
     
-    main(elec_fpath, savePath, verbose=False)
+    main(verbose=False)

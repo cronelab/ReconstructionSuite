@@ -20,21 +20,13 @@ def _convert_materialcolors_to_rgb(matcolors_dict, region_name):
     return r, g, b
 
 
-def main(mat_color_json_fpath, savePath):
-    """Create ``.glb`` Blender files for brain regions.
-
-    Parameters
-    ----------
-    mat_color_json_fpath : str | pathlib.Path
-        The path to the ``materialColors.json`` file, which has the
-        default coloring for each brain region in FreeSurfer.
-    """
+def main():
+    # Create ``.glb`` Blender files for brain regions.
     fs_subjects_dir = os.environ.get("SUBJECTS_DIR")
     subject = os.environ.get("SUBJECT")
     subjects_dir = f"{fs_subjects_dir}/{subject}"
 
-    print(f"Loading materialColors.json file from {mat_color_json_fpath}")
-    with open(mat_color_json_fpath, "r", encoding="utf-8") as json_file:
+    with open("/home/generate/scripts/octave/materialColors.json", "r", encoding="utf-8") as json_file:
         data = json.load(json_file)
     #
     scn = bpy.context.scene
@@ -93,7 +85,7 @@ def main(mat_color_json_fpath, savePath):
 
     bpy.ops.export_scene.gltf(
         export_format="GLB",
-        filepath=f"{subjects_dir}/{savePath}", #savePath,
+        filepath=f"{subjects_dir}/brain",
         export_texcoords=False,
         export_normals=False,
         export_cameras=False,
@@ -106,14 +98,4 @@ def main(mat_color_json_fpath, savePath):
 
 
 if __name__ == "__main__":
-
-    mat_colors_json_fpath = sys.argv[6]
-    if mat_colors_json_fpath == "":
-        mat_colors_json_fpath = "/home/generate/scripts/octave/materialColors.json"
-
-    savePath = sys.argv[7]
-    if savePath == "":
-        savePath = "brain"
-    
-
-    main(mat_color_json_fpath=mat_colors_json_fpath, savePath=savePath)
+    main()

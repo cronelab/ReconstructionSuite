@@ -1,6 +1,6 @@
 #!/bin/bash
 
-workdir='/home'
+workdir='/home/generate'
 
 $workdir/scripts/octave/srf2obj $SUBJECTS_DIR/$1/aseg2srf/aseg_002.srf > $SUBJECTS_DIR/$1/obj/Left-Cerebral-White-Matter.obj
 $workdir/scripts/octave/srf2obj $SUBJECTS_DIR/$1/aseg2srf/aseg_003.srf > $SUBJECTS_DIR/$1/obj/Left-Cerebral-Cortex.obj

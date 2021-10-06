@@ -3,6 +3,9 @@ FROM ubuntu:latest
 ENV DEBIAN_FRONTEND noninteractive
 
 LABEL authors="Christopher Coogan <c.coogan2201@gmail.com>, Adam Li <ali39@jhu.edu>"
+WORKDIR /home/generate
+
+ENV SUBJECTS_DIR=/data/
 
 # Install dependencies
 RUN apt-get update && apt-get -y install bc binutils libgomp1 perl psmisc sudo tar tcsh unzip \
@@ -15,12 +18,12 @@ ENV LANGUAGE en_US:en
 
 # Download Blender and set path
 RUN mkdir /usr/local/blender \
-    && curl -SL https://download.blender.org/release/Blender2.91/blender-2.91.0-linux64.tar.xz -o blender.tar.xz \
+    && curl -SL https://download.blender.org/release/Blender2.93/blender-2.93.4-linux-x64.tar.xz -o blender.tar.xz \
     && tar -xf blender.tar.xz -C /usr/local/blender --strip-components=1 \
     && rm blender.tar.xz \
     && curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py \
-    && /usr/local/blender/2.91/python/bin/python3.7m get-pip.py \
-    && /usr/local/blender/2.91/python/bin/python3.7m -m pip install pandas
+    && /usr/local/blender/2.93/python/bin/python3.9 get-pip.py \
+    && /usr/local/blender/2.93/python/bin/python3.9 -m pip install pandas
 
 ENV PATH /usr/local/blender:$PATH
 
@@ -46,9 +49,5 @@ ENV PATH /usr/local/freesurfer/bin:$PATH
 
 COPY ./freesurferlicense.txt /usr/local/freesurfer/.license
 
-WORKDIR /home/generate
+WORKDIR /home/generate/scripts
 
-# Copy all scripts to image
-# COPY ./scripts /home/scripts
-# RUN chmod +x -R /home/scripts
-# /runscript.sh && chmod +x /home/scripts/bash/aseg2srf.sh
