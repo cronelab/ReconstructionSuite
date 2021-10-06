@@ -21,5 +21,6 @@
       "ami.js": ["./node_modules/ami.js/build/ami"]
     }
   },
-  "include": ["src"]
+  "include": ["src"],
+  "exclude": ["src/Views/notyet"]
 }

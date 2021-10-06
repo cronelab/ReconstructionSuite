@@ -8,22 +8,24 @@ A web-based processing and visualization platform for placing and visualizing in
 
 Input: Subject directory with a directory for MR and CT nifti files
 Output: 
-+ Freesurfer-processed subject directory
-+ 3D mesh files containing brain regions and electrodes
-+ BIDS-compliant electrode coordinates
-+ Webserver to view and localize electrodes
+- Freesurfer-processed subject directory
+- 3D mesh files containing brain regions and electrodes
+- BIDS-compliant electrode coordinates
+- Webserver to view and localize electrodes
 
 ### To run:
 
-docker-compose up --build
-docker exec -it mesh_preprocessor python 1_reconstruction.py -e SUBJECT=$SUBJECT
-docker exec -it mesh_generator bash runscript.sh -e SUBJECT=$SUBJECT
-docker exec -it -e SUBJECT=$SUBJECT preprocessor python3 scripts/2_coregistration.py
-docker exec -it mesh_visualizer npm run start
+- docker-compose up --build
+- docker exec -it -e SUBJECT=$SUBJECT preprocessor python3 scripts/1_reconstruction.py
+- docker exec -it -e SUBJECT=$SUBJECT mesh_generator bash 1_prep.sh
+- docker exec -it -e SUBJECT=$SUBJECT mesh_generator bash 2_brainGenerator.sh 
+- docker exec -it -e SUBJECT=$SUBJECT preprocessor python3 scripts/2_coregistration.py
+- docker exec -it mesh_visualizer npm run start
+- docker exec -it -e SUBJECT=$SUBJECT mesh_generator bash 3_electrodeGenerator.sh
 
 ### Example:
 
-![Example](/docs/_static/Picture.jpg)
+![Example](./docs/_static/Picture.jpg)
 The gLTF binary file format allows for optimized viewing directly in browsers and VR/AR devices.
 
 ### Dependencies:

@@ -18,10 +18,12 @@ import {
   lastKnownClick,
   onDoubleClick,
   onScroll,
+  activeSubject
 } from '../helpers/renderers';
 import cv from '@techstark/opencv-js';
 import { loadVolume } from '../helpers/loadVolume';
 import { loadBrainSurface } from '../helpers/loadSurfaces';
+import { GLTFExporter } from "three/examples/jsm/exporters/GLTFExporter"; // Import GLTFLoader
 
 import setGUIS from '../helpers/sliceGUI';
 import { initHelpersStack, initRenderer3D } from '../helpers/helpers';
@@ -37,9 +39,12 @@ function SlicedView(): JSX.Element {
   const [electrodeColor, setElectrodeColor] = useState('');
   const [stack_, setStack_] = useState();
   const [show, setShow] = useState(false);
+  const [electrodeSpheres, setElectrodeSpheres] = useState([])
+
+  let electrodeScene = new Scene();
+
 
   useControls('Electrodes', newOpts, [newOpts, electrodeName]);
-  setGUIS();
   let stack;
   useEffect(() => {
     initRenderer3D(r0);
@@ -66,7 +71,7 @@ function SlicedView(): JSX.Element {
       animate();
 
       await loadBrainSurface(r0, worldCenter);
-      console.log(r0);
+      // console.log(r0);
       setStack_(stack);
       // console.log(stack);
       // console.log(cv);
@@ -95,9 +100,7 @@ function SlicedView(): JSX.Element {
       alert(anatomicalLocation);
     }
     if (e.key == 'Enter') {
-      console.log(stack_);
-      let sphere_r0 = new Mesh(new SphereGeometry(1.1), new MeshBasicMaterial({ color: 0x00ff00 }));
-      sphere_r0.position.set(lastKnownClick.x, lastKnownClick.y, lastKnownClick.z);
+      // console.log(stack_);
 
       // let tkRAS = new Vector3(lastKnownClick.x, lastKnownClick.y, lastKnownClick.z).applyMatrix4(LPStoRAS);
       const LPStoRAS = new Matrix4();
@@ -108,8 +111,13 @@ function SlicedView(): JSX.Element {
 
       let req_anatomicalLocation = await fetch(`locationInfo?location=${JSON.stringify(VOX)}`);
       let anatomicalLocation = await req_anatomicalLocation.json();
-      r0.scene.add(sphere_r0);
 
+      let sphere_r0 = new Mesh(new SphereGeometry(1.1), new MeshBasicMaterial({ color: electrodeColor }));
+      sphere_r0.position.set(lastKnownClick.x, lastKnownClick.y, lastKnownClick.z);
+
+
+      r0.scene.add(sphere_r0);
+      // console.log(r0)
       let i = data.length + 1;
       data[i] = {};
       data[i].scene = new Scene();
@@ -141,13 +149,15 @@ function SlicedView(): JSX.Element {
       let coordinate = [-lastKnownClick.x.toFixed(2), -lastKnownClick.y.toFixed(2), lastKnownClick.z.toFixed(2)];
       let currentElectrode = `${electrodeName}'${Object.keys(newOpts[electrodeName].schema).length + 1}`;
 
+      setElectrodeSpheres((cur) => [...cur, data[i].scene])
+
       setValuesToSave((vals) => ({
         ...vals,
         [currentElectrode]: {
-          tkRAS: [...coordinate],
+          RAS: [...coordinate],
           VOX: [VOX.x.toFixed(2), VOX.y.toFixed(2), VOX.z.toFixed(2)],
           location: anatomicalLocation,
-          RAS: [RAS.x.toFixed(2), RAS.y.toFixed(2), RAS.z.toFixed(2)],
+          tkrRAS: [RAS.x.toFixed(2), RAS.y.toFixed(2), RAS.z.toFixed(2)],
         },
       }));
 
@@ -163,8 +173,12 @@ function SlicedView(): JSX.Element {
       }));
     }
     if (e.key == 's') {
-      console.log(valuesToSave);
-      let sender = await fetch('/saveElectrodes', {
+
+      electrodeSpheres.forEach(sphere => {
+        electrodeScene.add(sphere)
+      })
+
+      let sender = await fetch(`/saveElectrodes/${activeSubject}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -172,6 +186,21 @@ function SlicedView(): JSX.Element {
         },
         body: JSON.stringify(valuesToSave),
       });
+      const exporter = new GLTFExporter();
+      exporter.parse( electrodeScene, function ( result ) {
+        console.log(electrodeScene)
+        console.log(result)
+        const link = document.createElement( 'a' );
+        link.style.display = 'none';
+        document.body.appendChild( link ); // Firefox workaround, see #6594
+  
+        link.href = URL.createObjectURL( new Blob( [ result ], { type: 'application/octet-stream' } ) );
+				link.download = 'scene.glb';
+				link.click();
+
+
+        
+      }, {binary: true} );
       let answer = await sender.json();
       alert(answer);
     }
@@ -201,6 +230,9 @@ function SlicedView(): JSX.Element {
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [stack_, newOpts]);
+
+  setGUIS();
+
 
   // document.onkeypress = (e) => {
   // if (e.key == 'e') {

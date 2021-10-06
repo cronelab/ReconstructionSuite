@@ -141,32 +141,34 @@ const routes = (express) => {
     );
   });
 
-  router.post('/saveElectrodes', (req, res) => {
-    if (!existsSync('/data/PY21N023/electrodes')) {
-      mkdirSync('/data/PY21N023/electrodes');
+  router.post('/saveElectrodes/:subject', (req, res) => {
+    let subject = req.params.subject;
+
+    if (!existsSync(`/data/${subject}/electrodes`)) {
+      mkdirSync(`/data/${subject}/electrodes`);
     }
-    writeFileSync('/data/PY21N023/electrodes/RAS_electrodes.tsv', 'name x y z size \n');
-    writeFileSync('/data/PY21N023/electrodes/VOX_electrodes.tsv', 'name x y z size \n');
-    writeFileSync('/data/PY21N023/electrodes/tkRAS_electrodes.tsv', 'name x y z size \n');
+    writeFileSync(`/data/${subject}/electrodes/VOX_electrodes.tsv`, 'name\tx\ty\tz\tsize \n');
+    writeFileSync(`/data/${subject}/electrodes/RAS_electrodes.tsv`, 'name\tx\ty\tz\tsize \n');
+    writeFileSync(`/data/${subject}/electrodes/tkrRAS_electrodes.tsv`, 'name\tx\ty\tz\tsize \n');
 
     Object.keys(req.body).forEach((entry) => {
       writeFileSync(
-        '/data/PY21N023/electrodes/RAS_electrodes.tsv',
-        `${entry} ${req.body[entry].RAS[0]} ${req.body[entry].RAS[1]} ${req.body[entry].RAS[2]} 1.1\n`,
+        `/data/${subject}/electrodes/RAS_electrodes.tsv`,
+        `${entry}\t${req.body[entry].RAS[0]}\t${req.body[entry].RAS[1]}\t${req.body[entry].RAS[2]}\t1.1\n`,
         {
           flag: 'a+',
         }
       );
       writeFileSync(
-        '/data/PY21N023/electrodes/VOX_electrodes.tsv',
-        `${entry} ${req.body[entry].VOX[0]} ${req.body[entry].VOX[1]} ${req.body[entry].VOX[2]} 1.1\n`,
+        `/data/${subject}/electrodes/VOX_electrodes.tsv`,
+        `${entry}\t${req.body[entry].VOX[0]}\t${req.body[entry].VOX[1]}\t${req.body[entry].VOX[2]}\t1.1\n`,
         {
           flag: 'a+',
         }
       );
       writeFileSync(
-        '/data/PY21N023/electrodes/tkRAS_electrodes.tsv',
-        `${entry} ${req.body[entry].tkRAS[0]} ${req.body[entry].tkRAS[1]} ${req.body[entry].tkRAS[2]} 1.1\n`,
+        `/data/${subject}/electrodes/tkrRAS_electrodes.tsv`,
+        `${entry}\t${req.body[entry].tkrRAS[0]}\t${req.body[entry].tkrRAS[1]}\t${req.body[entry].tkrRAS[2]}\t1.1\n`,
         {
           flag: 'a+',
         }

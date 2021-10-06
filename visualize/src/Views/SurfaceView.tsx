@@ -1,35 +1,39 @@
 //@ts-nocheck
-import React, { useRef, useState, useEffect, Suspense } from 'react';
-import { OrthographicCamera, OrbitControls, Html, useProgress } from '@react-three/drei';
-import { modifySize, modifyColor } from '../helpers/modifyElectrodes';
-import { useLoader, useFrame, Canvas } from '@react-three/fiber';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import { Mesh, Color, Scene } from 'three';
-import { useControls } from 'leva';
+import React, { useRef, useState, useEffect, Suspense } from "react";
+import {
+  OrthographicCamera,
+  OrbitControls,
+  Html,
+  useProgress,
+} from "@react-three/drei";
+import { modifySize, modifyColor } from "../helpers/modifyElectrodes";
+import { useLoader, useFrame, Canvas } from "@react-three/fiber";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+import { Mesh, Color, Scene } from "three";
+import { useControls } from "leva";
 
 const Electrodes = (props) => {
   const urlParams = new URLSearchParams(window.location.search);
-  const activeSubject = urlParams.get('subject') || 'fsaverage';
+  const activeSubject = urlParams.get("subject") || "fsaverage";
 
-  try {
-    const electrodes = useLoader(GLTFLoader, `/electrodes/${activeSubject}`, null, (e) => console.log(e)) || null;
-    const { disableElectrode } = useControls('Electrode view', {
+    const electrodes =
+      useLoader(GLTFLoader, `/electrodes/${activeSubject}`, null, (e) =>
+        console.log(e)
+      ) || null;
+    const { disableElectrode } = useControls("Electrode view", {
       disableElectrode: false,
     });
-  } catch (e) {
-    console.log(e);
-  }
 
-  // const elecInfoRef = useRef();
-  // const electrodeRef = useRef<Mesh>(null);
+  const elecInfoRef = useRef();
+  const electrodeRef = useRef<Mesh>(null);
 
   // console.log(electrodes);
   // //* Destructure nodes
-  // const { Electrodes } = electrodes.nodes;
+  const { Electrodes } = electrodes.nodes;
   return (
     <>
       {/* Electrodes */}
-      {/* <primitive
+      <primitive
       ref={electrodeRef}
       object={Electrodes}
       activeSubject={activeSubject}
@@ -56,7 +60,7 @@ const Electrodes = (props) => {
 
       //   e.object.scale.set(1, 1, 1);
       // }}
-    ></primitive> */}
+    ></primitive>
     </>
   );
 };
@@ -74,7 +78,7 @@ const Brain = (props) => {
   const brainRef = useRef();
   const controlRef = useRef<Mesh>(null);
   const structureNameRef = useRef<HTMLElement>(null);
-  const activeSubject = urlParams.get('subject') || 'fsaverage';
+  const activeSubject = urlParams.get("subject") || "fsaverage";
 
   // //* Import files
   const brain = useLoader(GLTFLoader, `/brain/${activeSubject}`);
@@ -87,31 +91,39 @@ const Brain = (props) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isActive, setIsActive] = useState(false);
   // const [selectedStructure, setSelectedStructure] = useState('Click a structure to display name');
-  const [elecState, setElecState] = useState('Hover over an electrode to view location');
-  const [initialGyriColorsDeclared, setInitialGyriColorsDeclared] = useState([]);
-  const [initialSubcortColorsDeclared, setInitialSubcortColorsDeclared] = useState([]);
+  const [elecState, setElecState] = useState(
+    "Hover over an electrode to view location"
+  );
+  const [initialGyriColorsDeclared, setInitialGyriColorsDeclared] = useState(
+    []
+  );
+  const [initialSubcortColorsDeclared, setInitialSubcortColorsDeclared] =
+    useState([]);
 
-  const { subcortTransparency, gyriTransparency, wmTransparency } = useControls('Transparency', {
-    subcortTransparency: {
-      value: 0.5,
-      min: 0,
-      max: 1,
-      step: 0.1,
-    },
-    gyriTransparency: {
-      value: 0.5,
-      min: 0,
-      max: 1,
-      step: 0.1,
-    },
-    wmTransparency: {
-      value: 0,
-      min: 0,
-      max: 1,
-      step: 0.1,
-    },
-  });
-  const { gyriGrayScale, subcortGrayScale } = useControls('Grayscale', {
+  const { subcortTransparency, gyriTransparency, wmTransparency } = useControls(
+    "Transparency",
+    {
+      subcortTransparency: {
+        value: 0.5,
+        min: 0,
+        max: 1,
+        step: 0.1,
+      },
+      gyriTransparency: {
+        value: 0.5,
+        min: 0,
+        max: 1,
+        step: 0.1,
+      },
+      wmTransparency: {
+        value: 0,
+        min: 0,
+        max: 1,
+        step: 0.1,
+      },
+    }
+  );
+  const { gyriGrayScale, subcortGrayScale } = useControls("Grayscale", {
     gyriGrayScale: false,
     subcortGrayScale: false,
   });
@@ -120,13 +132,15 @@ const Brain = (props) => {
   useEffect(() => {
     if (initialGyriColorsDeclared.length <= 0) {
       //@ts-ignore
-      let _initialGyriColorsDeclared = gyriRef.current.children.map((mat) => mat.material.color);
+      let _initialGyriColorsDeclared = gyriRef.current.children.map(
+        (mat) => mat.material.color
+      );
       setInitialGyriColorsDeclared(_initialGyriColorsDeclared);
     } else {
       if (gyriGrayScale === true)
         gyriRef.current.children.map((mat) => {
           //@ts-ignore
-          mat.material.color = new Color('rgb(255,255,255)');
+          mat.material.color = new Color("rgb(255,255,255)");
           //@ts-ignore
           mat.material.opacity = 1;
         });
@@ -144,19 +158,21 @@ const Brain = (props) => {
   //Subcortical grayscale
   useEffect(() => {
     if (initialSubcortColorsDeclared.length <= 0) {
-      let _initialSubcortColorsDeclared = subCortRef.current.children.map((mat) => {
-        if (mat instanceof Mesh) {
-          return mat.material.color;
-        } else {
-          return null;
+      let _initialSubcortColorsDeclared = subCortRef.current.children.map(
+        (mat) => {
+          if (mat instanceof Mesh) {
+            return mat.material.color;
+          } else {
+            return null;
+          }
         }
-      });
+      );
       setInitialSubcortColorsDeclared(_initialSubcortColorsDeclared);
     } else {
       if (subcortGrayScale === true)
         subCortRef.current.children.map((mat) => {
           if (mat instanceof Mesh) {
-            mat.material.color = new Color('rgb(50,50,50)');
+            mat.material.color = new Color("rgb(50,50,50)");
             //@ts-ignore
             mat.materialopacity = 1;
           }
@@ -174,14 +190,14 @@ const Brain = (props) => {
   }, [subcortGrayScale]);
 
   //Current electrode
-  let elecDescriptor = useControls('currentElectrode', {
-    elecDescriptor: '',
+  let elecDescriptor = useControls("currentElectrode", {
+    elecDescriptor: "",
     // component: () => <div ref={elecInfoRef}>{elecState}</div>,
   });
 
   //Current structure
-  let { selectedStructure } = useControls('selectedStructure', {
-    selectedStructure: '',
+  let { selectedStructure } = useControls("selectedStructure", {
+    selectedStructure: "",
     // component: () => <div ref={structureNameRef}>{selectedStructure}</div>,
   });
 
@@ -252,15 +268,20 @@ const Brain = (props) => {
   useEffect(() => {
     if (controlRef.current && first === true) {
       first = false;
-      controlRef.current.addEventListener('end', (e) => setAllowHover(true));
-      controlRef.current.addEventListener('start', (e) => setAllowHover(false));
+      controlRef.current.addEventListener("end", (e) => setAllowHover(true));
+      controlRef.current.addEventListener("start", (e) => setAllowHover(false));
     }
   }, [controlRef.current || first]);
   return (
     <>
       <group dispose={null}>
         <directionalLight ref={lightRef} position={[0, 0, -400]} />
-        <OrthographicCamera ref={cam} makeDefault position={[0, 0, -400]} zoom={1} />
+        <OrthographicCamera
+          ref={cam}
+          makeDefault
+          position={[0, 0, -400]}
+          zoom={1}
+        />
         <OrbitControls ref={controlRef} rotateSpeed={2} target0={brainRef} />
         {/* Gyri */}
         <primitive
@@ -317,7 +338,7 @@ const SurfaceView = () => {
   }
 
   return (
-    <Canvas style={{ backgroundColor: 'gray' }}>
+    <Canvas style={{ backgroundColor: "gray" }}>
       <Suspense fallback={<Loader />}>
         <Brain></Brain>
         <Electrodes></Electrodes>

@@ -6,10 +6,10 @@ services:
       context: ./preprocess
       dockerfile: Dockerfile
     environment: 
-      - SUBJECT=PY21N026
+      - SUBJECT=PY21N023
       - ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS=16
     volumes:
-      - /usr/local/freesurfer/7-dev/subjects:/data
+      - $SUBJECTS_DIR:/data
       - ./preprocess/scripts:/home/preprocess/scripts:cached
     tty: true
     
@@ -19,10 +19,9 @@ services:
       context: ./generate
       dockerfile: Dockerfile
     environment: 
-      - SUBJECT=PY21N026
+      - SUBJECT=PY21N023
     volumes:
-      - /usr/local/freesurfer/7-dev/subjects:/data
-      # - .:/home:cached
+      - $SUBJECTS_DIR:/data
       - ./generate:/home/generate:cached
     tty: true
 
@@ -36,6 +35,6 @@ services:
     environment: 
       - PORT=80
     volumes:
-      - /usr/local/freesurfer/7-dev/subjects:/data
+      - $SUBJECTS_DIR:/data
       - ./visualize:/home/visualize:cached
     tty: true

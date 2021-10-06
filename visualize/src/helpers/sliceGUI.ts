@@ -2,9 +2,9 @@
 import { r1, r2, r3 } from './renderers';
 import { Mesh } from 'three';
 import { useControls, folder } from 'leva';
-// import { brainScene } from './loadSurfaces';
+import { brainScene } from './loadSurfaces';
 
-let brainScene;
+// let brainScene;
 export const setGUIS = () => {
   //@ts-ignore
   const [, si] = useControls('Slice index', {
@@ -36,23 +36,19 @@ export const setGUIS = () => {
   //@ts-ignore
   const [, trans] = useControls('Transparency', {
     subcorticalStructs: {
-      value: true,
+      value: .5,
+      min:0,
+      max:1,
       onChange: (val) => {
-        if (val == false) {
           brainScene?.traverse((child) => {
-            if (child instanceof Mesh && child.parent.name != 'Electrodes') {
-              child.material.transparent = true;
-              child.material.opacity = 0.5;
-            }
-          });
-        } else {
-          brainScene?.traverse((child) => {
-            if (child instanceof Mesh && child.parent.name != 'Electrodes') {
-              child.material.transparent = false;
+            console.log(child)
+            if(child instanceof Mesh){
+
+              // child.material.transparent = true;
+              child.material.opacity = val;
             }
           });
         }
-      },
     },
   });
   //@ts-ignore
