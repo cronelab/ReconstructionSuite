@@ -2,8 +2,10 @@ import path from 'path';
 import fs, { existsSync } from 'fs';
 import parse from 'csv-parse/lib/sync.js';
 import { exec } from 'child_process';
-let dataDir = '/data';
 import { readFileSync, writeFileSync, mkdirSync } from 'fs';
+
+let dataDir = '/data';
+console.log(dataDir)
 let __dirname = path.resolve(path.dirname(''));
 
 const routes = (express) => {
@@ -43,6 +45,7 @@ const routes = (express) => {
   });
 
   router.get('/api/list', (req, res) => {
+    console.log("AY!")
     fs.readdir('/data/', (err, subjects) => {
       if (subjects != undefined) {
         res.status(200).json(subjects.filter((x) => x.startsWith('PY')));
@@ -55,9 +58,9 @@ const routes = (express) => {
   //default colors
   router.get('/electrodeColors/:subject', (req, res) => {
     let subject = req.params.subject;
-    if (fs.existsSync(`${dataDir}/${subject}/colors.json`)) {
+    if (fs.existsSync(`${dataDir}/${subject}/electrodes/colors.json`)) {
       res.sendFile(`colors.json`, {
-        root: `${dataDir}/${subject}/`,
+        root: `${dataDir}/${subject}/electrodes`,
       });
     } else {
       res.status(404).send('Not Found');
@@ -97,6 +100,24 @@ const routes = (express) => {
     }
   });
 
+  //T1
+  router.get('/cerebellumRemoved/:subject', (req, res) => {
+    let subject = req.params.subject;
+    console.log("ASDSD")
+    if (fs.existsSync(`${dataDir}/${subject}/cerebellumRemoved.nii.gz`)) {
+      res.setHeader('Content-Type', 'application/gzip');
+      res.sendFile(`${dataDir}/${subject}/cerebellumRemoved.nii.gz`);
+      console.log("ASDSD1")
+    } else if (fs.existsSync(`${dataDir}/${subject}/cerebellumRemoved.nii`)) {
+      res.setHeader('Content-Type', 'application/nii');
+      res.sendFile(`${dataDir}/${subject}/cerebellumRemoved.nii`);
+      console.log("ASDSD2")
+
+    } else {
+      res.status(404).send('Not Found');
+    }
+  });
+
   //CT
   router.get('/ct/:subject', (req, res) => {
     let subject = req.params.subject;
@@ -111,12 +132,13 @@ const routes = (express) => {
     }
   });
 
-  router.get('/locationInfo', (req, res) => {
+  router.get('/locationInfo/:subject', (req, res) => {
+    let subject = req.params.subject;
     let location = JSON.parse(req.query.location);
     const data = readFileSync('/usr/local/freesurfer/FreeSurferColorLUT.txt', 'utf-8');
     const lines = data.split(/\r?\n/);
     exec(
-      `/usr/local/freesurfer/bin/mri_info /data/PY20N012/mri/wmparc.mgz --voxel ${location.x} ${location.y} ${location.z}`,
+      `/usr/local/freesurfer/bin/mri_info /data/${subject}/mri/wmparc.mgz --voxel ${location.x} ${location.y} ${location.z}`,
       (error, stdout, stderr) => {
         if (error) {
           console.log(`error: ${error.message}`);
@@ -150,6 +172,7 @@ const routes = (express) => {
     writeFileSync(`/data/${subject}/electrodes/VOX_electrodes.tsv`, 'name\tx\ty\tz\tsize \n');
     writeFileSync(`/data/${subject}/electrodes/RAS_electrodes.tsv`, 'name\tx\ty\tz\tsize \n');
     writeFileSync(`/data/${subject}/electrodes/tkrRAS_electrodes.tsv`, 'name\tx\ty\tz\tsize \n');
+    writeFileSync(`/data/${subject}/electrodes/anatomicalLocations.tsv`, 'name\tlocation \n');
 
     Object.keys(req.body).forEach((entry) => {
       writeFileSync(
@@ -169,6 +192,13 @@ const routes = (express) => {
       writeFileSync(
         `/data/${subject}/electrodes/tkrRAS_electrodes.tsv`,
         `${entry}\t${req.body[entry].tkrRAS[0]}\t${req.body[entry].tkrRAS[1]}\t${req.body[entry].tkrRAS[2]}\t1.1\n`,
+        {
+          flag: 'a+',
+        }
+      );
+      writeFileSync(
+        `/data/${subject}/electrodes/anatomicalLocations.tsv`,
+        `${entry}\t${req.body[entry].location}\n`,
         {
           flag: 'a+',
         }

@@ -1,34 +1,30 @@
+import path from 'path';
 import express from 'express';
 import routes from './routes.js';
-import middleware from 'webpack-dev-middleware';
-import webpack from 'webpack';
-import config from '../webpack.development.config.js';
-import WebpackHotMiddleware from 'webpack-hot-middleware';
-import path from 'path';
-let __dirname = path.resolve(path.dirname(''));
-const compiler = webpack(config);
-const app = express();
+import webpackDevMiddleware from 'webpack-dev-middleware'
+import webpackHotMiddleware from 'webpack-hot-middleware'
+import webpack from 'webpack'
+import config from '../webpack.development.config.js'
 
+
+const app = express();
+let __dirname = path.resolve(path.dirname(''));
+
+
+const compiler = webpack(config)
+
+let middle = webpackDevMiddleware(compiler, {
+  publicPath: config.output.publicPath,
+  writeToDisk: true
+})
+app.use(middle)
+// app.use(webpackHotMiddleware(compiler))
+// app.use(middle)
 const PORT = process.env.PORT || 80;
 
-app.use(
-  middleware(compiler, {
-    // logLevel: 'warn',
-    publicPath: config.output.publicPath,
-  })
-);
-
-app.use(
-  WebpackHotMiddleware(compiler, {
-    log: console.log,
-    path: '/__webpack_hmr',
-    heartbeat: 10 * 1000,
-  })
-);
-
-app.get('*', function (req, res) {
-  res.sendFile(path.resolve(__dirname, 'dist/index.html'));
-});
 app.use('/', routes(express));
-
+// app.use(express.static(path.resolve(__dirname, 'dist')));
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname + '/dist/index.html'));
+});
 app.listen(PORT, () => console.log(`Serving on port: ${PORT}`));

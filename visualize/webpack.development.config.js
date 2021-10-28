@@ -1,51 +1,50 @@
-import webpack from 'webpack';
 import path from 'path';
-import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
+import webpack from 'webpack'
 let __dirname = path.resolve(path.dirname(''));
+const devMode = 'development';
 
 const module = {
-  mode: 'development',
-  context: __dirname,
-  devServer: {
-    hot: true,
+  mode: devMode ? 'development' : 'production',
+  // devServer: {
+  //   static: {
+  //     directory: path.join(__dirname, 'dist'),
+  //   },
+  //   port: 8055,
+  //   hot: true,
+  //   historyApiFallback: true,
+  // },
+  devtool: devMode ? 'inline-source-map' : 'source-map',
+  entry: ['webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000', './src/index.tsx'],
+  resolve: {
+    extensions: ['.tsx', '.ts', '.js', '.jsx'],
   },
-  entry: {
-    main: './src/index.tsx',
+  output:{
+    path: path.resolve(__dirname, 'dist'),
+    publicPath: '/',
+    filename: '[name].bundle.js',
   },
-  // entry: [
-  //   // Add the client which connects to our middleware
-  //   // You can use full urls like 'webpack-hot-middleware/client?path=http://localhost:3000/__webpack_hmr'
-  //   // useful if you run your app from another point like django
-  //   'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000',
-  //   // And then the actual application
-  //   './src/main.ts',
-  // ],
+  optimization: {
+    runtimeChunk: 'single',
+  },
+  
+  cache: true,
   module: {
     rules: [
       {
-        test: /\.tsx?$/,
-        use: [
-          {
-            loader: 'ts-loader',
-            options: {
-              transpileOnly: true,
-              happyPackMode: true,
-            },
-          },
-        ],
-        include: path.resolve(__dirname, 'src'),
-      },
-      {
-        test: /\.js|jsx$/,
-        exclude: /(node_modules|bower_components)/,
-        use: {
-          loader: 'babel-loader',
-          options: {
-            presets: ['@babel/preset-env', '@babel/preset-react', '@babel/preset-typescript'],
-            plugins: ['@babel/plugin-transform-runtime'],
-          },
+        test: /\.(ts|tsx|js|jsx)$/,
+        exclude: /node_modules/,
+        loader: 'babel-loader',
+        options: {
+          babelrc: false,
+          presets: ['@babel/preset-env', '@babel/preset-react', '@babel/preset-typescript'],
+          plugins: ['@babel/transform-runtime', 'react-refresh/babel', "@babel/plugin-transform-async-to-generator"],
+          cacheDirectory: true,
         },
       },
+
       {
         test: /\.(sa|sc|c)ss$/,
         use: [
@@ -55,24 +54,30 @@ const module = {
           {
             loader: 'css-loader',
           },
+          {
+            loader: 'sass-loader',
+          },
         ],
+      },
+      {
+        test: /\.(png|gb)/,
+        type: 'asset/resource',
       },
     ],
   },
-  resolve: {
-    extensions: ['.tsx', '.ts', '.js'],
-    symlinks: false,
-  },
-  output: {
-    path: __dirname,
-    publicPath: '/',
-    filename: 'bundle.js',
-  },
-  devtool: 'source-map',
   plugins: [
+    new ReactRefreshWebpackPlugin(),
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoEmitOnErrorsPlugin(),
-    new ForkTsCheckerWebpackPlugin(),
+
+    new MiniCssExtractPlugin({
+      filename: '[name].css',
+      chunkFilename: '[id].css',
+    }),
+    new HtmlWebpackPlugin({
+      template: './src/index.html',
+      filename: 'index.html',
+
+    }),
   ],
 };
 export default module;
