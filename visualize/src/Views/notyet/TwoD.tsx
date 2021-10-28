@@ -145,8 +145,6 @@ const TwoD = () => {
 
     let header = nifti.readHeader(data1);
     let image = nifti.readImage(header, data1);
-    console.log(header);
-    console.log(image);
     let typedData;
     if (header.datatypeCode === nifti.NIFTI1.TYPE_UINT8) {
       typedData = new Uint8Array(image);

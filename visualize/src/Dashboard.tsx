@@ -1,3 +1,4 @@
+import React from 'react'
 import { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
@@ -5,7 +6,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Card from 'react-bootstrap/Card';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
-
+import './App.scss';
 const Dashboard = () => {
   const [subjects, setSubjects] = useState([]);
 
@@ -38,7 +39,7 @@ const Dashboard = () => {
                       </Button>
                       <Button
                         onClick={() => {
-                          window.location.href = `/slice?subject=${subj}`;
+                          window.location.href = `/slice?subject=${subj}&modality=T1`;
                         }}
                         variant="primary"
                       >
