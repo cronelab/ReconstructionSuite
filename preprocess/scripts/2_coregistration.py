@@ -25,5 +25,5 @@ os.system(f'mri_vol2vol --reg {filePath}/register.lta --mov {filePath}{fileName}
 
 
 #cleaned up CT for localization
-os.system(f'mri_mask -T 10 {SUBJECTS_DIR}/{SUBJECT}/CT/coregCT.nii {SUBJECTS_DIR}/{SUBJECT}/mri/brain.mgz {SUBJECTS_DIR}/{SUBJECT}/CT/strippedCT.nii.gz')
 os.system(f'cp {filePath}/coregCT.nii.gz {SUBJECTS_DIR}/{SUBJECT}/CT.nii.gz')
+os.system(f'mri_mask -T 10 {filePath}/coregCT.nii.gz {SUBJECTS_DIR}/{SUBJECT}/mri/brain.mgz {SUBJECTS_DIR}/{SUBJECT}/strippedCT.nii.gz')

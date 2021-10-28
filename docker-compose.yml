@@ -36,5 +36,5 @@ services:
       - PORT=80
     volumes:
       - $SUBJECTS_DIR:/data
-      - ./visualize:/home/visualize:cached
+      - ./visualize:/home/visualize
     tty: true

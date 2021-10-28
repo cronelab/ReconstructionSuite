@@ -1,5 +1,6 @@
 import os
 
+THREADS = os.environ["ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS"]
 SUBJECT = os.environ["SUBJECT"]
 SUBJECTS_DIR = os.environ["SUBJECTS_DIR"]
 filePath = f'{SUBJECTS_DIR}/sourcedata/{SUBJECT}/MR/'
@@ -21,9 +22,9 @@ if(os.path.isfile(f'{filePath}T1_RAS.nii') == False):
 
 acpc_aligned_T1 = "T1_RAS.nii"
 
-os.system(f'recon-all -s {SUBJECT} -i {filePath}{acpc_aligned_T1} -openmp 16 -parallel -autorecon1 -notify {SUBJECTS_DIR}/{SUBJECT}/auto1done.txt')
-os.system(f'recon-all -s {SUBJECT} -openmp 16 -parallel -autorecon2 -notify {SUBJECTS_DIR}/{SUBJECT}/auto2done.txt')
-os.system(f'recon-all -s {SUBJECT} -openmp 16 -parallel -autorecon3 -notify {SUBJECTS_DIR}/{SUBJECT}/auto3done.txt')
+os.system(f'recon-all -s {SUBJECT} -i {filePath}{acpc_aligned_T1} -openmp {THREADS} -parallel -autorecon1 -notify {SUBJECTS_DIR}/{SUBJECT}/auto1done.txt')
+os.system(f'recon-all -s {SUBJECT} -openmp {THREADS} -parallel -autorecon2 -notify {SUBJECTS_DIR}/{SUBJECT}/auto2done.txt')
+os.system(f'recon-all -s {SUBJECT} -openmp {THREADS} -parallel -autorecon3 -notify {SUBJECTS_DIR}/{SUBJECT}/auto3done.txt')
 
 os.system(f'mri_convert {SUBJECTS_DIR}/{SUBJECT}/mri/brain.mgz {SUBJECTS_DIR}/{SUBJECT}/reconstruction.nii.gz')
 
