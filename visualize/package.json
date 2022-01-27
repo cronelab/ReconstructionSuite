@@ -43,7 +43,7 @@
     "sass": "^1.43.3",
     "sass-loader": "^12.2.0",
     "style-loader": "^3.3.0",
-    "three": "^0.131.1",
+    "three": "^0.137.0",
     "webpack-dev-server": "^4.3.1",
     "write-file-webpack-plugin": "^4.5.1"
   },
