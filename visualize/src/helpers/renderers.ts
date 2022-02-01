@@ -1,10 +1,15 @@
-//@ts-nocheck
 import { Scene, FrontSide, BackSide, Mesh, MeshBasicMaterial, SphereGeometry, Plane, Vector3, Raycaster } from 'three';
-import { UtilsCore } from 'ami.js'; // Import AMI (from TheBrainChain repo)
+import { UtilsCore } from '../../node_modules/ami.js/build/ami'; // Import AMI (from TheBrainChain repo)
 
 export const r0 = {
   domId: 'r0',
   targetID: 0,
+  controls:null,
+  light: null,
+  camera: null, 
+  renderer: null,
+  scene: null,
+  domElement: null
 };
 
 // 2d axial renderer
@@ -12,6 +17,14 @@ export const r1 = {
   domId: 'r1',
   sliceOrientation: 'axial',
   targetID: 1,
+  controls:null,
+  light: null,
+  camera: null, 
+  renderer: null,
+  scene: null,
+  stackHelper: null,
+  domElement: null
+
 };
 
 // 2d sagittal renderer
@@ -19,6 +32,13 @@ export const r2 = {
   domId: 'r2',
   sliceOrientation: 'sagittal',
   targetID: 2,
+  controls:null,
+  light: null,
+  camera: null, 
+  renderer: null,
+  scene: null,
+  stackHelper: null,
+  domElement: null
 };
 
 // 2d coronal renderer
@@ -26,6 +46,14 @@ export const r3 = {
   domId: 'r3',
   sliceOrientation: 'coronal',
   targetID: 3,
+  controls:null,
+  light: null,
+  camera: null, 
+  renderer: null,
+  scene: null,
+  stackHelper: null,
+  domElement: null
+
 };
 
 export const sceneClip = new Scene();
@@ -69,6 +97,10 @@ sceneClip.add(data[0].scene);
 
 const urlParams = new URLSearchParams(window.location.search);
 
+// Get the subject and modality of the 3D scan from the url params
+export const activeSubject = urlParams.get('subject') || 'fsaverage';
+export const modality = urlParams.get('modality') || 't1'; //ct
+
 export const clipPlane1 = new Plane(new Vector3(0, 0, 0), 0);
 export const clipPlane2 = new Plane(new Vector3(0, 0, 0), 0);
 export const clipPlane3 = new Plane(new Vector3(0, 0, 0), 0);
@@ -76,50 +108,64 @@ export const clipPlane3 = new Plane(new Vector3(0, 0, 0), 0);
 export const electrodeLegend = {};
 
 export function animate() {
-  r0.controls.update();
-  r0.light.position.copy(r0.camera.position);
-  r0.renderer.render(r0.scene, r0.camera);
+  r0.controls?.update();
+  r0.light?.position.copy(r0.camera?.position);
+  r0.renderer?.render(r0.scene, r0.camera);
 
-  r1.controls.update();
-  r2.controls.update();
-  r3.controls.update();
+  [r1, r2, r3].forEach((r) => {
+    r.controls?.update();
 
-  r1.renderer.clear();
-  r1.renderer.render(r1.scene, r1.camera);
-  r1.renderer.clearDepth();
+  })
+
+  // r1.controls.update();
+  // r2.controls.update();
+  // r3.controls.update();
+
+  r1.renderer?.clear();
+  r1.renderer?.render(r1.scene, r1.camera);
+  r1.renderer?.clearDepth();
   data.forEach((object) => {
     object.materialFront.clippingPlanes = [clipPlane1];
     object.materialBack.clippingPlanes = [clipPlane1];
   });
-  r1.renderer.render(sceneClip, r1.camera);
-  r1.renderer.clearDepth();
+  r1.renderer?.render(sceneClip, r1.camera);
+  r1.renderer?.clearDepth();
 
-  r2.renderer.clear();
-  r2.renderer.render(r2.scene, r2.camera);
-  r2.renderer.clearDepth();
+  r2.renderer?.clear();
+  r2.renderer?.render(r2.scene, r2.camera);
+  r2.renderer?.clearDepth();
   data.forEach((object) => {
     object.materialFront.clippingPlanes = [clipPlane2];
     object.materialBack.clippingPlanes = [clipPlane2];
   });
-  r2.renderer.render(sceneClip, r2.camera);
-  r2.renderer.clearDepth();
+  r2.renderer?.render(sceneClip, r2.camera);
+  r2.renderer?.clearDepth();
 
-  r3.renderer.clear();
-  r3.renderer.render(r3.scene, r3.camera);
-  r3.renderer.clearDepth();
+  r3.renderer?.clear();
+  r3.renderer?.render(r3.scene, r3.camera);
+  r3.renderer?.clearDepth();
   data.forEach((object) => {
     object.materialFront.clippingPlanes = [clipPlane3];
     object.materialBack.clippingPlanes = [clipPlane3];
   });
-  r3.renderer.render(sceneClip, r3.camera);
-  r3.renderer.clearDepth();
-
+  r3.renderer?.render(sceneClip, r3.camera);
+  r3.renderer?.clearDepth();
+  // [r1, r2, r3].forEach((r) => {
+  //   r.controls?.update();
+  //   r.renderer?.clear();
+  //   r.renderer?.render(r.scene, r.camera);
+  //   r.renderer?.clearDepth();
+  //   data.forEach((object) => {
+  //     object.materialFront.clippingPlanes = [clipPlane1,clipPlane2,clipPlane3];
+  //     object.materialBack.clippingPlanes = [clipPlane1,clipPlane2,clipPlane3];
+  //   });
+  //   r.renderer?.render(sceneClip, r.camera);
+  //   r.renderer?.clearDepth();
+  
+  // })
   requestAnimationFrame(() => animate());
 }
 
-// Get the subject and modality of the 3D scan from the url params
-export const activeSubject = urlParams.get('subject') || 'fsaverage';
-export const modality = urlParams.get('modality') || 't1'; //ct
 
 export function updateClipPlane(refObj, clipPlane) {
   const stackHelper = refObj.stackHelper;

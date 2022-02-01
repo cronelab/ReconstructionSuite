@@ -7,14 +7,15 @@ services:
       dockerfile: Dockerfile
     environment: 
       - SUBJECT=PY21N023
-      - ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS=16
+      - ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS=42
     volumes:
-      - $SUBJECTS_DIR:/data
+      - /mnt/shared/Subjects/sourcedata:/data/sourcedata
+      - /mnt/shared/Subjects/derivatives/freesurfer:/data
       - ./preprocess/scripts:/home/preprocess/scripts:cached
     tty: true
     
-  mesh_generator:
-    container_name: mesh_generator
+  mesh_generator2:
+    container_name: mesh_generator2
     build:
       context: ./generate
       dockerfile: Dockerfile
@@ -25,15 +26,16 @@ services:
       - ./generate:/home/generate:cached
     tty: true
 
-  mesh_visualizer:
-    container_name: mesh_visualizer
+  mesh_visualizer2:
+    container_name: mesh_visualizer2
     build: 
       context: ./visualize
       dockerfile: Dockerfile
     ports:
-      - "80:80"
+      - "8055:8055"
+      - "8056:8056"
     environment: 
-      - PORT=80
+      - PORT=8055
     volumes:
       - $SUBJECTS_DIR:/data
       - ./visualize:/home/visualize

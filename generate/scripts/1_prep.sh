@@ -1,16 +1,17 @@
 #!/bin/bash
 
-mkdir -p $SUBJECTS_DIR/$SUBJECT/obj 
-mkdir -p $SUBJECTS_DIR/$SUBJECT/rois 
-mkdir -p /usr/local/freesurfer/matlab 
+mkdir -p $SUBJECTS_DIR/$SUBJECT/obj
+mkdir -p $SUBJECTS_DIR/$SUBJECT/rois
+mkdir -p $SUBJECTS_DIR/$SUBJECT/electrodes
+mkdir -p /usr/local/freesurfer/matlab
 
 ./bash/aseg2srf.sh $SUBJECT
 
-mris_convert $SUBJECTS_DIR/$SUBJECT/surf/lh.pial $SUBJECTS_DIR/$SUBJECT/surf/lh.pial.asc 
-mris_convert $SUBJECTS_DIR/$SUBJECT/surf/rh.pial $SUBJECTS_DIR/$SUBJECT/surf/rh.pial.asc 
+mris_convert $SUBJECTS_DIR/$SUBJECT/surf/lh.pial $SUBJECTS_DIR/$SUBJECT/surf/lh.pial.asc
+mris_convert $SUBJECTS_DIR/$SUBJECT/surf/rh.pial $SUBJECTS_DIR/$SUBJECT/surf/rh.pial.asc
 
-mv $SUBJECTS_DIR/$SUBJECT/surf/lh.pial.asc $SUBJECTS_DIR/$SUBJECT/surf/lh.pial.srf 
-mv $SUBJECTS_DIR/$SUBJECT/surf/rh.pial.asc $SUBJECTS_DIR/$SUBJECT/surf/rh.pial.srf 
+mv $SUBJECTS_DIR/$SUBJECT/surf/lh.pial.asc $SUBJECTS_DIR/$SUBJECT/surf/lh.pial.srf
+mv $SUBJECTS_DIR/$SUBJECT/surf/rh.pial.asc $SUBJECTS_DIR/$SUBJECT/surf/rh.pial.srf
 
 ./octave/annot2dpv $SUBJECTS_DIR/$SUBJECT/label/lh.aparc.annot $SUBJECTS_DIR/$SUBJECT/label/lh.aparc.annot.dpv
 ./octave/annot2dpv $SUBJECTS_DIR/$SUBJECT/label/rh.aparc.annot $SUBJECTS_DIR/$SUBJECT/label/rh.aparc.annot.dpv

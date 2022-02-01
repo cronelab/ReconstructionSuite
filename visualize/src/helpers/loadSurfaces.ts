@@ -18,47 +18,10 @@ dracoLoader.setDecoderPath(
 ); // use a full url path
 gltfLoader.setDRACOLoader(dracoLoader);
 
-export const brain,electrodes,brainScene;
-export const loadBrainSurface = async (r0, worldCenter) => {
-  // return new Promise(async (resolve) => {
-  const RASToLPS = new Matrix4();
-  RASToLPS.set(
-    -1,
-    0,
-    0,
-    worldCenter.x,
-    0,
-    -1,
-    0,
-    worldCenter.y,
-    0,
-    0,
-    1,
-    worldCenter.z,
-    0,
-    0,
-    0,
-    1
-  );
-  try {
-    brain = await gltfLoader.loadAsync(`/brain/${activeSubject}`);
-    brain.scene.name = "BrainMeshScene";
+export let brain,electrodes,brainScene;
 
-    brain.scene.traverse((child) => {
-      if (child instanceof Mesh) {
-        child.material.transparent = true;
-        // child.material.opacity = 0.4;
-      }
-    });
-
-    brain.scene.children[0].applyMatrix4(RASToLPS);
-    r0.scene.add(brain.scene);
-    console.log(brain.scene)
-    brainScene=brain.scene.children[0];
-  } catch (e) {
-    console.log(e);
-  }
-
+export const loadElectrodeScene = async (electrodeColors?) => {
+  let electrodes
   try {
     electrodes = await gltfLoader.loadAsync(`/electrodes/${activeSubject}`);
 
@@ -68,15 +31,28 @@ export const loadBrainSurface = async (r0, worldCenter) => {
     // ElectrodeScene = object3d.scene;
     electrodes.scene.children.forEach((electrodeGroups) => {
       electrodeGroups.children.forEach((electrodeGroup) => {
+        let cols = electrodeColors[electrodeGroup.name]
+        electrodeGroup.children[0].material.color = new Color(
+          cols.split(" ")[0],
+          cols.split(" ")[1],
+          cols.split(" ")[2]
+        );
         electrodeGroup.children.forEach((actualElectrode) => {
+
+          // console.log(cols)
           data[i] = {};
           let meshOpacity = 0.8;
 
           data[i].scene = new Scene();
           data[i].materialFront = new MeshBasicMaterial({
-            color: new Color(1, 0, 0),
+            color: new Color(
+              cols.split(" ")[0],
+              cols.split(" ")[1],
+              cols.split(" ")[2]
+  
+            ),
             side: FrontSide,
-            depthWrite: true,
+            depthWrite: false,
             opacity: 0,
             transparent: true,
             clippingPlanes: [],
@@ -87,7 +63,12 @@ export const loadBrainSurface = async (r0, worldCenter) => {
             data[i].materialFront
           );
           data[i].materialBack = new MeshBasicMaterial({
-            color: new Color(1, 0, 0),
+            color: new Color(
+              cols.split(" ")[0],
+              cols.split(" ")[1],
+              cols.split(" ")[2]
+  
+            ),
             side: BackSide,
             depthWrite: true,
             opacity: meshOpacity,
@@ -110,27 +91,76 @@ export const loadBrainSurface = async (r0, worldCenter) => {
             actualElectrode.position.z
           );
           data[i].scene.add(data[i].meshFront);
-          data[i].scene.add(data[i].meshBack);
-          data[i].scene.applyMatrix4(RASToLPS);
+          // data[i].scene.add(data[i].meshBack);
+          // data[i].scene.applyMatrix4(RASToLPS);
           sceneClip.add(data[i].scene);
           i++;
         });
-        // const childMesh = electrodeGroup.children[0];
-        // if (childMesh instanceof Mesh) {
-        //   electrodeLegend[electrodeGroup.name] = childMesh.material.color;
-        //   childMesh.material.color = new Color(1, 0, 0);
-        // }
       });
     });
-    electrodes.scene.applyMatrix4(RASToLPS);
 
-    r0.scene.add(electrodes.scene);
+  } catch (e) {
+    console.log(e);
+  }
+  return{
+    electrodeScene: electrodes !== undefined ? electrodes?.scene : undefined,
+
+  }
+}
+
+export const loadBrainScene = async () => {
+ let brain;
+  try {
+    brain = await gltfLoader.loadAsync(`/brain/${activeSubject}`);
+    brain.scene.name = "BrainMeshScene";
+
+    brain.scene.traverse((child) => {
+      if (child instanceof Mesh) {
+        child.material.transparent = true;
+      }
+    });
+
+
+
+    brainScene=brain.scene.children[0];
   } catch (e) {
     console.log(e);
   }
 
   return {
-    brainScene: brain.scene || undefined,
-    electrodeScene: electrodes?.scene || undefined,
+    brainScene: brain.scene !== undefined ? brain.scene : undefined,
+
   };
 };
+
+export const reorientateBrainScene = async(r0, worldCenter, brainScene?,electrodeScene?) => { 
+  const RASToLPS = new Matrix4();
+  RASToLPS.set(
+    -1,
+    0,
+    0,
+    worldCenter.x,
+    0,
+    -1,
+    0,
+    worldCenter.y,
+    0,
+    0,
+    1,
+    worldCenter.z,
+    0,
+    0,
+    0,
+    1
+  );
+  if(brainScene){
+    brainScene.children[0]?.applyMatrix4(RASToLPS);
+    r0.scene.add(brainScene);
+  }
+  if(electrodeScene){
+
+    electrodeScene?.applyMatrix4(RASToLPS);
+    r0.scene.add(electrodeScene);
+  }
+
+}

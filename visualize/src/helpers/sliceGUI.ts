@@ -1,12 +1,21 @@
-//@ts-nocheck
-import { r1, r2, r3 } from './renderers';
+import { r0,r1, r2, r3 } from './renderers';
 import { Mesh } from 'three';
 import { useControls, folder } from 'leva';
 import { brainScene } from './loadSurfaces';
+import { modality } from './renderers';
 
 // let brainScene;
-export const setGUIS = () => {
-  //@ts-ignore
+export const setGUIS = async (newOpts, electrodeName) => {
+
+  // if(modality == "T1"){
+  // }
+  // else if(modality == "CT"){
+    useControls('Electrodes', newOpts, [newOpts, electrodeName]);
+    console.log(brainScene)
+    // }
+
+
+  // @ts-ignore
   const [, si] = useControls('Slice index', {
     redIndex: {
       value: r1.stackHelper?.index || 0,
@@ -14,7 +23,9 @@ export const setGUIS = () => {
       max: r1.stackHelper?.orientationMaxIndex || 255,
       step: 1,
       //@ts-ignore
-      onChange: (val) => (r1.stackHelper?.index = val),
+      onChange: (val) => {
+        if(r1.stackHelper) r1.stackHelper.index = val
+      },
     },
     yellowIndex: {
       value: r2.stackHelper?.index || 0,
@@ -22,7 +33,9 @@ export const setGUIS = () => {
       max: r2.stackHelper?.orientationMaxIndex || 255,
       step: 1,
       //@ts-ignore
-      onChange: (val) => (r2.stackHelper?.index = val),
+      onChange: (val) => {
+        if(r2.stackHelper) r2.stackHelper.index = val
+      }
     },
     greenIndex: {
       value: r3.stackHelper?.index || 0,
@@ -30,98 +43,189 @@ export const setGUIS = () => {
       max: r3.stackHelper?.orientationMaxIndex || 255,
       step: 1,
       //@ts-ignore
-      onChange: (val) => (r3.stackHelper?.index = val),
+      onChange: (val) => {
+        if(r3.stackHelper) r3.stackHelper.index = val
+      },
     },
   });
-  //@ts-ignore
+  // @ts-ignore
   const [, trans] = useControls('Transparency', {
-    subcorticalStructs: {
-      value: .5,
-      min:0,
-      max:1,
-      onChange: (val) => {
-          brainScene?.traverse((child) => {
-            console.log(child)
-            if(child instanceof Mesh){
-
-              // child.material.transparent = true;
-              child.material.opacity = val;
-            }
-          });
-        }
-    },
-  });
-  //@ts-ignore
-  const [, meshtoggle] = useControls('Mesh toggle', {
     Gyri: {
-      value: true,
+      value: 0.5,
+      min: 0,
+      max: 1,
       onChange: (val) => {
-        if (val == true) {
-          brainScene?.children.forEach((child) => {
-            if (child.name == 'Gyri') {
+        brainScene?.children.forEach((child) => {
+          if (child.name == 'Gyri') {
+            if(val == 0){
+              child.visible = false
+            } else{
               child.visible = true;
             }
-          });
-        } else {
-          brainScene?.children.forEach((child) => {
-            if (child.name == 'Gyri') {
-              child.visible = false;
-            }
-          });
-        }
+            child.traverse((c) => {
+              if (c instanceof Mesh) {
+                c.material.opacity = val;
+              }
+            });
+          }
+        });
       },
     },
     WhiteMatter: {
-      value: true,
+      value: 0.5,
+      min: 0,
+      max: 1,
       onChange: (val) => {
-        if (val == true) {
-          brainScene?.children.forEach((child) => {
-            if (child.name == 'WhiteMatter') {
+        brainScene?.children.forEach((child) => {
+          if (child.name == 'WhiteMatter') {
+            if(val == 0){
+              child.visible = false
+            } else{
               child.visible = true;
             }
-          });
-        } else {
-          brainScene?.children.forEach((child) => {
-            if (child.name == 'WhiteMatter') {
-              child.visible = false;
-            }
-          });
-        }
+
+            child.traverse((c) => {
+              if (c instanceof Mesh) {
+                c.material.opacity = val;
+              }
+            });
+          }
+        });
       },
     },
-    SubcortStructs: {
-      value: true,
+    subcorticalStructures: {
+      value: 0.5,
+      min: 0,
+      max: 1,
       onChange: (val) => {
-        if (val == true) {
-          brainScene?.children.forEach((child) => {
-            if (child.name == 'SubcorticalStructs') {
+        brainScene?.children.forEach((child) => {
+          if (child.name == 'SubcorticalStructs') {
+            if(val == 0){
+              child.visible = false
+            } else{
               child.visible = true;
             }
-          });
-        } else {
-          brainScene?.children.forEach((child) => {
-            if (child.name == 'SubcorticalStructs') {
-              child.visible = false;
-            }
-          });
-        }
+
+            child.traverse((c) => {
+              if (c instanceof Mesh) {
+                c.material.opacity = val;
+              }
+            });
+          }
+        });
       },
     },
-    All: {
-      value: true,
+    All:{
+      value: 0.5,
+      min: 0,
+      max: 1,
       onChange: (val) => {
-        if (val == true) {
-          brainScene?.children.forEach((child) => {
-            child.visible = true;
-          });
-        } else {
-          brainScene?.children.forEach((child) => {
-            child.visible = false;
-          });
-        }
+        brainScene?.children.forEach((child) => {
+            if(val == 0){
+              child.visible = false
+            } else{
+              child.visible = true;
+            }
+
+            child.traverse((c) => {
+              if (c instanceof Mesh) {
+                c.material.opacity = val;
+              }
+            });
+        });
       },
-    },
+    }
   });
+
+  // @ts-ignore
+  const [, trans2] = useControls('Transparency', {
+    Gyri: {
+      value: 0.5,
+      min: 0,
+      max: 1,
+      onChange: (val) => {
+        brainScene?.children.forEach((child) => {
+          if (child.name == 'Gyri') {
+            if(val == 0){
+              child.visible = false
+            } else{
+              child.visible = true;
+            }
+            child.traverse((c) => {
+              if (c instanceof Mesh) {
+                c.material.opacity = val;
+              }
+            });
+          }
+        });
+      },
+    },
+    WhiteMatter: {
+      value: 0.5,
+      min: 0,
+      max: 1,
+      onChange: (val) => {
+        brainScene?.children.forEach((child) => {
+          if (child.name == 'WhiteMatter') {
+            if(val == 0){
+              child.visible = false
+            } else{
+              child.visible = true;
+            }
+
+            child.traverse((c) => {
+              if (c instanceof Mesh) {
+                c.material.opacity = val;
+              }
+            });
+          }
+        });
+      },
+    },
+    subcorticalStructures: {
+      value: 0.5,
+      min: 0,
+      max: 1,
+      onChange: (val) => {
+        brainScene?.children.forEach((child) => {
+          if (child.name == 'SubcorticalStructs') {
+            if(val == 0){
+              child.visible = false
+            } else{
+              child.visible = true;
+            }
+
+            child.traverse((c) => {
+              if (c instanceof Mesh) {
+                c.material.opacity = val;
+              }
+            });
+          }
+        });
+      },
+    },
+    All:{
+      value: 0.5,
+      min: 0,
+      max: 1,
+      onChange: (val) => {
+        brainScene?.children.forEach((child) => {
+            if(val == 0){
+              child.visible = false
+            } else{
+              child.visible = true;
+            }
+
+            child.traverse((c) => {
+              if (c instanceof Mesh) {
+                c.material.opacity = val;
+              }
+            });
+        });
+      },
+    }
+  });
+
 };
 
 export default setGUIS;

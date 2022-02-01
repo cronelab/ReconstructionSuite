@@ -10,7 +10,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 // import TwoDFiber from './Views/notyet/TwoDFiber';
 // import TwoD from './Views/notyet/TwoD';
 // import ThreeDFiber from './Views/notyet/ThreeDFiber';
-import CombinedView from './Views/CombinedView';
+// import CombinedView from './Views/notyet/CombinedView';
 
 ReactDOM.render(
   <Router>
@@ -18,9 +18,9 @@ ReactDOM.render(
       <Route exact path="/">
         <Dashboard />
       </Route>
-      <Route exact path="/all">
+      {/* <Route exact path="/all">
         <CombinedView />
-      </Route>
+      </Route> */}
       <Route exact path="/volume">
         <VolumetricRender />
       </Route>
