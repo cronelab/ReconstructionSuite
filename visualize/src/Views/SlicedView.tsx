@@ -29,7 +29,7 @@ import setGUIS from '../helpers/sliceGUI';
 
 import { button } from 'leva';
 
-import { stackHelperFactory } from '../../node_modules/ami.js/build/ami.js';
+import { stackHelperFactory } from 'ami.js/build/ami';
 
 import {
   Scene,

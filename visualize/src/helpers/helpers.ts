@@ -1,20 +1,17 @@
 import { Vector3, WebGLRenderer, PerspectiveCamera, Scene, DirectionalLight } from 'three';
 import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls';
-import { orthographicCameraFactory, trackballOrthoControlFactory } from '../../node_modules/ami.js/build/ami';
+import { orthographicCameraFactory, trackballOrthoControlFactory } from 'ami.js/build/ami';
 
 // Instantiate AMI factories
 const CamerasOrthographic = orthographicCameraFactory();
 const ControlsOrthographic = trackballOrthoControlFactory();
 
-export const initHelpersStack = async (rendererObj, stack,lpsDims,stackHelper) => {
-
-
+export const initHelpersStack = async (rendererObj, stack, lpsDims, stackHelper) => {
   rendererObj.domElement = document.getElementById(rendererObj.domId);
   rendererObj.renderer = new WebGLRenderer({
     antialias: true,
   });
 
-  
   rendererObj.renderer.autoClear = false;
   rendererObj.renderer.localClippingEnabled = true;
   rendererObj.renderer.setSize(rendererObj.domElement.clientWidth, rendererObj.domElement.clientHeight);
@@ -41,7 +38,7 @@ export const initHelpersStack = async (rendererObj, stack,lpsDims,stackHelper) =
   // scene
   rendererObj.scene = new Scene();
 
-  rendererObj.stackHelper= stackHelper
+  rendererObj.stackHelper = stackHelper;
   rendererObj.stackHelper.bbox.visible = false;
   rendererObj.stackHelper.borderColor = 0x000000; //rendererObj.sliceColor;
   rendererObj.stackHelper.backgroundColor = 0x000000;
@@ -66,10 +63,9 @@ export const initHelpersStack = async (rendererObj, stack,lpsDims,stackHelper) =
   rendererObj.stackHelper.orientation = rendererObj.camera.stackOrientation;
   rendererObj.stackHelper.index = Math.floor(rendererObj.stackHelper.orientationMaxIndex / 2);
   rendererObj.scene.add(rendererObj.stackHelper);
-}
+};
 
 export function initRenderer3D(r0, stack) {
-
   const worldbb = stack.worldBoundingBox();
   const lpsDims = new Vector3(
     (worldbb[1] - worldbb[0]) / 1,
@@ -96,7 +92,7 @@ export function initRenderer3D(r0, stack) {
     r0.renderer.domElement.clientWidth / 2,
     r0.renderer.domElement.clientHeight / 2,
     r0.renderer.domElement.clientHeight / -2,
-    .1,
+    0.1,
     1000
   );
   // Axial+ = -22,-110,-255
@@ -115,7 +111,7 @@ export function initRenderer3D(r0, stack) {
   r0.controls.zoomSpeed = 1.2;
   r0.controls.panSpeed = 0.8;
   r0.controls.staticMoving = true;
-  r0.controls.dynamicDampingFactor = 0.3;  
+  r0.controls.dynamicDampingFactor = 0.3;
   r0.camera.controls = r0.controls;
 
   r0.scene = new Scene();
@@ -136,5 +132,4 @@ export function initRenderer3D(r0, stack) {
   r0.camera.orientation = 'axial';
   r0.camera.update();
   // r0.camera.fitBox(2, 1);
-
 }

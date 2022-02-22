@@ -1,13 +1,11 @@
 Thanks for contributing. If this is your first time,
 make sure to read [contributing document](https://github.com/cronelab/ReconstructionVisualizer/master/doc/contribute.rst)
 
-PR Description
---------------
+## PR Description
 
 Describe your PR here
 
-Merge checklist
----------------
+## Merge checklist
 
 Maintainer, please confirm the following before merging:
 

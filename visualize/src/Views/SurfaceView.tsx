@@ -15,59 +15,57 @@ const Electrodes = (props) => {
     disableElectrode: false,
   });
 
-  let electrodes
+  let electrodes;
   try {
     electrodes = useLoader(GLTFLoader, `/electrodes/${activeSubject}`, null, (e) => console.log(e)) || null;
     const elecInfoRef = useRef();
     const electrodeRef = useRef<Mesh>(null);
-  
+
     // const { Electrodes } = electrodes.nodes; // * Destructure nodes
-  
   } catch (e) {
     console.log(e);
   }
 
   const ElectrodeRenderer = () => {
-    if(electrodes != undefined){
-      return(
+    if (electrodes != undefined) {
+      return (
         <primitive
-        ref={electrodeRef}
-        object={electrodes.nodes}
-        activeSubject={activeSubject}
-        rotation={[-Math.PI / 2, 0, Math.PI / 2]}
-        position={[0, 0, 0]}
-        // onPointerOver={(e) => {
-        //   e.stopPropagation();
-        //   e.object.scale.set(3, 3, 3);
-        //   let location = labels?.filter((label) => {
-        //     let withoutApost = label.name.split("'");
-        //     if (withoutApost[0] + withoutApost[1] === e.object.name) {
-        //       return label;
-        //     } else {
-        //       return null;
-        //     }
-        //   });
-        //   elecInfoRef.current.innerText = `${e.object.name}`;
-        //   if (location.length > 0) {
-        //     elecInfoRef.current.innerText = `${e.object.name}: ${location[0].location}`;
-        //   }
-        // }}
-        // onPointerOut={(e) => {
-        //   elecInfoRef.current.innerText = `Hover over another electrode`;
+          ref={electrodeRef}
+          object={electrodes.nodes}
+          activeSubject={activeSubject}
+          rotation={[-Math.PI / 2, 0, Math.PI / 2]}
+          position={[0, 0, 0]}
+          // onPointerOver={(e) => {
+          //   e.stopPropagation();
+          //   e.object.scale.set(3, 3, 3);
+          //   let location = labels?.filter((label) => {
+          //     let withoutApost = label.name.split("'");
+          //     if (withoutApost[0] + withoutApost[1] === e.object.name) {
+          //       return label;
+          //     } else {
+          //       return null;
+          //     }
+          //   });
+          //   elecInfoRef.current.innerText = `${e.object.name}`;
+          //   if (location.length > 0) {
+          //     elecInfoRef.current.innerText = `${e.object.name}: ${location[0].location}`;
+          //   }
+          // }}
+          // onPointerOut={(e) => {
+          //   elecInfoRef.current.innerText = `Hover over another electrode`;
 
-        //   e.object.scale.set(1, 1, 1);
-        // }}
-      ></primitive>
-      )
+          //   e.object.scale.set(1, 1, 1);
+          // }}
+        ></primitive>
+      );
+    } else {
+      return <></>;
     }
-    else{
-      return(<></>)
-    }
-  }
+  };
 
   return (
     <>
-<ElectrodeRenderer></ElectrodeRenderer>
+      <ElectrodeRenderer></ElectrodeRenderer>
     </>
   );
 };

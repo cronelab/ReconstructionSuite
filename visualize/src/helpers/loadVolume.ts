@@ -1,14 +1,14 @@
-import { VolumeLoader, stackHelperFactory } from '../../node_modules/ami.js/build/ami';
+import { VolumeLoader, stackHelperFactory } from 'ami.js/build/ami';
 import { activeSubject, modality, onDoubleClick, onScroll } from './renderers';
 import pako from 'pako';
 import { Vector3 } from 'three';
 export const loadVolume = async (r0, r1, r2, r3, specificImage?) => {
   const volumeLoader = new VolumeLoader();
 
-  let newModality = modality
+  let newModality = modality;
   // If a T1 or CT exists, load it.
-  if(specificImage == 'cerebellumRemoved'){
-    newModality = 'cerebellumRemoved'
+  if (specificImage == 'cerebellumRemoved') {
+    newModality = 'cerebellumRemoved';
   }
   const brainReq = await fetch(`/${newModality}/${activeSubject}`);
   if (!brainReq.ok) {
@@ -34,7 +34,7 @@ export const loadVolume = async (r0, r1, r2, r3, specificImage?) => {
 
   stack = series.stack[0];
   stack.prepare();
-  console.log(stack)
+  console.log(stack);
 
   return {
     stack,

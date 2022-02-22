@@ -1,7 +1,7 @@
 import React from 'react';
 import { useEffect } from 'react';
 import '../App.scss';
-import {Container, Row, Col} from 'react-bootstrap';
+import { Container, Row, Col } from 'react-bootstrap';
 
 import { r0, r1, r2, r3, activeSubject } from '../helpers/renderers';
 import { initRenderer3D } from '../helpers/helpers';
@@ -10,13 +10,12 @@ import { loadVolume } from '../helpers/loadVolume';
 
 import { loadElectrodeScene, reorientateBrainScene } from '../helpers/loadSurfaces';
 
-import * as dat from '../../node_modules/dat.gui/build/dat.gui';
+import * as dat from 'dat.gui';
 
-import { VolumeRenderingHelper, LutHelper } from '../../node_modules/ami.js/build/ami';
+import { VolumeRenderingHelper, LutHelper } from 'ami.js/build/ami';
 
 import { TextGeometry, MeshPhongMaterial, Mesh, FontLoader, Cache, Vector3 } from 'three';
 import font from 'three/examples/fonts/helvetiker_regular.typeface.json';
-
 
 function VolumetricRender(): JSX.Element {
   // setGUIS();
@@ -33,7 +32,7 @@ function VolumetricRender(): JSX.Element {
   let vrHelper;
   let lut;
   let textMeshes;
-  let numberMeshes = []
+  let numberMeshes = [];
 
   const listeners = () => {
     r0.domElement.addEventListener(
@@ -58,7 +57,6 @@ function VolumetricRender(): JSX.Element {
     );
   };
 
-
   const animate = () => {
     r0.controls.update();
     r0.light.position.copy(r0.camera.position);
@@ -67,8 +65,7 @@ function VolumetricRender(): JSX.Element {
       text.lookAt(r0.camera.position);
       text.quaternion.copy(r0.camera.quaternion);
     });
-    if(numberMeshes != undefined){
-
+    if (numberMeshes != undefined) {
       numberMeshes?.forEach((text) => {
         text.lookAt(r0.camera.position);
         text.quaternion.copy(r0.camera.quaternion);
@@ -88,7 +85,7 @@ function VolumetricRender(): JSX.Element {
       vrHelper = new VolumeRenderingHelper(stack);
 
       r0.scene.add(vrHelper);
-      
+
       const worldCenter = stack.worldCenter();
       r0.camera.lookAt(worldCenter.x, worldCenter.y, worldCenter.z);
       r0.camera.updateProjectionMatrix();
@@ -101,10 +98,10 @@ function VolumetricRender(): JSX.Element {
       let fl = loader.parse(font);
 
       textMeshes = electrodeScene.children[0].children.map((group) => {
-        let nums=[];
+        let nums = [];
         group.children.forEach((elec, index) => {
-          if (index == 0 || index == group.children.length-1) {
-            let numberText = new TextGeometry(`${index+1}`, {
+          if (index == 0 || index == group.children.length - 1) {
+            let numberText = new TextGeometry(`${index + 1}`, {
               font: fl,
               size: 2,
               height: 1,
@@ -123,12 +120,12 @@ function VolumetricRender(): JSX.Element {
 
             elec.getWorldPosition(tempVec);
             let numberText1 = new Mesh(numberText, materials);
-            numberText1.position.x = tempVec.x+1;
-            numberText1.position.y = tempVec.y+1;
-            numberText1.position.z = tempVec.z+1;
+            numberText1.position.x = tempVec.x + 1;
+            numberText1.position.y = tempVec.y + 1;
+            numberText1.position.z = tempVec.z + 1;
             numberText1.lookAt(r0.camera.position);
             r0.scene.add(numberText1);
-            numberMeshes.push(numberText1)
+            numberMeshes.push(numberText1);
           }
           nums.push(parseInt(elec.name.split(/([0-9]+)/)[1]));
         });
@@ -161,7 +158,6 @@ function VolumetricRender(): JSX.Element {
         return textMesh1;
       });
 
-
       animate();
 
       buildGUI();
@@ -191,7 +187,7 @@ function VolumetricRender(): JSX.Element {
       invertColumns: false,
       orientation: 'default',
     };
-  
+
     // camera
     const cameraFolder = gui.addFolder('Camera');
     const invertRows = cameraFolder.add(camUtils, 'invertRows');
@@ -199,28 +195,21 @@ function VolumetricRender(): JSX.Element {
       r0.camera.invertRows();
     });
 
-    
-  const invertColumns = cameraFolder.add(camUtils, 'invertColumns');
-  invertColumns.onChange(() => {
-    r0.camera.invertColumns();
-  });
+    const invertColumns = cameraFolder.add(camUtils, 'invertColumns');
+    invertColumns.onChange(() => {
+      r0.camera.invertColumns();
+    });
 
+    const orientationUpdate = cameraFolder.add(camUtils, 'orientation', ['default', 'axial', 'coronal', 'sagittal']);
+    orientationUpdate.onChange((value) => {
+      r0.camera.orientation = value;
+      r0.camera.update();
+      r0.camera.fitBox(2, 0.6);
 
-  const orientationUpdate = cameraFolder.add(camUtils, 'orientation', [
-    'default',
-    'axial',
-    'coronal',
-    'sagittal',
-  ]);
-  orientationUpdate.onChange(value => {
-    r0.camera.orientation = value;
-    r0.camera.update();
-    r0.camera.fitBox(2,.6);
-    
-    // stackHelper.orientation = r0.camera.stackOrientation;
-  });
+      // stackHelper.orientation = r0.camera.stackOrientation;
+    });
 
-  cameraFolder.open();
+    cameraFolder.open();
     const stackFolder = gui.addFolder('Settings');
     // const lutUpdate = stackFolder.add(myStack, 'lut', lut.lutsAvailable());
     // lutUpdate.onChange(function (value) {

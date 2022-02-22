@@ -1,15 +1,15 @@
 import { Scene, FrontSide, BackSide, Mesh, MeshBasicMaterial, SphereGeometry, Plane, Vector3, Raycaster } from 'three';
-import { UtilsCore } from '../../node_modules/ami.js/build/ami'; // Import AMI (from TheBrainChain repo)
+import { UtilsCore } from 'ami.js/build/ami'; // Import AMI (from TheBrainChain repo)
 
 export const r0 = {
   domId: 'r0',
   targetID: 0,
-  controls:null,
+  controls: null,
   light: null,
-  camera: null, 
+  camera: null,
   renderer: null,
   scene: null,
-  domElement: null
+  domElement: null,
 };
 
 // 2d axial renderer
@@ -17,14 +17,13 @@ export const r1 = {
   domId: 'r1',
   sliceOrientation: 'axial',
   targetID: 1,
-  controls:null,
+  controls: null,
   light: null,
-  camera: null, 
+  camera: null,
   renderer: null,
   scene: null,
   stackHelper: null,
-  domElement: null
-
+  domElement: null,
 };
 
 // 2d sagittal renderer
@@ -32,13 +31,13 @@ export const r2 = {
   domId: 'r2',
   sliceOrientation: 'sagittal',
   targetID: 2,
-  controls:null,
+  controls: null,
   light: null,
-  camera: null, 
+  camera: null,
   renderer: null,
   scene: null,
   stackHelper: null,
-  domElement: null
+  domElement: null,
 };
 
 // 2d coronal renderer
@@ -46,14 +45,13 @@ export const r3 = {
   domId: 'r3',
   sliceOrientation: 'coronal',
   targetID: 3,
-  controls:null,
+  controls: null,
   light: null,
-  camera: null, 
+  camera: null,
   renderer: null,
   scene: null,
   stackHelper: null,
-  domElement: null
-
+  domElement: null,
 };
 
 export const sceneClip = new Scene();
@@ -114,8 +112,7 @@ export function animate() {
 
   [r1, r2, r3].forEach((r) => {
     r.controls?.update();
-
-  })
+  });
 
   // r1.controls.update();
   // r2.controls.update();
@@ -161,11 +158,10 @@ export function animate() {
   //   });
   //   r.renderer?.render(sceneClip, r.camera);
   //   r.renderer?.clearDepth();
-  
+
   // })
   requestAnimationFrame(() => animate());
 }
-
 
 export function updateClipPlane(refObj, clipPlane) {
   const stackHelper = refObj.stackHelper;

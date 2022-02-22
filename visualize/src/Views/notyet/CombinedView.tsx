@@ -3,7 +3,13 @@ import { useEffect, Suspense, useState, useRef } from 'react';
 import '../App.scss';
 import { initRenderer3D } from '../../helpers/helpers';
 // Import AMI (from TheBrainChain repo)
-import { VolumeRenderingHelper, LutHelper,stackHelperFactory, orthographicCameraFactory, trackballOrthoControlFactory } from 'ami.js/build/ami';
+import {
+  VolumeRenderingHelper,
+  LutHelper,
+  stackHelperFactory,
+  orthographicCameraFactory,
+  trackballOrthoControlFactory,
+} from 'ami.js/build/ami';
 import { loadVolume } from '../../helpers/loadVolume';
 import { loadBrainSurface } from '../../helpers/loadSurfaces';
 import { r0 } from '../../helpers/renderers';

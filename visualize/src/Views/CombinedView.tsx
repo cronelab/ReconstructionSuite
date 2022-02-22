@@ -3,7 +3,7 @@ import { useEffect, Suspense, useState, useRef } from 'react';
 import '../App.scss';
 import { initRenderer3D } from '../helpers/helpers';
 // Import AMI (from TheBrainChain repo)
-import { VolumeRenderingHelper, LutHelper } from 'ami.js';
+import { VolumeRenderingHelper, LutHelper } from 'ami.js/build/ami';
 import { loadVolume } from '../helpers/loadVolume';
 import { loadBrainSurface } from '../helpers/loadSurfaces';
 import { r0 } from '../helpers/renderers';
@@ -19,7 +19,7 @@ import {
   Box,
   RoundedBox,
 } from '@react-three/drei';
-import { stackHelperFactory, orthographicCameraFactory, trackballOrthoControlFactory } from 'ami.js';
+import { stackHelperFactory, orthographicCameraFactory, trackballOrthoControlFactory } from 'ami.js/build/ami';
 
 const CamerasOrthographic = orthographicCameraFactory();
 const ControlsOrthographic = trackballOrthoControlFactory();
