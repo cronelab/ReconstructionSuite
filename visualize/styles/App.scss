@@ -1,0 +1,112 @@
+// <body style="height: 100%; padding-bottom: 0px; margin: 0; overflow: hidden">
+// <div id="root" style="height: 100%; overflow: scroll;"></div>
+
+html,
+body,
+body > div:first-child,
+div#__next,
+div#__next > div {
+  height: 100%;
+  padding: 0px;
+  margin: 0;
+  overflow: hidden
+
+}
+
+.renderer {
+  position: relative;
+  overflow: hidden;
+  padding: 0 !important;
+  background-color: #000 !important;
+}
+
+#r0 {
+  border: 2px solid #000;
+}
+#r1 {
+  border: 2px solid #f44336;
+}
+
+#r2 {
+  border: 2px solid #ffeb3b;
+}
+
+#r3 {
+  border: 2px solid #8bc34a;
+}
+#my-gui-container {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  z-index: 1;
+}
+
+
+
+
+
+
+// * {
+//   font-family: 'Roboto', sans-serif;
+//   outline: none;
+// }
+
+// #stats {
+//   position: absolute;
+//   top: 0;
+//   left: 0;
+// }
+
+// #r3d {
+//   background-color: #000;
+//   left: 0;
+//   right: 0;
+//   top: 0;
+//   bottom: 0;
+//   position: absolute;
+//   width: 100%;
+//   height: 100%;
+//   overflow: hidden;
+// }
+
+// #my-gui-container {
+//   position: fixed;
+//   top: 30px;
+//   right: 20px;
+//   z-index: 1;
+// }
+
+// #my-lut-container {
+//   position: fixed;
+//   left: 50%;
+//   transform: translate(-50%, 0);
+//   z-index: 1;
+//   color: #f9f9f9;
+//   text-align: center;
+// }
+
+// #my-lut-container > div > .my-lut-canvases {
+//   position: relative;
+// }
+
+// #my-lut-min {
+//   margin-right: 10px;
+// }
+
+// #my-lut-max {
+//   margin-left: 10px;
+// }
+
+// #my-lut-container > div {
+//   margin-bottom: 10px;
+// }
+
+// #my-lut-container > div > .my-lut-canvases > :first-child {
+//   background: repeating-linear-gradient(-45deg, #353535, #353535 5px, black 5px, black 10px);
+// }
+
+// #my-lut-container > div > .my-lut-canvases > :nth-child(2) {
+//   position: absolute;
+//   top: 0;
+//   left: 0;
+// }

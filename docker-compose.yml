@@ -33,9 +33,9 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8055:8055"
-      - "8056:8056"
     environment: 
       - PORT=8055
+      - SUBJECTS_DIR=/data
     volumes:
       - $SUBJECTS_DIR:/data
       - ./visualize:/home/visualize

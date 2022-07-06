@@ -9,7 +9,7 @@ ENV SUBJECTS_DIR=/data/
 
 # Install dependencies
 RUN apt-get update && apt-get -y install bc binutils libgomp1 perl psmisc sudo tar tcsh unzip \
-    uuid-dev vim-common libjpeg62-dev curl octave gawk jq locales apt-utils
+    uuid-dev vim-common libjpeg62-dev curl octave gawk jq locales apt-utils xz-utils 
 RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
     locale-gen
 ENV LC_ALL en_US.UTF-8 

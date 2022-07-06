@@ -1,7 +1,12 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "ES2016",
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -16,11 +21,14 @@
     "isolatedModules": true,
     "noImplicitAny": false,
     "noEmit": true,
-    "jsx": "react-jsx",
-    "paths": {
-      "ami.js": ["node_modules/ami.js/build/ami.js"]
-    }
+    "jsx": "preserve",
+    "incremental": true
   },
-  "include": ["src"],
-  "exclude": ["src/Views/notyet"]
+  "include": [
+    "pages/CombinedView.tsx",
+    "components/helpers"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }
